@@ -56,3 +56,12 @@ class TestHomeView(TestCase):
 
         resp = self.client.get('/', follow=False)
         self.assertEqual(resp.status_code, 302)
+
+    def test_bad_login(self):
+        self.post_login_data['password'] = 'badpass'
+        resp = self.client.post('/login/', self.post_login_data, follow=True)
+        self.assertContains(resp, 'Wrong credentials')
+
+    def test_good_login(self):
+        resp = self.client.post('/login/', self.post_login_data, follow=True)
+        self.assertNotContains(resp, 'Wrong credentials')

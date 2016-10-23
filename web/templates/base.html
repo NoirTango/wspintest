@@ -1,0 +1,10 @@
+<!DOCTYPE xhtml>
+<html>
+    <header>
+    <title>{% block title %}{% endblock title %}</title>
+    </header>
+    <body>
+        <div id="Welcome message">{% block welcome %}Hello {{ request.user }}{% endblock %}</div>
+        {% block content %}{% endblock content %}
+    </body>
+</html>

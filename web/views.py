@@ -24,3 +24,7 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return render(request, 'logout.html')
+
+
+def register_view(request):
+    return redirect('home')

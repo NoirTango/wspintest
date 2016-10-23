@@ -9,7 +9,7 @@
 
 
     <body>
-        <div id="welcome_message">{% block welcome %}{{ request.user }}
+        <div id="welcome_message">{% block welcome %}Logged in as: {{ request.user }} /
         <a href="{% url 'logout' %}">Log out</a>{% endblock %}</div>
 
         {% block content %}{% endblock content %}

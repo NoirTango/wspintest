@@ -2,7 +2,7 @@
 
 {% block title %}Wspinologia - log in to your account{% endblock %}
 
-{% block welcome %}Login{% endblock %}
+{% block welcome %}Login or <a href="{% url 'register' %}">register</a>{% endblock %}
 
 {% block content %}
 
@@ -15,6 +15,4 @@
     <input type="hidden" name="next" value="{{ request.GET.next }}"/>
     <input type="submit" class="button" value="Login"/>
 </form>
-
-No account yet? <a href="{% url 'register' %}">Register here</a>
 {% endblock %}

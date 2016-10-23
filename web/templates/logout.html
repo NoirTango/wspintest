@@ -2,7 +2,9 @@
 
 {% block title %}Wspinologia - logged out{% endblock %}
 
-{% block welcome %}<a href="{% url 'login' %}">Log in</a>{% endblock %}
+{% block welcome %}<a href="{% url 'login' %}">Log in</a>
+or <a href="{% url 'register' %}">register</a>
+{% endblock %}
 
 {% block content %}
     Logged out

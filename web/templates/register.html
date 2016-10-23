@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Wspinologia - register new account{% endblock %}
+
+{% block welcome %}Register{% endblock %}
+
+{% block content %}
+
+<div id="failure_display">{{ failure }}</div>
+
+<form id="register_form" class="vertical_form" action="{% url 'register' %}" method="post">
+    {% csrf_token %}
+    Username <input type="text" name="username"/>
+    Email <input type="text" name="email"/>
+    Password <input type="password" name="password"/>
+    <input class="submit button" type="submit" value="Register"/>
+</form>
+
+{% endblock %}

@@ -1,10 +1,17 @@
+{% load static %}
 <!DOCTYPE xhtml>
 <html>
     <header>
-    <title>{% block title %}{% endblock title %}</title>
+        <title>{% block title %}{% endblock title %}</title>
+        <link rel="stylesheet" href="{% static "base.css" %}">
     </header>
+
+
+
     <body>
-        <div id="Welcome message">{% block welcome %}Hello {{ request.user }}{% endblock %}</div>
+        <div id="welcome_message">{% block welcome %}{{ request.user }}
+        <a href="{% url 'logout' %}">Log out</a>{% endblock %}</div>
+
         {% block content %}{% endblock content %}
     </body>
 </html>

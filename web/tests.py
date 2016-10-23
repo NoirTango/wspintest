@@ -65,3 +65,19 @@ class TestHomeView(TestCase):
     def test_good_login(self):
         resp = self.client.post('/login/', self.post_login_data, follow=True)
         self.assertNotContains(resp, 'Wrong credentials')
+
+    def test_register_creates_user(self):
+        post_register_data = {'username': 'newuser', 'email': '', 'password': 'pwd'}
+        resp = self.client.post('/register/', post_register_data)
+        self.assertEqual(resp.status_code, 302)
+        self.assertEqual(resp.url, '/')
+
+        del post_register_data['password']
+        User.objects.get(**post_register_data)
+
+    def test_register_does_not_overwrite_user(self):
+        post_register_data = self.post_login_data
+        post_register_data['email'] = ''
+        resp = self.client.post('/register/', post_register_data)
+        self.assertEqual(resp.status_code, 200)
+        self.assertContains(resp, 'Username already in use')

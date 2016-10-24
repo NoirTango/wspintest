@@ -2,6 +2,7 @@ body {
     background-color: white;
     font-family: "Segoe UI",Arial,sans-serif;
     margin: 0em;
+    font-size: 1em;
 }
 
 #welcome_message {
@@ -12,18 +13,35 @@ body {
     margin: 0em;
     border: 0em;
     font-weight: bold;
+    font-size: .8em;
 }
 
 #welcome_message a {
     color: white;
     font-weight: unset;
+    font-size: inherit;
 }
 
+#failure_display {
+    width: 100%;
+    text-align: center;
+    background-color: FireBrick;
+    padding: .5em;
+    color: white;
+    position: absolute;
+    bottom: 0;
+}
+
+#failure_display:empty {
+    display: none;
+}
+    
 .vertical_form {
     width: 50%;
     background-color: lightgrey;
     margin: 2em auto;
     padding: 1em;
+    font-size: inherit;
 }
 
 .vertical_form .button {
@@ -36,9 +54,11 @@ body {
     display: inline-block;
     width: 100%;
     margin: 0em 0em 0em 0em;
+    font-size: inherit;
 }
 
 .vertical_form input {
     width: 100%;
-    margin: 0em 0em 2em 0em;
+    margin: 0em 0em 1em 0em;
+    font-size: inherit;
 }

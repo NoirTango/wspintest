@@ -15,4 +15,5 @@ tests/report/
 .project
 .pydevproject
 db.sqlite3
+.settings
 

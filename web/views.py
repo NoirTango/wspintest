@@ -33,12 +33,14 @@ def register_view(request):
     context = None
     if request.method == 'POST':
         try:
-            User.objects.get(username=request.POST['username'])
-            context = {'failure': 'Username already in use'}
+            User.objects.get(username=request.POST['email'])
+            context = {'failure': 'User with this e-mail is already registered'}
             return render(request, 'register.html', context=context)
         except User.DoesNotExist:
-            new_user = User.objects.create_user(username=request.POST['username'],
+            new_user = User.objects.create_user(username=request.POST['email'],
                                                 email=request.POST['email'],
+                                                first_name=request.POST['name'],
+                                                last_name=request.POST['surname'],
                                                 password=request.POST['password'])
             login(request, new_user)
             return redirect(home_view)

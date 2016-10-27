@@ -10,7 +10,7 @@
 
 <form id="login_form" class="vertical_form" action="{{ request.path }}" method="post">
     {% csrf_token %}
-    Username: <input type="text" name="username"/><br/>
+    E-mail: <input type="text" name="username"/><br/>
     Password: <input type="password" name="password"/><br/>
     <input type="hidden" name="next" value="{{ request.GET.next }}"/>
     <input type="submit" class="button" value="Login"/>

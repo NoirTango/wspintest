@@ -10,8 +10,9 @@
 
 <form id="register_form" class="vertical_form" action="{% url 'register' %}" method="post">
     {% csrf_token %}
-    Username <input type="text" name="username"/>
-    Email <input type="text" name="email"/>
+    E-mail <input type="text" name="email"/>
+    First name <input type="text" name="name"/>
+    Last Name <input type="text" name="surname"/>
     Password <input type="password" name="password"/>
     <input class="submit button" type="submit" value="Register"/>
 </form>

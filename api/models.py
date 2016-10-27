@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.deletion import CASCADE
@@ -30,7 +32,7 @@ class Route(models.Model):
 
 class ClimbRecord(models.Model):
     route = models.ForeignKey(Route)
-    date = models.DateField(auto_now_add=True)
+    date = models.DateField(default=datetime.date.today)
     user = models.ForeignKey(User, on_delete=CASCADE)
 
     def __str__(self):

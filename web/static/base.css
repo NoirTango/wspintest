@@ -35,7 +35,7 @@ body {
 #failure_display:empty {
     display: none;
 }
-    
+
 .vertical_form {
     width: 50%;
     background-color: lightgrey;
@@ -61,4 +61,20 @@ body {
     width: 100%;
     margin: 0em 0em 1em 0em;
     font-size: inherit;
+}
+
+.even {
+    background-color: white;
+}
+
+.odd {
+    background-color: AliceBlue;
+}
+
+.climb-list {
+    padding: 1em;
+}
+
+.climb-list td {
+    padding: 0em 1em;
 }

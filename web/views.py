@@ -2,11 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.urls import reverse
+import requests
 
 
 @login_required
 def home_view(request):
-    return render(request, 'home.html')
+    host = request.META['HTTP_HOST']
+    path = reverse('climb-records-list')
+    print(path)
+    resp = requests.get('http://{host}{path}'.format(host=host, path=path), cookies=request.COOKIES)
+    context = {'data': resp.json}
+    return render(request, 'home.html', context)
 
 
 def login_view(request):

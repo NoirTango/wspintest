@@ -14,4 +14,4 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
             user = self.request.user
-            return ClimbRecord.objects.filter(user=user)
+            return ClimbRecord.objects.filter(user=user).order_by('-route__grade')

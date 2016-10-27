@@ -3,5 +3,24 @@
 {% block title %}Wspinologia{% endblock %}
 
 {% block content %}
-    OK
+    <table class="climb-list">
+        <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Grade</th>
+            <th>Sector</th>
+            <th>Crag</th>
+            <th>Country</th>
+        </tr>
+    {% for record in data %}
+        <tr class="{% cycle 'even' 'odd' %}">
+            <td>{{record.date}}</td>
+            <td>{{record.route.name}}</td>
+            <td>{{record.route.grade}}</td>
+            <td>{{record.route.sector.name}}</td>
+            <td>{{record.route.sector.crag.name}}</td>
+            <td>{{record.route.sector.crag.country}}</td>
+        </tr>
+    {% endfor %}
+    </table>
 {% endblock %}

@@ -1,26 +1,59 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Wspinologia{% endblock %}
 
 {% block content %}
-    <table class="climb-list">
-        <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Grade</th>
-            <th>Sector</th>
-            <th>Crag</th>
-            <th>Country</th>
-        </tr>
-    {% for record in data %}
-        <tr class="{% cycle 'even' 'odd' %}">
-            <td>{{record.date}}</td>
-            <td>{{record.route.name}}</td>
-            <td>{{record.route.grade}}</td>
-            <td>{{record.route.sector.name}}</td>
-            <td>{{record.route.sector.crag.name}}</td>
-            <td>{{record.route.sector.crag.country}}</td>
-        </tr>
-    {% endfor %}
-    </table>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js'></script>
+    <script src='{% static "post_data.js" %}'></script>
+
+    <div id="react_form"/>
+    <div id="react_list"/>
+    <script src='{% static "climb_record_form_controller.js" %}'></script>
+    <script src='{% static "climb_record_list_controller.js" %}'></script>
+    <script>
+'use strict';
+
+
+
+function handler() {
+  console.log(this);
+  if(this.status == 200) {
+    console.log(this.response);
+    climb_records_list = JSON.parse(this.response);
+    refreshApp();
+  } else {
+    data = [];
+  }
+}
+
+function reloadDataFromAPI() {
+    var client = new XMLHttpRequest();
+    client.onload = handler;
+    client.open("GET", "/api/climb-records/");
+    client.setRequestHeader("Accept", "application/json");
+    client.send();
+}
+
+reloadDataFromAPI();
+
+var climb_records_list = [];
+var form_data = {route: {text:'', list: []}, sector: {text:'', list: []}, crag: {text:'', list:[]}};
+var ping = function(text) {
+    console.log(text);
+    refreshApp();
+};
+var refreshApp = function() {
+    ReactDOM.render(
+        React.createElement('div', {},
+            React.createElement(RecordForm, {data: form_data, onChange: ping}),
+            React.createElement(ClimbRecordList, {climbs: climb_records_list})
+        ),
+        document.getElementById('react_list'));
+};
+
+refreshApp();
+
+    </script>
 {% endblock %}

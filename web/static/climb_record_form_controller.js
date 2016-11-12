@@ -1,48 +1,22 @@
-var React, ReactDOM, console;
+var React, console, QueryableTextField;
 
-var QueryableTextField = React.createClass({
-    propTypes: {
-        data: React.PropTypes.object.isRequired,
-        query: React.PropTypes.string.isRequired,
-        onChange: React.PropTypes.func
-    },
-    onTextChange: function(e) {
-        this.props.data.text = e.target.value;
-        this.props.onChange(this.props.data.text);
+var routeDisplay = function(route) {
+    return route.name + ' ' + route.grade + ' - ' + route.sector_name;
+};
 
-        var query = this.props.query;
-        var data = this.props.data;
-        var client = new XMLHttpRequest();
-        client.onload = function() {
-            if(this.status == 200) {
-                data.list = JSON.parse(this.response);
-                refreshApp();
-            }
-        };
-        client.open("GET", query + data.text);
-        client.setRequestHeader("Accept", "application/json");
-        client.send();
-    },
-    render: function() {
-        return (
-            React.createElement('div', {},
-                React.createElement('input', {
-                    type: 'text',
-                    value: this.props.data.text,
-                    onChange: this.onTextChange
-                }),
-                React.createElement('div', {}, this.props.data.list.map(function(c) {
-                    return React.createElement('div', {key: c.id}, c.name);
-                }))
-            )
-        );
-    }
-});
+var sectorDisplay = function(sector) {
+    return sector.name + ' - ' + sector.crag_name + ' / ' + sector.crag_country;
+};
+
+var cragDisplay = function(crag) {
+    return crag.name  + ' / ' + crag.country;
+};
+
 
 var RecordForm = React.createClass({
     propTypes: {
         data: React.PropTypes.object.isRequired,
-        onChange: React.PropTypes.func.isRequired,
+        onChange: React.PropTypes.func,
     },
     onRouteChange: function(text) {
         this.props.data.route.text = text;
@@ -60,17 +34,23 @@ var RecordForm = React.createClass({
         return (
             React.createElement('form', {noValidate: true},
                 React.createElement(QueryableTextField, {
-                    data: this.props.data.route,
+                    value: this.props.data.route,
+                    name: 'route',
+                    dataDisplay: routeDisplay,
                     query: "/api/routes/?search=",
                     onChange: this.onRouteChange
                 }),
                 React.createElement(QueryableTextField, {
-                    data: this.props.data.sector,
+                    value: this.props.data.sector,
+                    name: 'sector',
+                    dataDisplay: sectorDisplay,
                     query: "/api/sectors/?search=",
                     onChange: this.onSectorChange
                 }),
                 React.createElement(QueryableTextField, {
-                    data: this.props.data.crag,
+                    value: this.props.data.crag,
+                    name: 'crag',
+                    dataDisplay: cragDisplay,
                     query: "/api/crags/?search=",
                     onChange: this.onCragChange
                 }),

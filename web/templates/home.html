@@ -10,19 +10,25 @@
 
     <div id="react_form"/>
     <div id="react_list"/>
+    <script src='{% static "queryable_text_field.js" %}'></script>
     <script src='{% static "climb_record_form_controller.js" %}'></script>
     <script src='{% static "climb_record_list_controller.js" %}'></script>
     <script>
 'use strict';
 
+var form_data = {route: '', sector: '', crag: ''};
+var climb_record_list = React.createElement(ClimbRecordList, {});
 
 
-function handler() {
+
+function resetClimbRecordList() {
+  var retrieved_list;
   console.log(this);
   if(this.status == 200) {
     console.log(this.response);
-    climb_records_list = JSON.parse(this.response);
-    refreshApp();
+    retrieved_list = JSON.parse(this.response);
+    console.log(climb_record_list);
+    globalSetClimbRecordList(retrieved_list);
   } else {
     data = [];
   }
@@ -30,30 +36,25 @@ function handler() {
 
 function reloadDataFromAPI() {
     var client = new XMLHttpRequest();
-    client.onload = handler;
+    client.onload = resetClimbRecordList;
     client.open("GET", "/api/climb-records/");
     client.setRequestHeader("Accept", "application/json");
     client.send();
 }
 
-reloadDataFromAPI();
 
-var climb_records_list = [];
-var form_data = {route: {text:'', list: []}, sector: {text:'', list: []}, crag: {text:'', list:[]}};
-var ping = function(text) {
-    console.log(text);
-    refreshApp();
-};
-var refreshApp = function() {
+
+var buildApp = function() {
     ReactDOM.render(
         React.createElement('div', {},
-            React.createElement(RecordForm, {data: form_data, onChange: ping}),
-            React.createElement(ClimbRecordList, {climbs: climb_records_list})
+            React.createElement(RecordForm, {data: form_data}),
+            climb_record_list
         ),
         document.getElementById('react_list'));
 };
 
-refreshApp();
+buildApp();
+reloadDataFromAPI();
 
     </script>
 {% endblock %}

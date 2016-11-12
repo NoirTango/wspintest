@@ -1,5 +1,7 @@
 var React, ReactDOM;
 
+var globalSetClimbRecordList;
+
 var normalise = function(api_data) {
     return {
         key: api_data.id,
@@ -20,7 +22,6 @@ var ClimbRecord = React.createClass({
         sector: React.PropTypes.string.isRequired,
         crag: React.PropTypes.string.isRequired,
         country: React.PropTypes.string.isRequired,
-        className: React.PropTypes.string
     },
 
     render: function() {
@@ -38,10 +39,15 @@ var ClimbRecord = React.createClass({
 });
 
 var ClimbRecordList = React.createClass({
-    propTypes: {
-        climbs: React.PropTypes.array.isRequired
+    getInitialState: function() {
+        return {climbs: []};
     },
-
+    componentWillMount: function() {
+        var component = this;
+        globalSetClimbRecordList = function(climb_list) {
+            component.setState(Object.assign({}, component.state, {climbs: climb_list}));
+        };
+    },
     render: function() {
         return (
             React.createElement('table', {className: 'climb-list'},
@@ -54,7 +60,7 @@ var ClimbRecordList = React.createClass({
                         React.createElement('th', {}, 'Crag'),
                         React.createElement('th', {}, 'Country')
                     ),
-                    this.props.climbs.map(function(cr, i) {
+                    this.state.climbs.map(function(cr, i) {
                         var row_props = normalise(cr);
                         if (i%2) {
                             row_props.className = 'odd';

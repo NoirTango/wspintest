@@ -1,7 +1,7 @@
 var React, console, QueryableTextField;
 
 var routeDisplay = function(route) {
-    return route.name + ' ' + route.grade + ' - ' + route.sector_name;
+    return route.name + ' ' + route.grade + ' - ' + route.sector_name + ' - ' + route.crag_name;
 };
 
 var sectorDisplay = function(sector) {

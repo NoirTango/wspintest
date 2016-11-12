@@ -11,7 +11,8 @@ var QueryableTextField = React.createClass({
     getInitialState: function() {
         return {
             value: this.props.value,
-            choice_list: []
+            choice_list: [],
+            selected_object: null
         };
     },
     onTextChange: function(e) {
@@ -22,7 +23,6 @@ var QueryableTextField = React.createClass({
         var client = new XMLHttpRequest();
         client.onload = function() {
             if(this.status == 200) {
-                console.log(component);
                 component.setState(Object.assign({}, component.state, {choice_list: JSON.parse(this.response)}));
             }
         };
@@ -34,9 +34,14 @@ var QueryableTextField = React.createClass({
         var datalist_name = this.props.name + '_datalist';
         var display_func = this.props.dataDisplay;
         var option_list = this.state.choice_list.map(function(c) {
-            return React.createElement('option', {key: c.id, value: c.name}, display_func(c));
+            return React.createElement('option', {
+                key: c.id,
+                value: c.name,
+                onSelect: function() {console.log(c.id);},
+                onChange: function() {console.log(c.id);},
+                onClick: function() {console.log(c.id);}
+            }, display_func(c));
         });
-        var select_element = React.createElement('datalist', {id: datalist_name}, option_list);
         return (
             React.createElement('div', {},
                 React.createElement('input', {
@@ -45,7 +50,11 @@ var QueryableTextField = React.createClass({
                     value: this.state.value,
                     onChange: this.onTextChange
                 }),
-                select_element
+                React.createElement('datalist', {
+                    id: datalist_name,
+                    onSelect: function() {console.log('oc');},
+                    onChange: function() {console.log('oc');}
+                }, option_list)
             )
         );
     }

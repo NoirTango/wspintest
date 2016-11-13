@@ -15,20 +15,37 @@ var QueryableTextField = React.createClass({
             selected_object: null
         };
     },
+    findOption: function(text) {
+        var display_func = this.props.dataDisplay;
+        return this.state.choice_list.find(function(opt) {return display_func(opt)==text;});
+    },
     onTextChange: function(e) {
-        this.setState(Object.assign({}, this.state, {value: e.target.value}));
-
-        var query = this.props.query;
-        var component = this;
-        var client = new XMLHttpRequest();
-        client.onload = function() {
-            if(this.status == 200) {
-                component.setState(Object.assign({}, component.state, {choice_list: JSON.parse(this.response)}));
-            }
-        };
-        client.open("GET", query + e.target.value);
-        client.setRequestHeader("Accept", "application/json");
-        client.send();
+        var selected_object = this.findOption(e.target.value);
+        var new_state;
+        if (selected_object) {
+            new_state = Object.assign({}, this.state, {
+                choice_list: [],
+                selected_object: selected_object,
+                value: selected_object.name
+            });
+        } else {
+            var query = this.props.query;
+            var component = this;
+            var client = new XMLHttpRequest();
+            client.onload = function() {
+                if(this.status == 200) {
+                    component.setState(Object.assign({}, component.state, {choice_list: JSON.parse(this.response)}));
+                }
+            };
+            client.open("GET", query + e.target.value);
+            client.setRequestHeader("Accept", "application/json");
+            client.send();
+            new_state = Object.assign({}, this.state, {selected_object: null, value: e.target.value});
+        }
+        this.setState(new_state);
+        if (typeof this.props.onChange === 'function') {
+            this.props.onChange({value: new_state.value, selected_object: new_state.selected_object});
+        }
     },
     render: function() {
         var datalist_name = this.props.name + '_datalist';
@@ -36,24 +53,20 @@ var QueryableTextField = React.createClass({
         var option_list = this.state.choice_list.map(function(c) {
             return React.createElement('option', {
                 key: c.id,
-                value: c.name,
-                onSelect: function() {console.log(c.id);},
-                onChange: function() {console.log(c.id);},
-                onClick: function() {console.log(c.id);}
+                value: display_func(c)
             }, display_func(c));
         });
         return (
-            React.createElement('div', {},
+            React.createElement('span', {},
                 React.createElement('input', {
+                    name: this.props.name,
                     type: 'text',
                     list: datalist_name,
                     value: this.state.value,
                     onChange: this.onTextChange
                 }),
                 React.createElement('datalist', {
-                    id: datalist_name,
-                    onSelect: function() {console.log('oc');},
-                    onChange: function() {console.log('oc');}
+                    id: datalist_name
                 }, option_list)
             )
         );

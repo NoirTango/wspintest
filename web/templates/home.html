@@ -16,7 +16,6 @@
     <script>
 'use strict';
 
-var form_data = {route: '', sector: '', crag: ''};
 var climb_record_list = React.createElement(ClimbRecordList, {});
 
 
@@ -47,7 +46,7 @@ function reloadDataFromAPI() {
 var buildApp = function() {
     ReactDOM.render(
         React.createElement('div', {},
-            React.createElement(RecordForm, {data: form_data}),
+            React.createElement(RecordForm, {route: '', sector: '', crag: ''}),
             climb_record_list
         ),
         document.getElementById('react_list'));

@@ -36,4 +36,4 @@ class ClimbRecord(models.Model):
     user = models.ForeignKey(User, on_delete=CASCADE)
 
     def __str__(self):
-        return '{} - {} / {}'.format(self.route.name, self.route.grade, self.date)
+        return '{}: {} - {} / {}'.format(self.user.username, self.route.name, self.route.grade, self.date)

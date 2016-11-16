@@ -4,7 +4,8 @@ var QueryableTextField = React.createClass({
     propTypes: {
         value: React.PropTypes.string.isRequired,
         query: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
+        id: React.PropTypes.string.isRequired,
+        placeholder: React.PropTypes.string,
         dataDisplay: React.PropTypes.func.isRequired,
         onChange: React.PropTypes.func
     },
@@ -26,7 +27,8 @@ var QueryableTextField = React.createClass({
             new_state = Object.assign({}, this.state, {
                 choice_list: [],
                 selected_object: selected_object,
-                value: selected_object.name
+                value: selected_object.name,
+                id: selected_object.id
             });
         } else {
             var query = this.props.query;
@@ -40,15 +42,19 @@ var QueryableTextField = React.createClass({
             client.open("GET", query + e.target.value);
             client.setRequestHeader("Accept", "application/json");
             client.send();
-            new_state = Object.assign({}, this.state, {selected_object: null, value: e.target.value});
+            new_state = Object.assign({}, this.state, {selected_object: null, id:null, value: e.target.value});
         }
         this.setState(new_state);
         if (typeof this.props.onChange === 'function') {
-            this.props.onChange({value: new_state.value, selected_object: new_state.selected_object});
+            this.props.onChange({
+                value: new_state.value,
+                id: new_state.id,
+                selected_object: new_state.selected_object
+            });
         }
     },
     render: function() {
-        var datalist_name = this.props.name + '_datalist';
+        var datalist_name = this.props.id + '_datalist';
         var display_func = this.props.dataDisplay;
         var option_list = this.state.choice_list.map(function(c) {
             return React.createElement('option', {
@@ -59,7 +65,8 @@ var QueryableTextField = React.createClass({
         return (
             React.createElement('span', {},
                 React.createElement('input', {
-                    name: this.props.name,
+                    id: this.props.id,
+                    placeholder: this.props.placeholder,
                     type: 'text',
                     list: datalist_name,
                     value: this.state.value,

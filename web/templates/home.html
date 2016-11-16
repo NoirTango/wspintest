@@ -4,7 +4,7 @@
 {% block title %}Wspinologia{% endblock %}
 
 {% block content %}
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-with-addons.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js'></script>
     <script src='{% static "post_data.js" %}'></script>
 
@@ -46,7 +46,7 @@ function reloadDataFromAPI() {
 var buildApp = function() {
     ReactDOM.render(
         React.createElement('div', {},
-            React.createElement(RecordForm, {route: '', sector: '', crag: ''}),
+            React.createElement(RecordForm, {}),
             climb_record_list
         ),
         document.getElementById('react_list'));

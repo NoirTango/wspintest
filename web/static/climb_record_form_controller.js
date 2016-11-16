@@ -1,3 +1,5 @@
+//jshint esnext:true
+
 var React, console, QueryableTextField;
 
 var routeDisplay = function(route) {
@@ -11,62 +13,6 @@ var sectorDisplay = function(sector) {
 var cragDisplay = function(crag) {
     return crag.name  + ' / ' + crag.country;
 };
-
-var RouteEditRow = React.createClass({
-    propTypes: {
-        onChange: React.PropTypes.func
-    },
-    getInitialState: function() {
-        return {
-            value: '',
-            selected_object: null,
-            grade: ''
-        };
-    },
-    propagateState: function(new_state) {
-        this.setState(new_state);
-        if (typeof this.props.onChange === 'function') {
-            this.props.onChange(new_state);
-        }
-    },
-    onRouteChange: function(obj) {
-        var new_state = Object.assign({}, this.state, obj);
-        if (obj.selected_object !== null) {
-            new_state.grade = obj.selected_object.grade;
-        }
-        this.propagateState(new_state);
-    },
-    onGradeChange: function(e) {
-        var new_state = Object.assign({}, this.state, {grade: e.target.value});
-        if ((new_state.selected_object !== null) && (new_state.grade != new_state.selected_object.grade)) {
-            new_state.selected_object = null;
-        }
-        this.propagateState(new_state);
-    },
-    render: function() {
-        return (
-            React.createElement('div', {},
-                React.createElement(QueryableTextField, {
-                    value: this.state.value,
-                    id: 'route',
-                    placeholder: 'Route name',
-                    dataDisplay: routeDisplay,
-                    query: "/api/routes/?search=",
-                    onChange: this.onRouteChange
-                }),
-                React.createElement('input', {
-                    type: 'text',
-                    id: 'grade',
-                    placeholder: 'grade',
-                    value: this.state.grade,
-                    onChange: this.onGradeChange
-                })
-            )
-        );
-   }
-});
-
-
 
 var RecordForm = React.createClass({
     propTypes: {
@@ -145,9 +91,13 @@ var RecordForm = React.createClass({
         this.disconnectCrag();
         this.setState((prevState, props) => (Object.assign({}, prevState, {country: value})));
     },
+    onSubmit: function(e) {
+        e.preventDefault();
+        console.log('LINK');
+    },
     render: function() {
         return (
-            React.createElement('form', {noValidate: true, className: 'climb-record-form'},
+            React.createElement('form', {noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit},
                 React.createElement('div', {},
                     React.createElement(QueryableTextField, {
                         value: this.state.route.value,

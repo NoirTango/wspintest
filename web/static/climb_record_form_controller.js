@@ -147,7 +147,7 @@ var RecordForm = React.createClass({
     },
     render: function() {
         return (
-            React.createElement('form', {noValidate: true},
+            React.createElement('form', {noValidate: true, className: 'climb-record-form'},
                 React.createElement('div', {},
                     React.createElement(QueryableTextField, {
                         value: this.state.route.value,
@@ -194,13 +194,17 @@ var RecordForm = React.createClass({
                         onChange: this.onCountryChange
                     })
                 ),
-                React.createElement('input', {
-                    type: 'text',
-                    id: 'date',
-                    defaultValue: this.state.date
-                }),
-                React.createElement('div', {}, JSON.stringify(this.state)),
-                React.createElement('button', {type: 'submit'}, 'Linked!')
+                React.createElement('div', {},
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'date',
+                        defaultValue: this.state.date
+                    })
+                ),
+//                React.createElement('div', {}, JSON.stringify(this.state)),
+                React.createElement('div', {},
+                    React.createElement('button', {type: 'submit'}, 'Linked!')
+                )
             )
         );
     }

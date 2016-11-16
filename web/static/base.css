@@ -78,3 +78,33 @@ body {
 .climb-list td {
     padding: 0em 1em;
 }
+
+.climb-record-form div {
+    display: inline-block;
+    background-color: lightgrey;
+    padding: 0.5em 0.5em;
+    border: none;
+
+}
+
+.climb-record-form #grade {
+    width: 4em;
+}
+
+.climb-record-form #date {
+    width: 8em;
+}
+.climb-record-form input {
+    border: none;
+    margin: .1em;
+    padding: .2em;
+}
+.climb-record-form button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: .2em 2em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}

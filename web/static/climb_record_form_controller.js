@@ -93,7 +93,7 @@ var RecordForm = React.createClass({
     },
     onSubmit: function(e) {
         e.preventDefault();
-        console.log('LINK');
+        this.props.onSubmit(this.state);
     },
     render: function() {
         return (
@@ -113,9 +113,7 @@ var RecordForm = React.createClass({
                         placeholder: 'grade',
                         value: this.state.grade,
                         onChange: this.onGradeChange
-                    })
-                ),
-                React.createElement('div', {className: 'sector'},
+                    }),
                     React.createElement(QueryableTextField, {
                         value: this.state.sector.value,
                         id: 'sector',
@@ -142,16 +140,14 @@ var RecordForm = React.createClass({
                         placeholder: 'Country',
                         value: this.state.country,
                         onChange: this.onCountryChange
-                    })
-                ),
-                React.createElement('div', {},
+                    }),
                     React.createElement('input', {
                         type: 'text',
                         id: 'date',
                         defaultValue: this.state.date
                     })
                 ),
-//                React.createElement('div', {}, JSON.stringify(this.state)),
+                React.createElement('div', {}, JSON.stringify(this.state)),
                 React.createElement('div', {},
                     React.createElement('button', {type: 'submit'}, 'Linked!')
                 )

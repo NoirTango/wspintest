@@ -16,6 +16,9 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
             user = self.request.user
             return models.ClimbRecord.objects.filter(user=user).order_by('-route__grade')
 
+    def create(self, request, *args, **kwargs):
+        return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
+
 
 class RouteViewSet(viewsets.ModelViewSet):
     model = models.Route

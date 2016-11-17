@@ -28,17 +28,19 @@ class ClimbRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.ClimbRecord
         fields = '__all__'
-        #readonly_fields = ('id',)
-        #depth = 3
 
 
 class RouteSerializer(serializers.ModelSerializer):
     sector_name = serializers.SerializerMethodField()
+    crag = serializers.SerializerMethodField()
     crag_name = serializers.SerializerMethodField()
     crag_country = serializers.SerializerMethodField()
 
     def get_sector_name(self, obj):
         return obj.sector.name
+
+    def get_crag(self, obj):
+        return obj.sector.crag.id
 
     def get_crag_name(self, obj):
         return obj.sector.crag.name

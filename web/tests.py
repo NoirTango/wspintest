@@ -4,16 +4,20 @@ from django.contrib.auth.models import User
 
 class TestHomeView(TestCase):
     def setUp(self):
-        self.test_user_name = 'testuser'
+        self.test_user_username = 'testuser@somewhere.com'
         self.test_user_password = 'testpass'
-        self.test_user_email = ''
-        self.post_login_data = {'username': self.test_user_name, 'password': self.test_user_password}
-        self.user = User.objects.create_user(self.test_user_name,
+        self.test_user_firstname = 'John'
+        self.test_user_lastname = 'Doe'
+        self.test_user_email = self.test_user_username
+        self.post_login_data = {'username': self.test_user_username, 'password': self.test_user_password}
+        self.post_register_data = {'email': self.test_user_email, 'name': self.test_user_firstname,
+                                   'surname': self.test_user_lastname, 'password': self.test_user_password}
+        self.user = User.objects.create_user(self.test_user_username,
                                              self.test_user_email,
                                              self.test_user_password)
 
     def do_valid_login(self):
-        self.client.login(username=self.test_user_name, password=self.test_user_password)
+        self.client.login(username=self.test_user_username, password=self.test_user_password)
 
     def do_logout(self):
         self.client.logout()
@@ -67,17 +71,14 @@ class TestHomeView(TestCase):
         self.assertNotContains(resp, 'Wrong credentials')
 
     def test_register_creates_user(self):
-        post_register_data = {'username': 'newuser', 'email': '', 'password': 'pwd'}
-        resp = self.client.post('/register/', post_register_data)
+        self.post_register_data['email'] = 'another@email.com'
+        resp = self.client.post('/register/', self.post_register_data)
         self.assertEqual(resp.status_code, 302)
         self.assertEqual(resp.url, '/')
 
-        del post_register_data['password']
-        User.objects.get(**post_register_data)
+        User.objects.get(username=self.post_register_data['email'])
 
     def test_register_does_not_overwrite_user(self):
-        post_register_data = self.post_login_data
-        post_register_data['email'] = ''
-        resp = self.client.post('/register/', post_register_data)
+        resp = self.client.post('/register/', self.post_register_data)
         self.assertEqual(resp.status_code, 200)
-        self.assertContains(resp, 'Username already in use')
+        self.assertContains(resp, 'User with this e-mail is already registered')

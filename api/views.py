@@ -1,4 +1,4 @@
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, exceptions
 
 from . import models
 from . import serializers
@@ -12,12 +12,18 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
     base_name = 'Climb Records'
     serializer_class = serializers.ClimbRecordSerializer
 
-    def get_queryset(self):
-            user = self.request.user
-            return models.ClimbRecord.objects.filter(user=user).order_by('-route__grade')
-
     def create(self, request, *args, **kwargs):
-        return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
+        if 'user' not in request.data:
+            request.data['user'] = request.user.id
+
+        if int(request.data.get('user')) == request.user.id or request.user.is_staff:
+            return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
+        else:
+            raise exceptions.PermissionDenied('Not allowed to add for another user')
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.ClimbRecord.objects.filter(user=user).order_by('-route__grade')
 
 
 class RouteViewSet(viewsets.ModelViewSet):

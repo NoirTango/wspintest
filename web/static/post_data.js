@@ -22,7 +22,6 @@ var postData = function(data) {
         date: data.date
     };
     var postData = JSON.stringify(flatData);
-    console.log("POST", postData, csrfCookie);
     var client = new XMLHttpRequest();
     client.onload = postReceived;
     client.open("POST", "/api/climb-records/");

@@ -147,7 +147,7 @@ var RecordForm = React.createClass({
                         defaultValue: this.state.date
                     })
                 ),
-                React.createElement('div', {}, JSON.stringify(this.state)),
+//                React.createElement('div', {}, JSON.stringify(this.state)),
                 React.createElement('div', {},
                     React.createElement('button', {type: 'submit'}, 'Linked!')
                 )

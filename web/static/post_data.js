@@ -24,7 +24,7 @@ var postData = function(data) {
     var postData = JSON.stringify(flatData);
     var client = new XMLHttpRequest();
     client.onload = postReceived;
-    client.open("POST", "/api/climb-records/");
+    client.open("POST", "/api/climb-records/ajax/");
     client.setRequestHeader("Accept", "application/json");
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

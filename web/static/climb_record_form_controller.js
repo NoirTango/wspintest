@@ -78,11 +78,11 @@ var RecordForm = React.createClass({
         }
     },
     onCragChange: function(obj) {
-        this.setState((prevState, props) => (Object.assign({}, this.state, {crag: obj})));
+        this.setState((prevState, props) => (Object.assign({}, prevState, {crag: obj})));
         this.disconnectSector();
         if (obj.selected_object !== null) {
             this.setState((prevState, props) => (Object.assign({}, prevState, {
-                country: obj.selected_object.crag_country
+                country: obj.selected_object.country
             })));
         }
     },

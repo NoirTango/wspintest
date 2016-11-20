@@ -98,10 +98,8 @@ var RecordForm = React.createClass({
     onSubmit: function(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
-        this.routeComponent.setState(this.routeComponent.getInitialState());
-        this.sectorComponent.setState(this.sectorComponent.getInitialState());
-        this.cragComponent.setState(this.cragComponent.getInitialState());
-        this.setState(this.getInitialState());
+        this.setState((prevState, props) => (Object.assign({}, prevState, {grade: ''})));
+        this.routeComponent.setState({value: '', selected_object: null});
     },
     render: function() {
         return (
@@ -157,7 +155,7 @@ var RecordForm = React.createClass({
                         onChange: this.onDateChange
                     })
                 ),
-                React.createElement('div', {}, JSON.stringify(this.state)),
+                //React.createElement('div', {}, JSON.stringify(this.state)),
                 React.createElement('div', {},
                     React.createElement('button', {type: 'submit'}, 'Linked!')
                 )

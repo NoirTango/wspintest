@@ -91,6 +91,10 @@ var RecordForm = React.createClass({
         this.disconnectCrag();
         this.setState((prevState, props) => (Object.assign({}, prevState, {country: value})));
     },
+    onDateChange: function(e) {
+        var value = e.target.value;
+        this.setState((prevState, props) => (Object.assign({}, prevState, {date: value})));
+    },
     onSubmit: function(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
@@ -149,10 +153,11 @@ var RecordForm = React.createClass({
                     React.createElement('input', {
                         type: 'text',
                         id: 'date',
-                        defaultValue: this.state.date
+                        value: this.state.date,
+                        onChange: this.onDateChange
                     })
                 ),
-                //React.createElement('div', {}, JSON.stringify(this.state)),
+                React.createElement('div', {}, JSON.stringify(this.state)),
                 React.createElement('div', {},
                     React.createElement('button', {type: 'submit'}, 'Linked!')
                 )

@@ -4,6 +4,7 @@ from . import models
 from . import serializers
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
+from rest_framework.status import HTTP_201_CREATED
 
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
@@ -29,14 +30,13 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
 
     @list_route(methods=['post'])
     def ajax(self, request):
-        print(request.data)
         if request.data.get('route') is None:
             route = self.create_route_from_ajax_request(request.data)
         else:
             route = models.Route.objects.get(id=request.data.get('route'))
 
         cr = models.ClimbRecord.objects.create(user=request.user, route=route, date=request.data['date'])
-        return Response('{}'.format(cr))
+        return Response('{}'.format(cr), status=HTTP_201_CREATED)
 
     def create_route_from_ajax_request(self, data):
         if data.get('sector') is None:

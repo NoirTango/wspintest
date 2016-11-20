@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from . import models
 from rest_framework.reverse import reverse
 import json
+from api.admin import consolidate_crag, consolidate_sector, consolidate_route
 
 
 class WithLoggedUserMixin(object):
@@ -103,8 +104,47 @@ class TestClimbRecordWithAjax(WithLoggedUserMixin, TestCase):
         resp = self.client.post(reverse('climb-records-ajax'),
                                 json.dumps(data),
                                 content_type="application/json")
-        print(resp.status_code)
+        self.assertEqual(resp.status_code, 201)
         self.assertEqual(models.Crag.objects.count(), 1)
         self.assertEqual(models.Sector.objects.count(), 1)
         self.assertEqual(models.Route.objects.count(), 1)
         self.assertEqual(models.ClimbRecord.objects.count(), 1)
+
+
+class TestConsolidationActions(WithOneRouteMixin, TestCase):
+    def duplicate_route(self):
+        self.routes = []
+        self.sectors = []
+        self.crags = []
+        for _ in range(2):
+            self.setUpRoute()
+            self.routes.append(self.route)
+            self.sectors.append(self.sector)
+            self.crags.append(self.crag)
+
+    def test_consolidate_crag(self):
+        self.duplicate_route()
+
+        consolidate_crag(None, None, self.crags)
+
+        self.assertEqual(models.Crag.objects.count(), 1)
+        sector1, sector2 = list(models.Sector.objects.all())
+        self.assertEqual(sector1.crag, sector2.crag)
+        route1, route2 = list(models.Route.objects.all())
+        self.assertNotEqual(route1.sector, route2.sector)
+
+    def test_consolidate_sector(self):
+        self.duplicate_route()
+
+        consolidate_sector(None, None, self.sectors)
+
+        self.assertEqual(models.Sector.objects.count(), 1)
+        route1, route2 = list(models.Route.objects.all())
+        self.assertEqual(route1.sector, route2.sector)
+
+    def test_consolidate_route(self):
+        self.duplicate_route()
+
+        consolidate_route(None, None, self.routes)
+
+        self.assertEqual(models.Route.objects.count(), 1)

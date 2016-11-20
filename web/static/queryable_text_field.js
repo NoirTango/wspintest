@@ -70,7 +70,8 @@ var QueryableTextField = React.createClass({
                     type: 'text',
                     list: datalist_name,
                     value: this.state.value,
-                    onChange: this.onTextChange
+                    onChange: this.onTextChange,
+                    autoComplete: 'off'
                 }),
                 React.createElement('datalist', {
                     id: datalist_name

@@ -1,7 +1,6 @@
 var console, Cookies, reloadDataFromAPI;
 var postReceived = function() {
     if(this.status == 200) {
-        console.log(this.response);
         reloadDataFromAPI();
     } else {
         console.log(this.response);

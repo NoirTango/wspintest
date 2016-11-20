@@ -94,6 +94,10 @@ var RecordForm = React.createClass({
     onSubmit: function(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
+        this.routeComponent.setState(this.routeComponent.getInitialState());
+        this.sectorComponent.setState(this.sectorComponent.getInitialState());
+        this.cragComponent.setState(this.cragComponent.getInitialState());
+        this.setState(this.getInitialState());
     },
     render: function() {
         return (
@@ -105,7 +109,8 @@ var RecordForm = React.createClass({
                         placeholder: 'Route name',
                         dataDisplay: routeDisplay,
                         query: "/api/routes/?search=",
-                        onChange: this.onRouteChange
+                        onChange: this.onRouteChange,
+                        ref: (component) => this.routeComponent = component
                     }),
                     React.createElement('input', {
                         type: 'text',
@@ -147,7 +152,7 @@ var RecordForm = React.createClass({
                         defaultValue: this.state.date
                     })
                 ),
-//                React.createElement('div', {}, JSON.stringify(this.state)),
+                //React.createElement('div', {}, JSON.stringify(this.state)),
                 React.createElement('div', {},
                     React.createElement('button', {type: 'submit'}, 'Linked!')
                 )

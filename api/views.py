@@ -26,7 +26,7 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return models.ClimbRecord.objects.filter(user=user).order_by('-route__grade')
+        return models.ClimbRecord.objects.filter(user=user).order_by('-date')
 
     @list_route(methods=['post'])
     def ajax(self, request):
@@ -54,6 +54,15 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
 
     def create_crag_from_ajax_request(self, data):
         return models.Crag.objects.create(name=data['crag_name'], country=data['crag_country'])
+
+
+class ClimbScoreViewset(viewsets.ModelViewSet):
+    model = models.GradeScore
+    serializer_class = serializers.ClimbScoreSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.GradeScore.objects.filter(user=user).order_by('-score')
 
 
 class RouteViewSet(viewsets.ModelViewSet):

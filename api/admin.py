@@ -1,17 +1,18 @@
 from django.contrib import admin
 from .models import Crag, Sector, Route, ClimbRecord
+from api.models import GradeScore
 
 
 def consolidate_related_field(queryset, attribute, reverse_attribute):
-    reference_object = None
-    for object in queryset:
-        if reference_object is None:
-            reference_object = object
+    reference_obj = None
+    for obj in queryset:
+        if reference_obj is None:
+            reference_obj = obj
             continue
-        for related in getattr(object, attribute).all():
-            setattr(related, reverse_attribute, reference_object)
+        for related in getattr(obj, attribute).all():
+            setattr(related, reverse_attribute, reference_obj)
             related.save()
-        object.delete()
+        obj.delete()
 
 
 def consolidate_crag(modeladmin, request, queryset):
@@ -43,7 +44,9 @@ class SectorAdmin(admin.ModelAdmin):
 class RouteAdmin(admin.ModelAdmin):
     actions = [consolidate_route]
 
+
 admin.site.register(Crag, CragAdmin)
 admin.site.register(Sector, SectorAdmin)
 admin.site.register(Route, RouteAdmin)
 admin.site.register(ClimbRecord)
+admin.site.register(GradeScore)

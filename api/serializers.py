@@ -72,3 +72,9 @@ class CragSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Crag
         fields = '__all__'
+
+
+class ClimbScoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.GradeScore
+        fields = '__all__'

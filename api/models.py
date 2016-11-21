@@ -37,3 +37,12 @@ class ClimbRecord(models.Model):
 
     def __str__(self):
         return '{}: {} - {} / {}'.format(self.user.username, self.route.name, self.route.grade, self.date)
+
+
+class GradeScore(models.Model):
+    grade = models.CharField(max_length=20)
+    score = models.FloatField()
+    user = models.ForeignKey(User, on_delete=CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'grade',)

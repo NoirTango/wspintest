@@ -1,18 +1,9 @@
 var React, ReactDOM, console;
-var ClimbRecordList, globalSetClimbRecordList, RecordForm, postData;
+var ClimbRecordList, climbRecordStats, globalSetClimbRecordList, RecordForm, postData, reloadListFromAPI;
 
 var climb_record_list = React.createElement(ClimbRecordList, {className: 'climb-list'}),
     climb_record_stats = React.createElement(ClimbRecordStats, {className: 'climb-stats'});
 
-function resetClimbRecordList() {
-  var retrieved_list;
-  if (this.status == 200) {
-    retrieved_list = JSON.parse(this.response);
-    globalSetClimbRecordList(retrieved_list);
-  } else {
-    console.log(this.response);
-  }
-}
 
 function resetClimbRecordStats() {
   var retrieved_list;
@@ -25,14 +16,6 @@ function resetClimbRecordStats() {
   }
 }
 
-
-function reloadListFromAPI() {
-    var client = new XMLHttpRequest();
-    client.onload = resetClimbRecordList;
-    client.open("GET", "/api/climb-records/");
-    client.setRequestHeader("Accept", "application/json");
-    client.send();
-}
 
 function reloadStatsFromAPI() {
     var client = new XMLHttpRequest();

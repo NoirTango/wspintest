@@ -44,5 +44,8 @@ class GradeScore(models.Model):
     score = models.FloatField()
     user = models.ForeignKey(User, on_delete=CASCADE)
 
+    def __str__(self):
+        return '{} = {} / {}'.format(self.grade, self.score, self.user)
+
     class Meta:
         unique_together = ('user', 'grade',)

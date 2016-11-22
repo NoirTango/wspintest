@@ -6,6 +6,8 @@ from rest_framework.status import HTTP_201_CREATED
 from . import models
 from . import serializers
 from django.db.models.aggregates import Count
+from api.models import GradeScore
+from collections import OrderedDict
 
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
@@ -97,7 +99,16 @@ class ScoreSumView(views.APIView):
         if year:
             query = query.filter(date__year=year)
 
-        res = query.values('route__grade').annotate(count=Count('route__grade')).order_by('-route__grade')
-        total = sum(item['count'] for item in res)
-        return Response([{'grade': item['route__grade'], 'count': item['count'], 'percentage': 100*item['count']/total}
-                         for item in res])
+        stats = query.values('route__grade').annotate(count=Count('route__grade'))
+        total = sum(item['count'] for item in stats)
+
+        score_maps = GradeScore.objects.filter(user=request.user).order_by('-score')
+        score_dict = OrderedDict((gs.grade, gs.score) for gs in score_maps)
+        for stat in stats:
+            score_dict[stat['route__grade']] = {
+                'grade': stat['route__grade'],
+                'count': stat['count'],
+                'percentage': 100*stat['count']/total
+            }
+
+        return Response([v for _, v in score_dict.items() if isinstance(v, dict)])

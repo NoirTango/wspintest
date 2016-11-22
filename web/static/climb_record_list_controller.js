@@ -1,6 +1,6 @@
-var React, ReactDOM;
+var React, ReactDOM, console;
 
-var globalSetClimbRecordList;
+var privateRecordListSetState;
 
 var normalise = function(api_data) {
     return {
@@ -12,6 +12,24 @@ var normalise = function(api_data) {
         country: api_data.crag_country,
         date: api_data.date
     };
+};
+
+var populateClimbRecordList = function() {
+  var retrieved_list;
+  if (this.status == 200) {
+    retrieved_list = JSON.parse(this.response);
+    privateRecordListSetState(retrieved_list);
+  } else {
+    console.log(this.response);
+  }
+};
+
+var reloadListFromAPI = function() {
+    var client = new XMLHttpRequest();
+    client.onload = populateClimbRecordList;
+    client.open("GET", "/api/climb-records/");
+    client.setRequestHeader("Accept", "application/json");
+    client.send();
 };
 
 var ClimbRecord = React.createClass({
@@ -44,10 +62,11 @@ var ClimbRecordList = React.createClass({
     },
     componentWillMount: function() {
         var component = this;
-        globalSetClimbRecordList = function(climb_list) {
+        privateRecordListSetState = function(climb_list) {
             component.setState(Object.assign({}, component.state, {climbs: climb_list}));
         };
     },
+
     render: function() {
         return (
             React.createElement('table', {className: 'climb-list'},

@@ -9,55 +9,11 @@
     <script src='{% static "js.cookie.js" %}'></script>
     <script src='{% static "post_data.js" %}'></script>
 
-    <div id="react_form"></div>
     <div id="react_list"></div>
     <div>{% csrf_token %}</div>
     <script src='{% static "queryable_text_field.js" %}'></script>
     <script src='{% static "climb_record_form_controller.js" %}'></script>
     <script src='{% static "climb_record_list_controller.js" %}'></script>
-    <script>
-'use strict';
-
-var climb_record_list = React.createElement(ClimbRecordList, {});
-
-
-
-function resetClimbRecordList() {
-  var retrieved_list;
-  console.log(this);
-  if(this.status == 200) {
-    console.log(this.response);
-    retrieved_list = JSON.parse(this.response);
-    console.log(climb_record_list);
-    globalSetClimbRecordList(retrieved_list);
-  } else {
-    data = [];
-  }
-}
-
-function reloadDataFromAPI() {
-    var client = new XMLHttpRequest();
-    client.onload = resetClimbRecordList;
-    client.open("GET", "/api/climb-records/");
-    client.setRequestHeader("Accept", "application/json");
-    client.send();
-}
-
-
-
-var buildApp = function() {
-    ReactDOM.render(
-        React.createElement('div', {},
-            React.createElement(RecordForm, {
-                onSubmit: postData
-            }),
-            climb_record_list
-        ),
-        document.getElementById('react_list'));
-};
-
-buildApp();
-reloadDataFromAPI();
-
-    </script>
+    <script src='{% static "climb_record_stats_controller.js" %}'></script>
+    <script src='{% static "main_application.js" %}'></script>
 {% endblock %}

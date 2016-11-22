@@ -1,16 +1,14 @@
-from rest_framework import viewsets, filters, exceptions
-
-from . import models
-from . import serializers
+from rest_framework import viewsets, filters, exceptions, views
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
 
+from . import models
+from . import serializers
+from django.db.models.aggregates import Count
+
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
     model = models.ClimbRecord
     base_name = 'Climb Records'
     serializer_class = serializers.ClimbRecordSerializer
@@ -90,3 +88,16 @@ class CragViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CragSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+
+
+class ScoreSumView(views.APIView):
+    def get(self, request):
+        query = models.ClimbRecord.objects.filter(user=request.user)
+        year = request.GET.get('year')
+        if year:
+            query = query.filter(date__year=year)
+
+        res = query.values('route__grade').annotate(count=Count('route__grade')).order_by('-route__grade')
+        total = sum(item['count'] for item in res)
+        return Response([{'grade': item['route__grade'], 'count': item['count'], 'percentage': 100*item['count']/total}
+                         for item in res])

@@ -108,3 +108,20 @@ body {
     text-decoration: none;
     display: inline-block;
 }
+
+.climb-stats {
+    float: right;
+    width: 20%;
+    list-style: none;
+}
+
+.climb-stats .grade {
+    display: inline-block;
+    width: 3em;
+}
+
+.climb-stats .count {
+    display: inline-block;
+    background-color: cornflowerblue;
+    color: white;
+}

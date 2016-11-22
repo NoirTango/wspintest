@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 
-from .views import ClimbRecordViewSet, RouteViewSet, SectorViewSet, CragViewSet, ClimbScoreViewset
+from .views import ClimbRecordViewSet, RouteViewSet, SectorViewSet, CragViewSet, ClimbScoreViewset, ScoreSumView
 
 router = routers.DefaultRouter()
 router.register(r'climb-records', ClimbRecordViewSet, base_name='climb-records')
@@ -10,5 +10,7 @@ router.register(r'sectors', SectorViewSet, base_name='sectors')
 router.register(r'crags', CragViewSet, base_name='crags')
 router.register(r'scores', ClimbScoreViewset, base_name='scores')
 
-urlpatterns = [url(r'^', include(router.urls))
+
+urlpatterns = [url(r'^', include(router.urls)),
+               url(r'^scores-total', ScoreSumView.as_view(), name='scores-total')
                ]

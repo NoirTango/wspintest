@@ -103,61 +103,63 @@ var RecordForm = React.createClass({
     },
     render: function() {
         return (
-            React.createElement('form', {noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit},
-                React.createElement('div', {},
-                    React.createElement(QueryableTextField, {
-                        value: this.state.route.value,
-                        id: 'route',
-                        placeholder: 'Route name',
-                        dataDisplay: routeDisplay,
-                        query: "/api/routes/?search=",
-                        onChange: this.onRouteChange,
-                        ref: (component) => this.routeComponent = component
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'grade',
-                        placeholder: 'grade',
-                        value: this.state.grade,
-                        onChange: this.onGradeChange
-                    }),
-                    React.createElement(QueryableTextField, {
-                        value: this.state.sector.value,
-                        id: 'sector',
-                        placeholder: 'Sector name',
-                        dataDisplay: sectorDisplay,
-                        query: "/api/sectors/?search=",
-                        onChange: this.onSectorChange,
-                        ref: (component) => this.sectorComponent = component
-                    })
-                ),
-                React.createElement('div', {},
-                    React.createElement(QueryableTextField, {
-                        value: this.state.crag.value,
-                        id: 'crag',
-                        placeholder: 'Crag name',
-                        dataDisplay: cragDisplay,
-                        query: "/api/crags/?search=",
-                        onChange: this.onCragChange,
-                        ref: (component) => this.cragComponent = component
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'country',
-                        placeholder: 'Country',
-                        value: this.state.country,
-                        onChange: this.onCountryChange
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'date',
-                        value: this.state.date,
-                        onChange: this.onDateChange
-                    })
-                ),
-                //React.createElement('div', {}, JSON.stringify(this.state)),
-                React.createElement('div', {},
-                    React.createElement('button', {type: 'submit'}, 'Linked!')
+            React.createElement('div', {className: 'climb-record-form'},
+                React.createElement('form', {noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit},
+                    React.createElement('div', {},
+                        React.createElement(QueryableTextField, {
+                            value: this.state.route.value,
+                            id: 'route',
+                            placeholder: 'Route name',
+                            dataDisplay: routeDisplay,
+                            query: "/api/routes/?search=",
+                            onChange: this.onRouteChange,
+                            ref: (component) => this.routeComponent = component
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            id: 'grade',
+                            placeholder: 'grade',
+                            value: this.state.grade,
+                            onChange: this.onGradeChange
+                        }),
+                        React.createElement(QueryableTextField, {
+                            value: this.state.sector.value,
+                            id: 'sector',
+                            placeholder: 'Sector name',
+                            dataDisplay: sectorDisplay,
+                            query: "/api/sectors/?search=",
+                            onChange: this.onSectorChange,
+                            ref: (component) => this.sectorComponent = component
+                        })
+                    ),
+                    React.createElement('div', {},
+                        React.createElement(QueryableTextField, {
+                            value: this.state.crag.value,
+                            id: 'crag',
+                            placeholder: 'Crag name',
+                            dataDisplay: cragDisplay,
+                            query: "/api/crags/?search=",
+                            onChange: this.onCragChange,
+                            ref: (component) => this.cragComponent = component
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            id: 'country',
+                            placeholder: 'Country',
+                            value: this.state.country,
+                            onChange: this.onCountryChange
+                        }),
+                        React.createElement('input', {
+                            type: 'text',
+                            id: 'date',
+                            value: this.state.date,
+                            onChange: this.onDateChange
+                        })
+                    ),
+                    //React.createElement('div', {}, JSON.stringify(this.state)),
+                    React.createElement('div', {className: 'submit'},
+                        React.createElement('button', {type: 'submit'}, 'Linked!')
+                    )
                 )
             )
         );

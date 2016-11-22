@@ -42,11 +42,14 @@ var ClimbRecordStats = React.createClass({
     },
     render: function() {
         return (
-            React.createElement('ul', {className: 'climb-stats'},
-                this.state.stats.map(function(s, i) {
-                    var stat_props = normalise_stats(s);
-                    return React.createElement(GradeStat, stat_props);
-                })
+            React.createElement('div', {className: 'climb-stats'},
+                React.createElement('div', {className: 'title'}, 'Grade stats'),
+                React.createElement('ul', {},
+                    this.state.stats.map(function(s, i) {
+                        var stat_props = normalise_stats(s);
+                        return React.createElement(GradeStat, stat_props);
+                    })
+                )
             )
         );
     }

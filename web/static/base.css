@@ -73,18 +73,21 @@ body {
 
 .climb-list {
     padding: 1em;
+    width: 78%;
 }
 
 .climb-list td {
     padding: 0em 1em;
 }
 
+.climb-record-form {
+    width: 100%;
+    background-color: lightgrey;
+}
+
 .climb-record-form div {
     display: inline-block;
-    background-color: lightgrey;
     padding: 0.5em 0.5em;
-    border: none;
-
 }
 
 .climb-record-form #grade {
@@ -99,6 +102,10 @@ body {
     margin: .1em;
     padding: .2em;
 }
+
+.climb-record-form .submit {
+}
+
 .climb-record-form button {
     background-color: green;
     border: none;
@@ -107,12 +114,25 @@ body {
     text-align: center;
     text-decoration: none;
     display: inline-block;
+    width: 100%;
 }
 
 .climb-stats {
     float: right;
     width: 20%;
+    background-color: lightGrey;
+    padding: .5em;
+}
+
+.climb-stats .title {
+    font-weight: bold;
+    font-size: inherit;
+}
+
+.climb-stats ul {
     list-style: none;
+    background-color: white;
+    padding: .2em;
 }
 
 .climb-stats .grade {
@@ -124,4 +144,6 @@ body {
     display: inline-block;
     background-color: cornflowerblue;
     color: white;
+    padding: .1em;
+    text-align: right;
 }

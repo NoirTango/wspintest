@@ -147,3 +147,15 @@ body {
     padding: .1em;
     text-align: right;
 }
+
+.icon-up::before {
+    content: '>'
+}
+
+.icon-down::before {
+    content: '<'
+}
+
+.disabled {
+    color: grey;
+}

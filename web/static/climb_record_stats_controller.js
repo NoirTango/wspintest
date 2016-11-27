@@ -1,4 +1,4 @@
-var React, ReactDOM, console;
+var React, ReactDOM, console, ConnectToAPIComponent;
 
 var globalReloadClimbRecordStats;
 
@@ -53,39 +53,16 @@ var GradeStat = React.createClass({
 var ClimbRecordStats = React.createClass({
     getInitialState: function() {
         var current_year = new Date().getFullYear();
-        return {stats: [], year: current_year, maxYear: current_year};
+        return {stats: [], year: current_year, maxYear: current_year, reload: true};
     },
     componentWillMount: function() {
         var component = this;
         globalReloadClimbRecordStats = function() {
-            component.reloadStats();
+            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
         };
     },
-    reloadCallback: function(e) {
-        var retrieved_list;
-        if(e.target.status == 200) {
-            console.log(e.target.response);
-            retrieved_list = JSON.parse(e.target.response);
-            this.setState((prevState, props) => Object.assign({}, prevState, {stats: retrieved_list}));
-        } else {
-            console.log(e.target.response);
-        }
-    },
-    reloadStats: function(year) {
-        var client = new XMLHttpRequest();
-        var query = "/api/scores-total/";
-        if (typeof year === 'undefined') {
-            year = this.state.year;
-        }
-
-        if (year !== null) {
-            query = query + '?year=' + year;
-            console.log(query);
-        }
-        client.onload = this.reloadCallback;
-        client.open("GET", query);
-        client.setRequestHeader("Accept", "application/json");
-        client.send();
+    setData: function(data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {stats: data, reload: false}));
     },
     onUpClicked: function() {
         this.setState(function(prevState, props){
@@ -93,8 +70,7 @@ var ClimbRecordStats = React.createClass({
             if (prevState.year < prevState.maxYear) {
                 new_year = prevState.year + 1;
             }
-            this.reloadStats(new_year);
-            return Object.assign({}, prevState, {year: new_year});
+            return Object.assign({}, prevState, {year: new_year, reload: true});
         });
     },
     onDownClicked: function() {
@@ -103,14 +79,20 @@ var ClimbRecordStats = React.createClass({
             if (this.state.year !== null) {
                 new_year = prevState.year - 1;
             }
-            this.reloadStats(new_year);
-            return Object.assign({}, prevState, {year: new_year});
+            return Object.assign({}, prevState, {year: new_year, reload: true});
         });
     },
     render: function() {
-        var total = this.state.stats.reduce(function(sum, stat) {return sum + stat.count;}, 0);
+        var total = this.state.stats.reduce(function(sum, stat) {return sum + stat.count;}, 0),
+            query_args = (this.state.year === null ? '' : '?year=' + this.state.year);
+
         return (
             React.createElement('div', {className: 'climb-stats'},
+                React.createElement(ConnectToAPIComponent, {
+                   query: "/api/scores-total/" + query_args,
+                   reload: this.state.reload,
+                   dataCallback: this.setData
+                }),
                 React.createElement('div', {className: 'title'},
                     React.createElement('span', {}, 'Grade stats'),
                     React.createElement(YearSelector, {

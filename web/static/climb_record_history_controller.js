@@ -1,50 +1,27 @@
-var React, ReactDOM, console;
+var React, ReactDOM, console, ConnectToAPIComponent;
 
 var globalReloadClimbRecordHistory;
 
-var ConnectToAPIComponent = React.createClass({
-    propTypes: {
-        query: React.PropTypes.string.isRequired,
-        dataCallback: React.PropTypes.func.isRequired
-    }
-});
 var ClimbRecordHistory = React.createClass({
     propTypes: {},
     getInitialState: function() {
         return ({
-            data: null
+            data: null,
+            reload: true
         });
-    },
-    reloadCallback: function(e) {
-        var retrieved_list;
-        if(e.target.status == 200) {
-            retrieved_list = JSON.parse(e.target.response);
-            this.setState((prevState, props) => Object.assign({}, prevState, {data: retrieved_list}));
-        } else {
-            console.log(e.target.response);
-        }
-    },
-    reloadHistory: function() {
-        var client = new XMLHttpRequest();
-        var query = "/api/scores-history/";
-        client.onload = this.reloadCallback;
-        client.open("GET", query);
-        client.setRequestHeader("Accept", "application/json");
-        client.send();
     },
     componentWillMount: function() {
         var component = this;
         globalReloadClimbRecordHistory = function() {
-            component.reloadHistory();
+            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
         };
     },
-    render: function() {
-        if (this.state.data === null) {
-            return null;
-        }
+    setData: function(data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {data: data, reload: false}));
+    },
+    buildTable: function() {
         var totals = this.state.data.years.map((year) => this.state.data.total_counts[year]),
             max_total = totals.reduce((a,b) => (a>b?a:b), 0);
-
         return React.createElement('table', {className: 'history-table'},
             React.createElement('tbody', {},
                 React.createElement('tr', {key: 'history-header'},
@@ -71,6 +48,19 @@ var ClimbRecordHistory = React.createClass({
                 })
             )
         );
+    },
+    render: function() {
+        var loader = React.createElement(ConnectToAPIComponent, {
+            query: "/api/scores-history/",
+            dataCallback: this.setData,
+            reload: this.state.reload
+        });
+        var table;
+        if (this.state.data === null) {
+            table = null;
+        } else {
+            table = this.buildTable();
+        }
+        return React.createElement('div', {}, loader, table );
     }
 });
-

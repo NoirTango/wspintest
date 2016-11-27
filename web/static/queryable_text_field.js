@@ -65,13 +65,15 @@ var QueryableTextField = React.createClass({
         return (
             React.createElement('span', {},
                 React.createElement('input', {
-                    id: this.props.id,
                     placeholder: this.props.placeholder,
                     type: 'text',
                     list: datalist_name,
                     value: this.state.value,
-                    onChange: this.onTextChange,
-                    autoComplete: 'off'
+                    onChange: this.onTextChange
+                    // Note: I would rather use the following:
+                    //id: this.props.id,
+                    //autoComplete: 'off'
+                    // But chrome insists on hiding datalist if autocomplete is off
                 }),
                 React.createElement('datalist', {
                     id: datalist_name

@@ -1,6 +1,6 @@
 var React, ReactDOM, console;
 var ClimbRecordList, ClimbRecordStats, globalSetClimbRecordList, globalSetClimbRecordStats,
-    RecordForm, postData, reloadListFromAPI, reloadStatsFromAPI;
+    RecordForm, postData, reloadListFromAPI, globalReloadClimbRecordStats;
 
 var climb_record_list = React.createElement(ClimbRecordList, {className: 'climb-list'}),
     climb_record_stats = React.createElement(ClimbRecordStats, {className: 'climb-stats'});

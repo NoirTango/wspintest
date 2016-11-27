@@ -1,3 +1,6 @@
+from collections import OrderedDict, defaultdict
+
+from django.db.models.aggregates import Count
 from rest_framework import viewsets, filters, exceptions, views
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -5,9 +8,6 @@ from rest_framework.status import HTTP_201_CREATED
 
 from . import models
 from . import serializers
-from django.db.models.aggregates import Count
-from api.models import GradeScore
-from collections import OrderedDict
 
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
@@ -100,15 +100,34 @@ class ScoreSumView(views.APIView):
             query = query.filter(date__year=year)
 
         stats = query.values('route__grade').annotate(count=Count('route__grade'))
-        total = sum(item['count'] for item in stats)
 
-        score_maps = GradeScore.objects.filter(user=request.user).order_by('-score')
+        score_maps = models.GradeScore.objects.filter(user=request.user).order_by('-score')
         score_dict = OrderedDict((gs.grade, gs.score) for gs in score_maps)
         for stat in stats:
             score_dict[stat['route__grade']] = {
                 'grade': stat['route__grade'],
                 'count': stat['count'],
-                'percentage': 100*stat['count']/total
             }
 
         return Response([v for _, v in score_dict.items() if isinstance(v, dict)])
+
+
+class HistorySumView(views.APIView):
+    def get(self, request):
+        climb_data = models.ClimbRecord.objects.filter(user=request.user)
+        score_data = models.GradeScore.objects.filter(user=request.user).order_by('-score')
+
+        aggregation = defaultdict(lambda: defaultdict(int))
+
+        for item in climb_data:
+            aggregation[item.route.grade][item.date.year] += 1
+
+        result = OrderedDict()
+
+        for score in score_data:
+            if score.grade in aggregation:
+                result[score.grade] = OrderedDict()
+                for year in sorted(aggregation[score.grade].keys()):
+                    result[score.grade][year] = aggregation[score.grade][year]
+
+        return Response(result)

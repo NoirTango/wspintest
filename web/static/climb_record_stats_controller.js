@@ -2,20 +2,6 @@ var React, ReactDOM, console;
 
 var globalReloadClimbRecordStats;
 
-function resetClimbRecordStats() {
-  var retrieved_list;
-  if(this.status == 200) {
-    console.log(this.response);
-    retrieved_list = JSON.parse(this.response);
-    globalSetClimbRecordStats(retrieved_list);
-  } else {
-    console.log(this.response);
-  }
-}
-
-
-function reloadStatsFromAPI() {
-}
 
 var normalise_stats = function(api_data, total) {
     return {

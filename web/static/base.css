@@ -160,3 +160,8 @@ body {
 .disabled {
     color: grey;
 }
+
+.history-table .count-span {
+    background-color: cornflowerblue;
+    display: inline-block;
+}

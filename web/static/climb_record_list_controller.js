@@ -1,6 +1,6 @@
 var React, ReactDOM, console;
 
-var privateRecordListSetState;
+var reloadListFromAPI;
 
 var normalise = function(api_data) {
     return {
@@ -12,24 +12,6 @@ var normalise = function(api_data) {
         country: api_data.crag_country,
         date: api_data.date
     };
-};
-
-var populateClimbRecordList = function() {
-  var retrieved_list;
-  if (this.status == 200) {
-    retrieved_list = JSON.parse(this.response);
-    privateRecordListSetState(retrieved_list);
-  } else {
-    console.log(this.response);
-  }
-};
-
-var reloadListFromAPI = function() {
-    var client = new XMLHttpRequest();
-    client.onload = populateClimbRecordList;
-    client.open("GET", "/api/climb-records/");
-    client.setRequestHeader("Accept", "application/json");
-    client.send();
 };
 
 var ClimbRecord = React.createClass({
@@ -58,36 +40,45 @@ var ClimbRecord = React.createClass({
 
 var ClimbRecordList = React.createClass({
     getInitialState: function() {
-        return {climbs: []};
+        return {climbs: [], reload: true};
     },
     componentWillMount: function() {
         var component = this;
-        privateRecordListSetState = function(climb_list) {
-            component.setState(Object.assign({}, component.state, {climbs: climb_list}));
+        reloadListFromAPI = function() {
+            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
         };
     },
-
+    setData: function(data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {climbs: data, reload: false}));
+    },
     render: function() {
         return (
-            React.createElement('table', {className: 'climb-list'},
-                React.createElement('tbody', {},
-                    React.createElement('tr', {},
-                        React.createElement('th', {}, 'Date'),
-                        React.createElement('th', {}, 'Name'),
-                        React.createElement('th', {}, 'Grade'),
-                        React.createElement('th', {}, 'Sector'),
-                        React.createElement('th', {}, 'Crag'),
-                        React.createElement('th', {}, 'Country')
-                    ),
-                    this.state.climbs.map(function(cr, i) {
-                        var row_props = normalise(cr);
-                        if (i%2) {
-                            row_props.className = 'odd';
-                        } else {
-                            row_props.className = 'even';
-                        }
-                        return React.createElement(ClimbRecord, row_props);
-                    })
+            React.createElement('div', {},
+                React.createElement(ConnectToAPIComponent, {
+                   query: "/api/climb-records/",
+                   reload: this.state.reload,
+                   dataCallback: this.setData
+                }),
+                React.createElement('table', {className: 'climb-list'},
+                    React.createElement('tbody', {},
+                        React.createElement('tr', {},
+                            React.createElement('th', {}, 'Date'),
+                            React.createElement('th', {}, 'Name'),
+                            React.createElement('th', {}, 'Grade'),
+                            React.createElement('th', {}, 'Sector'),
+                            React.createElement('th', {}, 'Crag'),
+                            React.createElement('th', {}, 'Country')
+                        ),
+                        this.state.climbs.map(function(cr, i) {
+                            var row_props = normalise(cr);
+                            if (i%2) {
+                                row_props.className = 'odd';
+                            } else {
+                                row_props.className = 'even';
+                            }
+                            return React.createElement(ClimbRecord, row_props);
+                        })
+                    )
                 )
             )
         );

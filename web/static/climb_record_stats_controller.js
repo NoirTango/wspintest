@@ -53,7 +53,7 @@ var GradeStat = React.createClass({
 var ClimbRecordStats = React.createClass({
     getInitialState: function() {
         var current_year = new Date().getFullYear();
-        return {stats: [], year: current_year, maxYear: current_year, reload: true};
+        return {stats: [], year: null, maxYear: current_year, reload: true};
     },
     componentWillMount: function() {
         var component = this;

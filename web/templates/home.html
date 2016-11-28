@@ -4,18 +4,18 @@
 {% block title %}Wspinologia{% endblock %}
 
 {% block content %}
-    <!-- <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-with-addons.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js'></script> -->
-    <script src='{% static "react-with-addons.js" %}'></script>
-    <script src='{% static "react-dom.js" %}'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-with-addons.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/react/15.3.1/react-dom.js'></script>
+    <!-- <script src='{% static "react-with-addons.js" %}'></script>
+    <script src='{% static "react-dom.js" %}'></script> -->
 
     <script src='{% static "js.cookie.js" %}'></script>
     <script src='{% static "post_data.js" %}'></script>
+    <script src='{% static "queryable_text_field.js" %}'></script>
+    <script src='{% static "connect_to_api_component.js" %}'></script>
 
     <div id="react_list"></div>
     <div>{% csrf_token %}</div>
-    <script src='{% static "queryable_text_field.js" %}'></script>
-    <script src='{% static "connect_to_api_component.js" %}'></script>
     <script src='{% static "climb_record_form_controller.js" %}'></script>
     <script src='{% static "climb_record_list_controller.js" %}'></script>
     <script src='{% static "climb_record_stats_controller.js" %}'></script>

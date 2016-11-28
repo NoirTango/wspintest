@@ -19,7 +19,7 @@ var ClimbRecordHistory = React.createClass({
     setData: function(data) {
         this.setState((prevState, props) => Object.assign({}, prevState, {data: data, reload: false}));
     },
-    buildTable: function() {
+    buildCountTable: function() {
         var totals = this.state.data.years.map((year) => this.state.data.total_counts[year]),
             max_total = totals.reduce((a,b) => (a>b?a:b), 0);
         return React.createElement('table', {className: 'history-table'},
@@ -49,18 +49,32 @@ var ClimbRecordHistory = React.createClass({
             )
         );
     },
+    buildPointsTable: function() {
+        return React.createElement('table', {},
+            React.createElement('tbody', {},
+                React.createElement('tr', {},
+                    this.state.data.years.map((year) => React.createElement('th', {}, year))
+                ),
+                React.createElement('tr', {},
+                    this.state.data.years.map((year) => React.createElement('td', {}, this.state.data.total_points[year]))
+                )
+            )
+        );
+    },
     render: function() {
         var loader = React.createElement(ConnectToAPIComponent, {
             query: "/api/scores-history/",
             dataCallback: this.setData,
             reload: this.state.reload
         });
-        var table;
+        var count_table, points_table;
         if (this.state.data === null) {
-            table = null;
+            count_table = null;
+            points_table = null;
         } else {
-            table = this.buildTable();
+            count_table = this.buildCountTable();
+            points_table = this.buildPointsTable();
         }
-        return React.createElement('div', {}, loader, table );
+        return React.createElement('div', {}, loader, count_table, points_table );
     }
 });

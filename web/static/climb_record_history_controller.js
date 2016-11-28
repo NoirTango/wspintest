@@ -38,14 +38,17 @@ var ClimbRecordHistory = React.createClass({
                                 return React.createElement('td', {key: 'data'+count.grade+i},
                                     React.createElement('svg', {
                                             xmlns: 'http://www.w3.org/2000/svg',
-                                            width: '4em',
+                                            width: '3em',
                                             height: '1.5em'
                                         },
+                                        React.createElement('line', {
+                                            x1: '0%', y1: '50%', x2: '100%', y2: '50%',
+                                            className: 'climb-count-horizontal-line'
+                                        }),
                                         React.createElement('circle', {
                                             r: num/max_total + 'em',
                                             cx: "50%",
                                             cy: "50%",
-                                            //fill: 'red',
                                             className: 'climb-count-dot'
                                         })
                                     )
@@ -58,13 +61,20 @@ var ClimbRecordHistory = React.createClass({
         );
     },
     buildPointsTable: function() {
+
         return React.createElement('table', {},
             React.createElement('tbody', {},
                 React.createElement('tr', {},
                     this.state.data.years.map((year) => React.createElement('th', {}, year))
                 ),
                 React.createElement('tr', {},
-                    this.state.data.years.map((year) => React.createElement('td', {}, this.state.data.total_points[year]))
+                    this.state.data.years.map((year) => React.createElement('td', {},
+                        React.createElement('svg', {width: '3em', height: '10em'},
+                            React.createElement('line', {x1: '50%', y1: '100%', x2: '50%', y2:
+                                (100-this.state.data.total_points[year]) + '%', className: 'climb-points-line'})
+                            )
+                        )
+                    )
                 )
             )
         );

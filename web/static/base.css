@@ -161,10 +161,24 @@ body {
     color: grey;
 }
 
-.history-table .climb-count-dot {
+.climb-count-dot {
     fill: cornflowerblue;
 }
 
+.climb-count-horizontal-line {
+    stroke: lightgray;
+    stroke-width: 2px;
+}
+
+.climb-points-line {
+    stroke: cornflowerblue;
+    stroke-width: 30px;
+}
+
 .history-table td {
-    text-align: center;
+    padding: 0px;
+}
+
+.history-table th {
+    padding: 0px;
 }

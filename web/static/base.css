@@ -170,9 +170,28 @@ body {
     stroke-width: 2px;
 }
 
+.climb-count-cell {
+    width: 3em;
+    height: 1.5em;
+}
+
+.climb-count-cell svg {
+    width: 3em;
+    height: 1.5em;
+}
+
 .climb-points-line {
     stroke: cornflowerblue;
     stroke-width: 30px;
+}
+
+.climb-points-cell {
+    width: 3em;
+}
+
+.climb-points-cell svg {
+    width: 3em;
+    height: 10em;
 }
 
 .history-table td {

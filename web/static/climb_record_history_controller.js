@@ -33,14 +33,10 @@ var ClimbRecordHistory = React.createClass({
                 this.state.data.counts.map(function(count) {
                     return (
                         React.createElement('tr', {key: 'row'+count.grade},
-                            React.createElement('td', {key: 'info'+count.grade}, count.grade),
+                            React.createElement('td', {key: 'info'+count.grade, className: 'climb-count-cell'}, count.grade),
                             count.count.map(function(num, i) {
-                                return React.createElement('td', {key: 'data'+count.grade+i},
-                                    React.createElement('svg', {
-                                            xmlns: 'http://www.w3.org/2000/svg',
-                                            width: '3em',
-                                            height: '1.5em'
-                                        },
+                                return React.createElement('td', {key: 'data'+count.grade+i, className: 'climb-count-cell'},
+                                    React.createElement('svg', {},
                                         React.createElement('line', {
                                             x1: '0%', y1: '50%', x2: '100%', y2: '50%',
                                             className: 'climb-count-horizontal-line'
@@ -65,11 +61,13 @@ var ClimbRecordHistory = React.createClass({
         return React.createElement('table', {},
             React.createElement('tbody', {},
                 React.createElement('tr', {},
-                    this.state.data.years.map((year) => React.createElement('th', {}, year))
+                    React.createElement('td', {className: 'climb-points-cell'}),
+                    this.state.data.years.map((year) => React.createElement('th', {className: 'climb-points-cell'}, year))
                 ),
                 React.createElement('tr', {},
-                    this.state.data.years.map((year) => React.createElement('td', {},
-                        React.createElement('svg', {width: '3em', height: '10em'},
+                    React.createElement('td', {className: 'climb-points-cell'}),
+                    this.state.data.years.map((year) => React.createElement('td', {className: 'climb-points-cell'},
+                        React.createElement('svg', {},
                             React.createElement('line', {x1: '50%', y1: '100%', x2: '50%', y2:
                                 (100-this.state.data.total_points[year]) + '%', className: 'climb-points-line'})
                             )

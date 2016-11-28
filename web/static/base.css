@@ -165,3 +165,7 @@ body {
     background-color: cornflowerblue;
     display: inline-block;
 }
+
+.history-table td {
+    text-align: center;
+}

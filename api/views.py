@@ -120,7 +120,8 @@ class HistoryAggregator:
         self.grade_scores = OrderedDict()
         self.years = set()
         self.grades = set()
-        self.sorted_years = None
+        self.min_year = None
+        self.max_year = None
 
     def consume_grade_scores(self, grade_list):
         for grade_score in grade_list:
@@ -142,9 +143,11 @@ class HistoryAggregator:
             self.consume_climbrecord(cr)
 
     def get_years(self):
-        if self.sorted_years is None:
-            self.sorted_years = sorted(self.years)
-        return self.sorted_years
+        if self.min_year is None:
+            self.min_year = min(self.years)
+        if self.max_year is None:
+            self.max_year = max(self.years)
+        return range(self.min_year, self.max_year + 1)
 
     def get_grades(self):
         for g in self.grade_scores:

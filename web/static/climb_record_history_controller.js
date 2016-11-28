@@ -36,11 +36,19 @@ var ClimbRecordHistory = React.createClass({
                             React.createElement('td', {key: 'info'+count.grade}, count.grade),
                             count.count.map(function(num, i) {
                                 return React.createElement('td', {key: 'data'+count.grade+i},
-                                    React.createElement('div', {
-                                        style: {width: 100*num/max_total+'%'},
-                                        className: 'count-span',
-                                        dangerouslySetInnerHTML: {__html: '&nbsp;'}
-                                    })
+                                    React.createElement('svg', {
+                                            xmlns: 'http://www.w3.org/2000/svg',
+                                            width: '4em',
+                                            height: '1.5em'
+                                        },
+                                        React.createElement('circle', {
+                                            r: num/max_total + 'em',
+                                            cx: "50%",
+                                            cy: "50%",
+                                            //fill: 'red',
+                                            className: 'climb-count-dot'
+                                        })
+                                    )
                                 );
                             })
                         )

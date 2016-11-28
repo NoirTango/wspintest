@@ -161,9 +161,8 @@ body {
     color: grey;
 }
 
-.history-table .count-span {
-    background-color: cornflowerblue;
-    display: inline-block;
+.history-table .climb-count-dot {
+    fill: cornflowerblue;
 }
 
 .history-table td {

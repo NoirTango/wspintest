@@ -201,3 +201,20 @@ body {
 .history-table th {
     padding: 0px;
 }
+
+.navigation {
+    background-color: cornflowerblue;
+    color: white;
+}
+
+.navigation .active {
+    color: cornflowerblue;
+    background-color: white;
+
+}
+
+.navigation span {
+    margin: 2em;
+    padding: .2em;
+}
+

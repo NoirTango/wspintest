@@ -1,6 +1,6 @@
 var React, ReactDOM, console;
 
-var reloadListFromAPI;
+var globalReloadClimbRecordList;
 
 var normalise = function(api_data) {
     return {
@@ -44,7 +44,7 @@ var ClimbRecordList = React.createClass({
     },
     componentWillMount: function() {
         var component = this;
-        reloadListFromAPI = function() {
+        globalReloadClimbRecordList = function() {
             component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
         };
     },

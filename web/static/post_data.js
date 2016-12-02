@@ -32,9 +32,13 @@ var postClimbRecordData = function(data) {
     client.send(postData);
 };
 
-var putCsvReceived = function() {
-    console.log(this.status);
-    console.log(this.response);
+var postCsvReceived = function() {
+    if (this.status === 204) {
+        reloadDataFromAPI();
+    } else {
+        console.log(this.status);
+        console.log(this.response);
+    }
 };
 
 var putClimbRecordCSV = function(csv_file) {
@@ -43,11 +47,11 @@ var putClimbRecordCSV = function(csv_file) {
     fr.onload = function(e) {
         var payload = e.target.result;
         var client = new XMLHttpRequest();
-        client.onload = putCsvReceived;
-        client.open("PUT", "/api/csv-import/fname");
+        client.onload = postCsvReceived;
+        client.open("POST", "/api/csv-import/");
         client.setRequestHeader("X-CSRFToken", csrfCookie);
         client.setRequestHeader("Content-Type", "text/csv");
-
+        client.setRequestHeader("Content-Disposition", 'attachment;filename="'+csv_file.filename+'"');
         client.send(payload);
     };
     fr.readAsText(csv_file);

@@ -1,6 +1,7 @@
-from collections import OrderedDict, defaultdict
 import csv
-from io import StringIO, TextIOWrapper
+import datetime
+from collections import OrderedDict, defaultdict
+from io import StringIO
 
 from django.db.models.aggregates import Count
 from django.http.response import HttpResponse
@@ -195,10 +196,16 @@ class CSVExportView(views.APIView):
             writer = csv.DictWriter(payload, fieldnames=['Date', 'Route', 'Grade', 'Sector', 'Crag', 'Country'])
             writer.writeheader()
             for cr in climb_data:
-                writer.writerow(dict(Date=cr.date, Route=cr.route.name, Grade=cr.route.grade, Sector=cr.route.sector.name,
-                                     Crag=cr.route.sector.crag.name, Country=cr.route.sector.crag.country))
+                writer.writerow(dict(
+                    Date=cr.date,
+                    Route=cr.route.name,
+                    Grade=cr.route.grade,
+                    Sector=cr.route.sector.name,
+                    Crag=cr.route.sector.crag.name,
+                    Country=cr.route.sector.crag.country
+                ))
             res = HttpResponse(payload.getvalue(), content_type='text/csv')
-            res['Content-Disposition'] = 'attachment;filename=wspinologia.csv'
+            res['Content-Disposition'] = 'attachment;filename=wspinologia-{}.csv'.format(datetime.date.today())
         return res
 
 
@@ -209,15 +216,12 @@ class CSVImportView(views.APIView):
         for line in request.FILES['file']:
             yield line.decode('utf-8')
 
-    def put(self, request, filename, format=None):
+    def post(self, request):
         reader = csv.DictReader(self.text_file(request))
         for row in reader:
-            crag = models.Crag(name=row['Crag'], country=row['Country'])
-            crag.save()
-            sector = models.Sector(name=row['Sector'], crag=crag)
-            sector.save()
-            route = models.Route(name=row['Route'], grade=row['Grade'], sector=sector)
-            route.save()
+            crag, _ = models.Crag.objects.get_or_create(name=row['Crag'], country=row['Country'])
+            sector, _ = models.Sector.objects.get_or_create(name=row['Sector'], crag=crag)
+            route, _ = models.Route.objects.get_or_create(name=row['Route'], grade=row['Grade'], sector=sector)
             cr = models.ClimbRecord(date=row['Date'], route=route, user=request.user)
             cr.save()
         return Response(status=204)

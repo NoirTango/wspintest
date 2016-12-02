@@ -1,7 +1,7 @@
 var React, ReactDOM, console;
 var ClimbRecordList, ClimbRecordStats, ClimbRecordHistory,
     globalReloadClimbRecordList, globalReloadClimbRecordStats, globalReloadClimbRecordHistory,
-    RecordForm, postData;
+    RecordForm, postClimbRecordData;
 
 var climb_record_list = React.createElement(ClimbRecordList, {className: 'climb-list'}),
     climb_record_stats = React.createElement(ClimbRecordStats, {className: 'climb-stats'}),
@@ -18,6 +18,9 @@ var WspinologiaNavigation = React.createClass({
     propTypes: {},
     getInitialState: function() {
         return {selected: 'list'};
+    },
+    submitImport: function() {
+        putClimbRecordCSV(this.refs.filebutton.files[0]);
     },
     render: function() {
         var nav_bar = React.createElement('div', {className: 'navigation'},
@@ -38,7 +41,7 @@ var WspinologiaNavigation = React.createClass({
             return (React.createElement('div', {},
                 nav_bar,
                 React.createElement(RecordForm, {
-                    onSubmit: postData
+                    onSubmit: postClimbRecordData
                 }),
                 climb_record_list
             ));
@@ -50,11 +53,23 @@ var WspinologiaNavigation = React.createClass({
             ));
         } else if (this.state.selected === 'import') {
             return React.createElement('div', {className: 'import-export'},
+                nav_bar,
                 React.createElement('span', {
                     className: 'button',
-                    onClick: function() {location.replace('/api/csv-export');}
+                    onClick: function() {location.replace('/api/csv-export/');}
                 }, 'Export'),
-                React.createElement('span', {className: 'button', onClick: null}, 'Import')
+                React.createElement('span', {
+                        className: 'button',
+                        onClick: (() => this.refs.filebutton.click())
+                    },
+                    React.createElement('input', {
+                        type: 'file',
+                        ref: 'filebutton',
+                        style: {display: 'none'},
+                        onChange: this.submitImport
+                    }),
+                    'Import'
+                )
             );
         } else {
             console.log('HELL');

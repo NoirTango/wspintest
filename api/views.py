@@ -1,16 +1,17 @@
 from collections import OrderedDict, defaultdict
 import csv
-from io import StringIO
+from io import StringIO, TextIOWrapper
 
 from django.db.models.aggregates import Count
+from django.http.response import HttpResponse
 from rest_framework import viewsets, filters, exceptions, views
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 from rest_framework.status import HTTP_201_CREATED
+from rest_framework.parsers import FileUploadParser
 
 from . import models
 from . import serializers
-from django.http.response import HttpResponse
 
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
@@ -190,12 +191,33 @@ class HistorySumView(views.APIView):
 class CSVExportView(views.APIView):
     def get(self, request):
         climb_data = models.ClimbRecord.objects.filter(user=request.user)
-        payload = StringIO()
-        writer = csv.DictWriter(payload, fieldnames=['Date', 'Name', 'Grade', 'Sector', 'Crag', 'Country'])
-        writer.writeheader()
-        for cr in climb_data:
-            writer.writerow(dict(Date=cr.date, Name=cr.route.name, Grade=cr.route.grade, Sector=cr.route.sector.name,
-                                 Crag=cr.route.sector.crag.name, Country=cr.route.sector.crag.country))
-        res = HttpResponse(payload.getvalue(), content_type='text/csv')
-        res['Content-Disposition'] = 'attachment;filename=wspinologia.csv'
+        with StringIO() as payload:
+            writer = csv.DictWriter(payload, fieldnames=['Date', 'Route', 'Grade', 'Sector', 'Crag', 'Country'])
+            writer.writeheader()
+            for cr in climb_data:
+                writer.writerow(dict(Date=cr.date, Route=cr.route.name, Grade=cr.route.grade, Sector=cr.route.sector.name,
+                                     Crag=cr.route.sector.crag.name, Country=cr.route.sector.crag.country))
+            res = HttpResponse(payload.getvalue(), content_type='text/csv')
+            res['Content-Disposition'] = 'attachment;filename=wspinologia.csv'
         return res
+
+
+class CSVImportView(views.APIView):
+    parser_classes = (FileUploadParser,)
+
+    def text_file(self, request):
+        for line in request.FILES['file']:
+            yield line.decode('utf-8')
+
+    def put(self, request, filename, format=None):
+        reader = csv.DictReader(self.text_file(request))
+        for row in reader:
+            crag = models.Crag(name=row['Crag'], country=row['Country'])
+            crag.save()
+            sector = models.Sector(name=row['Sector'], crag=crag)
+            sector.save()
+            route = models.Route(name=row['Route'], grade=row['Grade'], sector=sector)
+            route.save()
+            cr = models.ClimbRecord(date=row['Date'], route=route, user=request.user)
+            cr.save()
+        return Response(status=204)

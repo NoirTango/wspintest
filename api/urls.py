@@ -14,4 +14,5 @@ router.register(r'scores', views.ClimbScoreViewset, base_name='scores')
 urlpatterns = [url(r'^', include(router.urls)),
                url(r'^scores-total', views.ScoreSumView.as_view(), name='scores-total'),
                url(r'^scores-history', views.HistorySumView.as_view(), name='scores-history'),
+               url(r'^csv-export', views.CSVExportView.as_view(), name='csv-export'),
                ]

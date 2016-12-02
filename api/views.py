@@ -1,4 +1,6 @@
 from collections import OrderedDict, defaultdict
+import csv
+from io import StringIO
 
 from django.db.models.aggregates import Count
 from rest_framework import viewsets, filters, exceptions, views
@@ -8,6 +10,7 @@ from rest_framework.status import HTTP_201_CREATED
 
 from . import models
 from . import serializers
+from django.http.response import HttpResponse
 
 
 class ClimbRecordViewSet(viewsets.ModelViewSet):
@@ -182,3 +185,16 @@ class HistorySumView(views.APIView):
             'total_counts': dict(aggregator.get_total_count()),
             'total_points': dict(aggregator.get_total_points())
         })
+
+
+class CSVExportView(views.APIView):
+    def get(self, request):
+        climb_data = models.ClimbRecord.objects.filter(user=request.user)
+        payload = StringIO()
+        writer = csv.DictWriter(payload, fieldnames=['Date', 'Name', 'Grade', 'Sector', 'Crag', 'Country'])
+        for cr in climb_data:
+            writer.writerow(dict(Date=cr.date, Name=cr.route.name, Grade=cr.route.grade, Sector=cr.route.sector.name,
+                                 Crag=cr.route.sector.crag.name, Country=cr.route.sector.crag.country))
+        res = HttpResponse(payload.getvalue(), content_type='text/csv')
+        res['Content-Disposition'] = 'attachment;filename=wspinologia.csv'
+        return res

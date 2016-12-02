@@ -218,3 +218,13 @@ body {
     padding: .2em;
 }
 
+.import-export .button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: .5em 1em;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    margin: 1em;
+}

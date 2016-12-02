@@ -48,6 +48,14 @@ var WspinologiaNavigation = React.createClass({
                 climb_record_stats,
                 climb_record_history
             ));
+        } else if (this.state.selected === 'import') {
+            return React.createElement('div', {className: 'import-export'},
+                React.createElement('span', {
+                    className: 'button',
+                    onClick: function() {location.replace('/api/csv-export');}
+                }, 'Export'),
+                React.createElement('span', {className: 'button', onClick: null}, 'Import')
+            );
         } else {
             console.log('HELL');
             return (React.createElement('div', {}, nav_bar));

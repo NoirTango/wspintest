@@ -192,6 +192,7 @@ class CSVExportView(views.APIView):
         climb_data = models.ClimbRecord.objects.filter(user=request.user)
         payload = StringIO()
         writer = csv.DictWriter(payload, fieldnames=['Date', 'Name', 'Grade', 'Sector', 'Crag', 'Country'])
+        writer.writeheader()
         for cr in climb_data:
             writer.writerow(dict(Date=cr.date, Name=cr.route.name, Grade=cr.route.grade, Sector=cr.route.sector.name,
                                  Crag=cr.route.sector.crag.name, Country=cr.route.sector.crag.country))

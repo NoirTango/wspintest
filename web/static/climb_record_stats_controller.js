@@ -1,5 +1,5 @@
+// jshint esnext: true
 var React, ReactDOM, console, ConnectToAPIComponent;
-
 var globalReloadClimbRecordStats;
 
 

@@ -1,6 +1,6 @@
+// jshint esnext: true
 var React, ReactDOM, console;
-
-var globalReloadClimbRecordList;
+var globalReloadClimbRecordList, ConnectToAPIComponent;
 
 var normalise = function(api_data) {
     return {

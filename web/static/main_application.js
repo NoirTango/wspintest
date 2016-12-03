@@ -1,3 +1,4 @@
+// jshint esnext: true
 var React, ReactDOM, console;
 var ClimbRecordList, ClimbRecordStats, ClimbRecordHistory,
     globalReloadClimbRecordList, globalReloadClimbRecordStats, globalReloadClimbRecordHistory,

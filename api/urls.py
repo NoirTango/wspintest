@@ -8,7 +8,7 @@ router.register(r'climb-records', views.ClimbRecordViewSet, base_name='climb-rec
 router.register(r'routes', views.RouteViewSet, base_name='routes')
 router.register(r'sectors', views.SectorViewSet, base_name='sectors')
 router.register(r'crags', views.CragViewSet, base_name='crags')
-router.register(r'scores', views.ClimbScoreViewset, base_name='scores')
+router.register(r'scores', views.GradeScoreViewset, base_name='scores')
 
 
 urlpatterns = [url(r'^', include(router.urls)),

@@ -1,9 +1,9 @@
+import json
 from django.test import TestCase
 from django.contrib.auth.models import User
-
-from . import models
 from rest_framework.reverse import reverse
-import json
+
+from api import models
 from api.admin import consolidate_crag, consolidate_sector, consolidate_route
 
 
@@ -32,33 +32,30 @@ class TestPostClimbingRecord(WithLoggedUserMixin, WithOneRouteMixin, TestCase):
 
     def test_user_can_upload_with_himself(self):
         self.assertEqual(models.ClimbRecord.objects.count(), 0)
-        resp = self.client.post(reverse('climb-records-list'),
-                                {
-                                    'route': self.route.id,
-                                    'date': '2010-01-01',
-                                    'user': self.user.id
-                                })
+        resp = self.client.post(reverse('climb-records-list'), {
+            'route': self.route.id,
+            'date': '2010-01-01',
+            'user': self.user.id
+        })
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(models.ClimbRecord.objects.count(), 1)
 
     def test_user_can_upload(self):
         self.assertEqual(models.ClimbRecord.objects.count(), 0)
-        resp = self.client.post(reverse('climb-records-list'),
-                                {
-                                    'route': self.route.id,
-                                    'date': '2010-01-01',
-                                })
+        resp = self.client.post(reverse('climb-records-list'), {
+            'route': self.route.id,
+            'date': '2010-01-01',
+        })
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(models.ClimbRecord.objects.count(), 1)
 
     def test_user_cannot_upload_another_account(self):
         another_user = User.objects.create_user('username', 'email', 'password')
-        resp = self.client.post(reverse('climb-records-list'),
-                                {
-                                    'route': self.route.id,
-                                    'date': '2010-01-01',
-                                    'user': another_user.id
-                                })
+        resp = self.client.post(reverse('climb-records-list'), {
+            'route': self.route.id,
+            'date': '2010-01-01',
+            'user': another_user.id
+        })
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(models.ClimbRecord.objects.count(), 0)
 
@@ -66,12 +63,11 @@ class TestPostClimbingRecord(WithLoggedUserMixin, WithOneRouteMixin, TestCase):
         self.user.is_staff = True
         self.user.save()
         another_user = User.objects.create_user('username', 'email', 'password')
-        resp = self.client.post(reverse('climb-records-list'),
-                                {
-                                    'route': self.route.id,
-                                    'date': '2010-01-01',
-                                    'user': another_user.id
-                                })
+        resp = self.client.post(reverse('climb-records-list'), {
+            'route': self.route.id,
+            'date': '2010-01-01',
+            'user': another_user.id
+        })
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(models.ClimbRecord.objects.count(), 1)
 

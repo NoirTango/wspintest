@@ -2,17 +2,19 @@
 var React, ReactDOM, console;
 var ClimbRecordList, ClimbRecordStats, ClimbRecordHistory,
     globalReloadClimbRecordList, globalReloadClimbRecordStats, globalReloadClimbRecordHistory,
-    RecordForm, postClimbRecordData, putClimbRecordCSV;
+    globalReloadGradeScoreList,
+    RecordForm, postClimbRecordData, putClimbRecordCSV, GradeScoreList;
 
 var climb_record_list = React.createElement(ClimbRecordList, {className: 'climb-list'}),
     climb_record_stats = React.createElement(ClimbRecordStats, {className: 'climb-stats'}),
-    climb_record_history = React.createElement(ClimbRecordHistory, {className: 'climb-history'});
+    climb_record_history = React.createElement(ClimbRecordHistory, {className: 'climb-history'}),
+    grade_score_list = React.createElement(GradeScoreList, {className: 'climb-history'});
 
 
 function reloadDataFromAPI() {
-    globalReloadClimbRecordList();
-    globalReloadClimbRecordStats();
-    globalReloadClimbRecordHistory();
+    var all_reload_functions = [globalReloadClimbRecordList, globalReloadGradeScoreList, globalReloadClimbRecordStats,
+                                globalReloadClimbRecordHistory];
+    all_reload_functions.map((f) => (typeof f === 'function' ? f() : null));
 }
 
 var NavigationElement = React.createClass({
@@ -72,6 +74,15 @@ var buildApp = function() {
                     return React.createElement('div', {},
                         climb_record_stats,
                         climb_record_history
+                    );
+                }
+            }),
+            React.createElement(NavigationElement, {
+                state_name: 'grades',
+                state_label: 'Grades',
+                render_body: function() {
+                    return React.createElement('div', {},
+                        grade_score_list
                     );
                 }
             }),

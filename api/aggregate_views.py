@@ -42,10 +42,23 @@ class HistoryAggregator:
         for grade_score in grade_list:
             self.grade_scores[grade_score.grade] = grade_score.score
 
+    def get_points_from_composite_grade(self, grade):
+        points = 0.
+        num_grades = 0
+        for exact_grade in grade.split('/'):
+            try:
+                points += self.grade_scores[exact_grade]
+            except KeyError:
+                pass
+            num_grades += 1
+        if num_grades:
+            points /= num_grades
+        return points
+
     def consume_climbrecord(self, climb_record):
         grade = climb_record.route.grade
         year = climb_record.date.year
-        points = self.grade_scores[grade]
+        points = self.get_points_from_composite_grade(grade)
 
         self.specific_count[grade][year] += 1
         self.aggregated_points[year] += points
@@ -65,9 +78,14 @@ class HistoryAggregator:
         return range(self.min_year, self.max_year + 1)
 
     def get_grades(self):
+        up_g = None
         for g in self.grade_scores:
+            mid_grade = '{}/{}'.format(g, up_g)
+            if mid_grade in self.grades:
+                yield mid_grade
             if g in self.grades:
                 yield g
+            up_g = g
 
     def get_total_points(self):
         for year in self.get_years():

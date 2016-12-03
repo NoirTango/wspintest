@@ -53,15 +53,6 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
         return models.Crag.objects.create(name=data['crag_name'], country=data['crag_country'])
 
 
-class GradeScoreViewset(viewsets.ModelViewSet):
-    model = models.GradeScore
-    serializer_class = serializers.ClimbScoreSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return models.GradeScore.objects.filter(user=user).order_by('-score')
-
-
 class RouteViewSet(viewsets.ModelViewSet):
     model = models.Route
     base_name = 'Routes'
@@ -87,3 +78,98 @@ class CragViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.CragSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
+
+
+class GradeScoreViewset(viewsets.ModelViewSet):
+    model = models.GradeScore
+    serializer_class = serializers.ClimbScoreSerializer
+
+    plus_minus = ['-', '', '+']
+    plus_only = ['', '+']
+
+    @classmethod
+    def generate_with_modifiers(cls, grade_list, modifiers, up_to=None):
+        for grade in grade_list:
+            for m in modifiers:
+                g = '{}{}'.format(grade, m)
+                yield g
+                if g == up_to:
+                    return
+
+    @classmethod
+    def uiaa_grades(cls, up_to=None):
+        for g in cls.generate_with_modifiers(['III', 'IV', 'V', 'VI'], modifiers=cls.plus_only, up_to=up_to):
+            yield g
+
+        if g == up_to:
+            return
+
+        for g in cls.generate_with_modifiers(['VII', 'VIII', 'XIX', 'X', 'XI', 'XII', 'XIII'],
+                                             modifiers=cls.plus_minus, up_to=up_to):
+            yield g
+
+    @classmethod
+    def french_grades(cls):
+        for g in cls.uiaa_grades(up_to='V+'):
+            yield g
+
+        for gn in range(6, 10):
+            for gl in 'abc':
+                grade = '{}{}'.format(gn, gl)
+                for g in cls.generate_with_modifiers([grade], modifiers=cls.plus_only):
+                    yield g
+
+    @classmethod
+    def polish_grades(cls):
+        for g in cls.uiaa_grades(up_to='VI+'):
+            yield g
+
+        for gn in range(1, 9):
+            grade = 'VI.{}'.format(gn)
+            for g in cls.generate_with_modifiers([grade], modifiers=cls.plus_only):
+                yield g
+
+    def get_queryset(self):
+        user = self.request.user
+        return models.GradeScore.objects.filter(user=user).order_by('-score')
+
+    @classmethod
+    def grade_scores_by_type(cls, grade_type):
+        type_dict = {
+            None: cls.french_grades,
+            'polish': cls.polish_grades,
+            'french': cls.french_grades,
+            'uiaa': cls.uiaa_grades
+        }
+        func = type_dict[grade_type]
+
+        score = 0.5
+        result = []
+        for grade in func():
+            result.append(dict(grade=grade, score=score))
+            score += 0.5
+        return result
+
+    @list_route(methods=['get'])
+    def static_scores(self, request):
+        return Response(self.grade_scores_by_type(request.GET.get('type')))
+
+    @list_route(methods=['post'])
+    def import_static(self, request):
+        grade_type = request.data.get('type')
+        if grade_type is None:
+            raise exceptions.ValidationError('Type must be specified')
+
+        try:
+            gs_dict = self.grade_scores_by_type(grade_type)
+        except KeyError:
+            raise exceptions.ValidationError('Unknown grading type: {}'.format(grade_type))
+
+        for gs in gs_dict:
+            row, created = models.GradeScore.objects.get_or_create(grade=gs['grade'], user=request.user,
+                                                                   defaults={'score': gs['score']})
+            if not created:
+                row.score = gs['score']
+                row.save()
+
+        return Response({'message': 'Imported static grade {}'.format(grade_type)}, status=204)

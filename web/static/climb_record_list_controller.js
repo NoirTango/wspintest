@@ -61,7 +61,7 @@ var ClimbRecordList = React.createClass({
                 }),
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {},
-                        React.createElement('tr', {},
+                        React.createElement('tr', {key: 'header'},
                             React.createElement('th', {}, 'Date'),
                             React.createElement('th', {}, 'Name'),
                             React.createElement('th', {}, 'Grade'),

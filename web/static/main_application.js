@@ -1,7 +1,7 @@
 var React, ReactDOM, console;
 var ClimbRecordList, ClimbRecordStats, ClimbRecordHistory,
     globalReloadClimbRecordList, globalReloadClimbRecordStats, globalReloadClimbRecordHistory,
-    RecordForm, postClimbRecordData;
+    RecordForm, postClimbRecordData, putClimbRecordCSV;
 
 var climb_record_list = React.createElement(ClimbRecordList, {className: 'climb-list'}),
     climb_record_stats = React.createElement(ClimbRecordStats, {className: 'climb-stats'}),
@@ -14,6 +14,17 @@ function reloadDataFromAPI() {
     globalReloadClimbRecordHistory();
 }
 
+var NavigationElement = React.createClass({
+    propTypes: {
+        state_name: React.PropTypes.string.isRequired,
+        state_label: React.PropTypes.string.isRequired,
+        render_body: React.PropTypes.func
+    },
+    render: function() {
+        return this.props.render_body();
+    }
+});
+
 var WspinologiaNavigation = React.createClass({
     propTypes: {},
     getInitialState: function() {
@@ -24,63 +35,69 @@ var WspinologiaNavigation = React.createClass({
     },
     render: function() {
         var nav_bar = React.createElement('div', {className: 'navigation'},
-            React.createElement('span', {
-                onClick: () => this.setState({selected: 'list'}),
-                className: (this.state.selected === 'list' ? 'active' : '')
-            }, 'LIST'),
-            React.createElement('span', {
-                onClick: () => this.setState({selected: 'stats'}),
-                className: (this.state.selected === 'stats' ? 'active' : '')
-            }, 'STATS'),
-            React.createElement('span', {
-                onClick: () => this.setState({selected: 'import'}),
-                className: (this.state.selected === 'import' ? 'active' : '')
-            }, 'IMPORT/EXPORT')
+            this.props.children.map((chld) => React.createElement('span', {
+                    onClick: () => this.setState({selected: chld.props.state_name}),
+                    className: (this.state.selected === chld.props.state_name ? 'active' : '')
+                },
+                chld.props.state_label)
+            )
         );
-        if (this.state.selected === 'list') {
-            return (React.createElement('div', {},
-                nav_bar,
-                React.createElement(RecordForm, {
-                    onSubmit: postClimbRecordData
-                }),
-                climb_record_list
-            ));
-        } else if (this.state.selected === 'stats') {
-            return (React.createElement('div', {},
-                nav_bar,
-                climb_record_stats,
-                climb_record_history
-            ));
-        } else if (this.state.selected === 'import') {
-            return React.createElement('div', {className: 'import-export'},
-                nav_bar,
-                React.createElement('span', {
-                    className: 'button',
-                    onClick: function() {location.replace('/api/csv-export/');}
-                }, 'Export'),
-                React.createElement('span', {
-                        className: 'button',
-                        onClick: (() => this.refs.filebutton.click())
-                    },
-                    React.createElement('input', {
-                        type: 'file',
-                        ref: 'filebutton',
-                        style: {display: 'none'},
-                        onChange: this.submitImport
-                    }),
-                    'Import'
-                )
-            );
-        } else {
-            console.log('HELL');
-            return (React.createElement('div', {}, nav_bar));
-        }
+        return React.createElement('div', {},
+            nav_bar,
+            this.props.children.map((chld) => (this.state.selected == chld.props.state_name ? chld.props.render_body() : null))
+        );
     }
 });
 
 var buildApp = function() {
     ReactDOM.render(
-        React.createElement(WspinologiaNavigation, {}),
+        React.createElement(WspinologiaNavigation, {},
+            React.createElement(NavigationElement, {
+                state_name: 'list',
+                state_label: 'List',
+                render_body: function() {
+                    return React.createElement('div', {},
+                        React.createElement(RecordForm, {
+                            onSubmit: postClimbRecordData
+                        }),
+                        climb_record_list
+                    );
+                }
+            }),
+            React.createElement(NavigationElement, {
+                state_name: 'stats',
+                state_label: 'Stats',
+                render_body: function() {
+                    return React.createElement('div', {},
+                        climb_record_stats,
+                        climb_record_history
+                    );
+                }
+            }),
+            React.createElement(NavigationElement, {
+                state_name: 'import',
+                state_label: 'Import/Export',
+                render_body: function() {
+                    return React.createElement('div', {className: 'import-export'},
+                        React.createElement('span', {
+                            className: 'button',
+                            onClick: function() {location.replace('/api/csv-export/');}
+                        }, 'Export'),
+                        React.createElement('span', {
+                            className: 'button',
+                            onClick: (() => this.refs.filebutton.click())
+                        },
+                        React.createElement('input', {
+                            type: 'file',
+                            ref: 'filebutton',
+                            style: {display: 'none'},
+                            onChange: this.submitImport
+                        }),
+                        'Import'
+                    ));
+                }
+            })
+        ),
         document.getElementById('react_list')
     );
 };

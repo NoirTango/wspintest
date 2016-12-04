@@ -19,8 +19,8 @@ var YearSelector = React.createClass({
         down: React.PropTypes.func
     },
     render: function() {
-        var c_name_up = 'icon-up ' + (this.props.up !== null ? 'endbled' : 'disabled'),
-            c_name_down = 'icon-down ' + (this.props.down !== null ? 'endbled' : 'disabled');
+        var c_name_up = 'icon-right-open ' + (this.props.up !== null ? 'endbled' : 'disabled'),
+            c_name_down = 'icon-left-open ' + (this.props.down !== null ? 'endbled' : 'disabled');
         return (
             React.createElement('span', {},
                 React.createElement('i', {className: c_name_down, onClick: this.props.down}),

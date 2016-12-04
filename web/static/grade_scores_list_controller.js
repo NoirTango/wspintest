@@ -32,6 +32,11 @@ var GradeScoreList = React.createClass({
         this.setState((prevState, props) => Object.assign({}, prevState, {climbs: data, reload: false}));
     },
     render: function() {
+        var scales = [
+            ['french', 'Import French scale'],
+            ['polish', 'Import Polish scale'],
+            ['uiaa', 'Import UIAA scale']
+        ];
         return (
             React.createElement('div', {},
                 React.createElement(ConnectToAPIComponent, {
@@ -39,6 +44,10 @@ var GradeScoreList = React.createClass({
                    reload: this.state.reload,
                    dataCallback: this.setData
                 }),
+                scales.map((g) => React.createElement('div', {
+                    className: 'button',
+                    onClick: (() => importStaticGrades(g[0]))
+                }, g[1])),
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {},
                         React.createElement('tr', {},

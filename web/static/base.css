@@ -233,3 +233,15 @@ body {
     width: 50%;
     margin-left: 2em;
 }
+
+.button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: .2em 2em;
+    margin: .2em;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    float: right;
+}

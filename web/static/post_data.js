@@ -56,3 +56,13 @@ var putClimbRecordCSV = function(csv_file) {
     };
     fr.readAsText(csv_file);
 };
+
+var importStaticGrades = function(scale_type) {
+    var csrfCookie = Cookies.get('csrftoken');
+    var client = new XMLHttpRequest();
+    client.onload = globalReloadGradeScoreList;
+    client.open("POST", "/api/scores/import_static/");
+    client.setRequestHeader("X-CSRFToken", csrfCookie);
+    client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    client.send(JSON.stringify({type: scale_type}));
+};

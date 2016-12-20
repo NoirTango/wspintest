@@ -1,6 +1,7 @@
 // jshint esnext: true
-var React, ReactDOM, console, ConnectToAPIComponent;
-var globalReloadClimbRecordStats;
+var React = require('react'),
+    console = require('console'),
+    getAPIData = require('./getAPIData.js');
 
 
 var normalise_stats = function(api_data, total) {
@@ -50,19 +51,20 @@ var GradeStat = React.createClass({
     }
 });
 
-var ClimbRecordStats = React.createClass({
+module.exports = React.createClass({
     getInitialState: function() {
         var current_year = new Date().getFullYear();
         return {stats: [], year: null, maxYear: current_year, reload: true};
     },
-    componentWillMount: function() {
-        var component = this;
-        globalReloadClimbRecordStats = function() {
-            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
-        };
-    },
     setData: function(data) {
         this.setState((prevState, props) => Object.assign({}, prevState, {stats: data, reload: false}));
+    },
+    reloadData: function() {
+        var query = '/api/scores-total/';
+        if ((this.state !== null) && (this.state.year !== null)) {
+            query = query + '?year=' + this.state.year;
+        }
+        getAPIData(query, this.setData);
     },
     onUpClicked: function() {
         this.setState(function(prevState, props){
@@ -83,16 +85,12 @@ var ClimbRecordStats = React.createClass({
         });
     },
     render: function() {
-        var total = this.state.stats.reduce(function(sum, stat) {return sum + stat.count;}, 0),
-            query_args = (this.state.year === null ? '' : '?year=' + this.state.year);
-
+        var total = this.state.stats.reduce(function(sum, stat) {return sum + stat.count;}, 0);
+        if (this.state.reload) {
+            this.reloadData();
+        }
         return (
             React.createElement('div', {className: 'climb-stats'},
-                React.createElement(ConnectToAPIComponent, {
-                   query: "/api/scores-total/" + query_args,
-                   reload: this.state.reload,
-                   dataCallback: this.setData
-                }),
                 React.createElement('div', {className: 'title'},
                     React.createElement('span', {}, 'Grade stats'),
                     React.createElement(YearSelector, {

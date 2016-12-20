@@ -9,6 +9,21 @@ def home_view(request):
     return render(request, 'home.html')
 
 
+@login_required
+def stats_view(request):
+    return render(request, 'stats.html')
+
+
+@login_required
+def grades_view(request):
+    return render(request, 'grades.html')
+
+
+@login_required
+def import_view(request):
+    return render(request, 'import.html')
+
+
 def login_view(request):
     context = None
     if request.method == 'POST':

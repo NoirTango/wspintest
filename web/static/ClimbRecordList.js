@@ -1,10 +1,11 @@
 // jshint esnext: true
-var React, ReactDOM, console;
-var globalReloadClimbRecordList, ConnectToAPIComponent;
+var React = require('react'),
+    console = require('console'),
+    ClimbRecordRow = require('./ClimbRecordRow.js');
 
 var normalise = function(api_data) {
     return {
-        key: api_data.id,
+        id: api_data.id,
         name: api_data.route_name,
         grade: api_data.route_grade,
         sector: api_data.sector_name,
@@ -20,42 +21,13 @@ var normalise = function(api_data) {
     };
 };
 
-var ClimbRecord = React.createClass({
-    propTypes: {
-        date: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        grade: React.PropTypes.string.isRequired,
-        sector: React.PropTypes.string.isRequired,
-        crag: React.PropTypes.string.isRequired,
-        country: React.PropTypes.string.isRequired,
+
+module.exports = React.createClass({
+    props: {
+        climbs: React.PropTypes.array.required
     },
-
-    render: function() {
-        return (
-            React.createElement('tr', {className: this.props.className},
-                React.createElement('td', {}, this.props.date),
-                React.createElement('td', {}, this.props.name),
-                React.createElement('td', {}, this.props.grade),
-                React.createElement('td', {}, this.props.sector),
-                React.createElement('td', {}, this.props.crag),
-                React.createElement('td', {}, this.props.country)
-            )
-        );
-    }
-});
-
-var ClimbRecordList = React.createClass({
     getInitialState: function() {
-        return {climbs: [], reload: true, filter_text: '', sort_key: '', sort_order: 1};
-    },
-    componentWillMount: function() {
-        var component = this;
-        globalReloadClimbRecordList = function() {
-            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
-        };
-    },
-    setData: function(data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {climbs: data, reload: false}));
+        return {filter_text: '', sort_key: '', sort_order: 1};
     },
     updateFilter: function(e) {
         var v = e.target.value;
@@ -77,7 +49,7 @@ var ClimbRecordList = React.createClass({
         };
     },
     render: function() {
-        var normalised_rows = this.state.climbs.map(normalise),
+        var normalised_rows = this.props.climbs.map(normalise),
             component = this,
             columns = {
                 'date': 'Date',
@@ -89,6 +61,7 @@ var ClimbRecordList = React.createClass({
             },
             column_keys = ['date', 'name', 'grade', 'sector', 'crag', 'country'];
 
+
         if (this.state.sort_key !== '') {
             normalised_rows = normalised_rows.sort(
                 (a,b) => this.state.sort_order*a[this.state.sort_key].localeCompare(b[this.state.sort_key])
@@ -96,11 +69,6 @@ var ClimbRecordList = React.createClass({
         }
         return (
             React.createElement('div', {},
-                React.createElement(ConnectToAPIComponent, {
-                   query: "/api/climb-records/",
-                   reload: this.state.reload,
-                   dataCallback: this.setData
-                }),
                 React.createElement('div', {className: 'filter'},
                     'Filter:',
                     React.createElement('input', {
@@ -110,9 +78,9 @@ var ClimbRecordList = React.createClass({
                     })
                 ),
                 React.createElement('table', {className: 'climb-list'},
-                    React.createElement('tbody', {},
+                    React.createElement('tbody', {key: 'body'},
                         React.createElement('tr', {key: 'header'},
-                            column_keys.map(function(column_key){
+                            column_keys.map(function(column_key, i){
                                 var icon = null;
                                 if (column_key == component.state.sort_key) {
                                     icon = React.createElement('i', {
@@ -120,7 +88,8 @@ var ClimbRecordList = React.createClass({
                                     });
                                 }
                                 return React.createElement('th', {
-                                    onClick: component.updateSort(column_key)
+                                    onClick: component.updateSort(column_key),
+                                    key: column_key+'H'
                                 }, icon, columns[column_key], icon);
                             })
                         ),
@@ -129,13 +98,13 @@ var ClimbRecordList = React.createClass({
                             return cr.search_term.indexOf(component.state.filter_text) >= 0;
                         })
                         .map(function(row_props, i) {
-                            //var row_props = normalise(cr);
                             if (i%2) {
                                 row_props.className = 'odd';
                             } else {
                                 row_props.className = 'even';
                             }
-                            return React.createElement(ClimbRecord, row_props);
+                            row_props.key = row_props.id + 'CRR';
+                            return React.createElement(ClimbRecordRow, row_props);
                         })
                     )
                 )

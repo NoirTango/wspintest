@@ -1,8 +1,9 @@
-var React, ReactDOM, console, ConnectToAPIComponent;
+//jshint esnext: true
+var React = require('react'),
+    console = require('console'),
+    getAPIData = require('./getAPIData.js');
 
-var globalReloadClimbRecordHistory;
-
-var ClimbRecordHistory = React.createClass({
+module.exports = React.createClass({
     propTypes: {},
     getInitialState: function() {
         return ({
@@ -10,14 +11,11 @@ var ClimbRecordHistory = React.createClass({
             reload: true
         });
     },
-    componentWillMount: function() {
-        var component = this;
-        globalReloadClimbRecordHistory = function() {
-            component.setState((prevState, props) => Object.assign({}, prevState, {reload: true}));
-        };
-    },
     setData: function(data) {
         this.setState((prevState, props) => Object.assign({}, prevState, {data: data, reload: false}));
+    },
+    reloadData: function() {
+        getAPIData('/api/scores-history/', this.setData);
     },
     buildCountTable: function() {
         var totals = this.state.data.years.map((year) => this.state.data.total_counts[year]),
@@ -78,12 +76,10 @@ var ClimbRecordHistory = React.createClass({
         );
     },
     render: function() {
-        var loader = React.createElement(ConnectToAPIComponent, {
-            query: "/api/scores-history/",
-            dataCallback: this.setData,
-            reload: this.state.reload
-        });
         var count_table, points_table;
+        if (this.state.reload) {
+            this.reloadData();
+        }
         if (this.state.data === null) {
             count_table = null;
             points_table = null;
@@ -91,6 +87,6 @@ var ClimbRecordHistory = React.createClass({
             count_table = this.buildCountTable();
             points_table = this.buildPointsTable();
         }
-        return React.createElement('div', {}, loader, count_table, points_table );
+        return React.createElement('div', {}, count_table, points_table );
     }
 });

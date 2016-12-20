@@ -172,4 +172,4 @@ class GradeScoreViewset(viewsets.ModelViewSet):
                 row.score = gs['score']
                 row.save()
 
-        return Response({'message': 'Imported static grade {}'.format(grade_type)}, status=204)
+        return Response({'message': 'Imported static grade {}'.format(grade_type)}, status=201)

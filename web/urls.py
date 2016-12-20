@@ -1,9 +1,13 @@
 from django.conf.urls import url
 
-from web.views import home_view, login_view, logout_view, register_view
+from web import views
+
 urlpatterns = [
-               url(r'^$', home_view, name='home'),
-               url(r'^login/', login_view, name='login'),
-               url(r'^logout/', logout_view, name='logout'),
-               url(r'^register/', register_view, name='register'),
+               url(r'^$', views.home_view, name='home'),
+               url(r'^stats/$', views.stats_view, name='stats'),
+               url(r'^grades/$', views.grades_view, name='grades'),
+               url(r'^import/$', views.import_view, name='import'),
+               url(r'^login/', views.login_view, name='login'),
+               url(r'^logout/', views.logout_view, name='logout'),
+               url(r'^register/', views.register_view, name='register'),
 ]

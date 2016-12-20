@@ -1,6 +1,6 @@
-var React;
+var React = require('react');
 
-var QueryableTextField = React.createClass({
+module.exports = React.createClass({
     propTypes: {
         value: React.PropTypes.string.isRequired,
         query: React.PropTypes.string.isRequired,

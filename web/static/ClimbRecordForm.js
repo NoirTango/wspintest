@@ -1,6 +1,8 @@
 //jshint esnext:true
 
-var React, console, QueryableTextField;
+var React = require('react'),
+    console = require('console')
+    QueryableTextField = require('./QueryableTextField.js');
 
 var routeDisplay = function(route) {
     return route.name + ' ' + route.grade + ' - ' + route.sector_name + ' - ' + route.crag_name;
@@ -14,7 +16,7 @@ var cragDisplay = function(crag) {
     return crag.name  + ' / ' + crag.country;
 };
 
-var RecordForm = React.createClass({
+module.exports = React.createClass({
     propTypes: {
         onChange: React.PropTypes.func,
     },

@@ -44,7 +44,7 @@ var MainPage = React.createClass({
 var buildApp = function() {
     ReactDOM.render(
         React.createElement(MainPage),
-        document.getElementById('react_list')
+        document.getElementById('react-app')
     );
 };
 

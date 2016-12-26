@@ -10,6 +10,6 @@ ReactDOM.render(
         React.createElement(ClimbRecordStats, {className: 'climb-stats'}),
         React.createElement(ClimbRecordHistory, {className: 'climb-history'})
     ),
-    document.getElementById('react_list')
+    document.getElementById('react-app')
 );
 

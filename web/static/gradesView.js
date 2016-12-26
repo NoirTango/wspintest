@@ -38,5 +38,5 @@ var GradesView = React.createClass({
 
 ReactDOM.render(
     React.createElement(GradesView),
-    document.getElementById('react_list')
+    document.getElementById('react-app')
 );

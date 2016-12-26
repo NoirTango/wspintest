@@ -41,5 +41,5 @@ var ImportView = React.createClass({
 
 ReactDOM.render(
     React.createElement(ImportView),
-    document.getElementById('react_list')
+    document.getElementById('react-app')
 );

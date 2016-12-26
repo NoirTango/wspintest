@@ -21,6 +21,10 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
         else:
             raise exceptions.PermissionDenied('Not allowed to add for another user')
 
+    def list(self, request, *args, **kwargs):
+        self.current_scores = models.GradeScore.objects.all()
+        return viewsets.ModelViewSet.list(self, request, *args, **kwargs)
+
     def get_queryset(self):
         user = self.request.user
         return models.ClimbRecord.objects.filter(user=user).order_by('-date')

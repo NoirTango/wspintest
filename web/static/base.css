@@ -1,19 +1,23 @@
+html {
+    font-size: 16px;
+}
+
 body {
     background-color: white;
     font-family: "Segoe UI",Arial,sans-serif;
     margin: 0em;
-    font-size: 1em;
+    font-size: 1rem;
 }
 
 #welcome_message {
     background-color: cornflowerblue;
     color: white;
     text-align: right;
-    padding: 1em;
+    padding: 1rem;
     margin: 0em;
     border: 0em;
     font-weight: bold;
-    font-size: .8em;
+    font-size: .8rem;
 }
 
 #welcome_message a {
@@ -26,7 +30,7 @@ body {
     width: 100%;
     text-align: center;
     background-color: FireBrick;
-    padding: .5em;
+    padding: .5rem;
     color: white;
     position: absolute;
     bottom: 0;
@@ -39,8 +43,8 @@ body {
 .vertical_form {
     width: 50%;
     background-color: lightgrey;
-    margin: 2em auto;
-    padding: 1em;
+    margin: 2rem auto;
+    padding: 1rem;
     font-size: inherit;
 }
 
@@ -48,18 +52,18 @@ body {
     background-color: green;
     border: none;
     color: white;
-    padding: .5em 1em;
+    padding: .5rem 1rem;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     width: 100%;
-    margin: 0em 0em 0em 0em;
+    margin: 0rem 0rem 0rem 0rem;
     font-size: inherit;
 }
 
 .vertical_form input {
     width: 100%;
-    margin: 0em 0em 1em 0em;
+    margin: 0rem 0rem 1rem 0rem;
     font-size: inherit;
 }
 
@@ -72,12 +76,12 @@ body {
 }
 
 .climb-list {
-    padding: 1em;
+    padding: 1rem;
     width: 78%;
 }
 
 .climb-list td {
-    padding: 0em 1em;
+    padding: 0rem 1rem;
 }
 
 .climb-record-form {
@@ -87,21 +91,21 @@ body {
 
 .climb-record-form div {
     display: inline-block;
-    padding: 0.5em 0.5em;
+    padding: 0.5rem 0.5rem;
 }
 
 .climb-record-form #grade {
-    width: 4em;
+    width: 4rem;
 }
 
 .climb-record-form #date {
-    width: 8em;
+    width: 8rem;
 }
 
 .climb-record-form input {
     border: none;
-    margin: .1em;
-    padding: .2em;
+    margin: .1rem;
+    padding: .2rem;
 }
 
 .climb-record-form .submit {
@@ -111,7 +115,7 @@ body {
     background-color: green;
     border: none;
     color: white;
-    padding: .2em 2em;
+    padding: .2rem 2rem;
     text-align: center;
     text-decoration: none;
     display: inline-block;
@@ -122,7 +126,7 @@ body {
     float: right;
     width: 20%;
     background-color: lightGrey;
-    padding: .5em;
+    padding: .5rem;
 }
 
 .climb-stats .title {
@@ -133,19 +137,19 @@ body {
 .climb-stats ul {
     list-style: none;
     background-color: white;
-    padding: .2em;
+    padding: .2rem;
 }
 
 .climb-stats .grade {
     display: inline-block;
-    width: 3em;
+    width: 3rem;
 }
 
 .climb-stats .count {
     display: inline-block;
     background-color: cornflowerblue;
     color: white;
-    padding: .1em;
+    padding: .1rem;
     text-align: right;
 }
 
@@ -163,13 +167,13 @@ body {
 }
 
 .climb-count-cell {
-    width: 3em;
-    height: 1.5em;
+    width: 3rem;
+    height: 1.5rem;
 }
 
 .climb-count-cell svg {
-    width: 3em;
-    height: 1.5em;
+    width: 3rem;
+    height: 1.5rem;
 }
 
 .climb-points-line {
@@ -178,12 +182,12 @@ body {
 }
 
 .climb-points-cell {
-    width: 3em;
+    width: 3rem;
 }
 
 .climb-points-cell svg {
-    width: 3em;
-    height: 10em;
+    width: 3rem;
+    height: 10rem;
 }
 
 .history-table td {
@@ -206,19 +210,19 @@ body {
 }
 
 .navigation span {
-    margin: 2em;
-    padding: .2em;
+    margin: 2rem;
+    padding: .2rem;
 }
 
 .import-export .button {
     background-color: green;
     border: none;
     color: white;
-    padding: .5em 1em;
+    padding: .5rem 1rem;
     text-align: center;
     text-decoration: none;
     display: block;
-    margin: 1em;
+    margin: 1rem;
 }
 
 .filter {
@@ -231,17 +235,31 @@ body {
     background: transparent;
     border-bottom: 2px solid grey;
     width: 50%;
-    margin-left: 2em;
+    margin-left: 2rem;
 }
 
 .button {
     background-color: green;
     border: none;
     color: white;
-    padding: .2em 2em;
-    margin: .2em;
+    padding: .2rem 2rem;
+    margin: .2rem;
     text-align: center;
     text-decoration: none;
     display: inline-block;
     float: right;
+}
+
+#navigation{
+    background-color: cornflowerblue;
+    color: white;
+}
+
+#navigation .selected {
+    background-color: white;
+    color: black;
+}
+#navigation a {
+    color: white;
+    text-decoration: none;
 }

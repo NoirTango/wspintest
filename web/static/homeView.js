@@ -29,7 +29,7 @@ var MainPage = React.createClass({
             crag_country: data.country,
             date: data.date
         };
-        postAPIData(flatData, '/api/climb-records/', this.reloadData);
+        postAPIData(flatData, '/api/climb-records/ajax/', this.reloadData);
     },
     render: function() {
         return React.createElement('div', {},

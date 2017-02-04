@@ -18,6 +18,7 @@ class TestPostClimbingRecord(mixins.WithLoggedUserMixin, mixins.WithOneRouteMixi
         self.assertEqual(models.ClimbRecord.objects.count(), 0)
         resp = self.client.post(reverse('climb-records-list'), {
             'route': self.route.id,
+            'style': 'OS',
             'date': '2010-01-01',
             'user': self.user.id
         })
@@ -28,6 +29,7 @@ class TestPostClimbingRecord(mixins.WithLoggedUserMixin, mixins.WithOneRouteMixi
         self.assertEqual(models.ClimbRecord.objects.count(), 0)
         resp = self.client.post(reverse('climb-records-list'), {
             'route': self.route.id,
+            'style': 'OS',
             'date': '2010-01-01',
         })
         self.assertEqual(resp.status_code, 201)
@@ -50,6 +52,7 @@ class TestPostClimbingRecord(mixins.WithLoggedUserMixin, mixins.WithOneRouteMixi
         resp = self.client.post(reverse('climb-records-list'), {
             'route': self.route.id,
             'date': '2010-01-01',
+            'style': 'RP',
             'user': another_user.id
         })
         self.assertEqual(resp.status_code, 201)
@@ -79,7 +82,8 @@ class TestClimbRecordWithAjax(mixins.WithLoggedUserMixin, TestCase):
             "sector_name": "SECTOR",
             "crag_name": "CRAG",
             "crag_country": "COUNTRY",
-            "date": "2016-11-19"
+            "date": "2016-11-19",
+            "style": "flash",
         }
         resp = self.client.post(reverse('climb-records-ajax'),
                                 json.dumps(data),

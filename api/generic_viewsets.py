@@ -36,7 +36,8 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
         else:
             route = models.Route.objects.get(id=request.data.get('route'))
 
-        cr = models.ClimbRecord.objects.create(user=request.user, route=route, date=request.data['date'])
+        cr = models.ClimbRecord.objects.create(user=request.user, route=route, style=request.data['style'],
+                                               date=request.data['date'])
         return Response('{}'.format(cr), status=HTTP_201_CREATED)
 
     def create_route_from_ajax_request(self, data):

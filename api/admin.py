@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Crag, Sector, Route, ClimbRecord
-from api.models import GradeScore
+from .models import Crag, Sector, Route, ClimbRecord, GradeScore, ClimbStyle
 
 
 def consolidate_related_field(queryset, attribute, reverse_attribute):
@@ -50,3 +49,4 @@ admin.site.register(Sector, SectorAdmin)
 admin.site.register(Route, RouteAdmin)
 admin.site.register(ClimbRecord)
 admin.site.register(GradeScore)
+admin.site.register(ClimbStyle)

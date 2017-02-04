@@ -24,6 +24,7 @@ var MainPage = React.createClass({
             crag: data.crag.id,
             route_name: data.route.value,
             route_grade: data.grade,
+            style: data.style,
             sector_name: data.sector.value,
             crag_name: data.crag.value,
             crag_country: data.country,

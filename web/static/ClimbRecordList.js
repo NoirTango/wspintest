@@ -8,6 +8,7 @@ var normalise = function(api_data) {
         id: api_data.id,
         name: api_data.route_name,
         grade: api_data.route_grade,
+        style: api_data.style,
         sector: api_data.sector_name,
         crag: api_data.crag_name,
         country: api_data.crag_country,
@@ -15,6 +16,7 @@ var normalise = function(api_data) {
         search_term: (api_data.date +' ' +
                       api_data.route_name.toLowerCase() + ' ' +
                       api_data.route_grade.toLowerCase() + ' ' +
+                      api_data.style.toLowerCase() + ' ' +
                       api_data.sector_name.toLowerCase() + ' ' +
                       api_data.crag_name.toLowerCase() + ' ' +
                       api_data.crag_country.toLowerCase())
@@ -55,11 +57,12 @@ module.exports = React.createClass({
                 'date': 'Date',
                 'name': 'Name',
                 'grade': 'Grade',
+                'style': 'Style',
                 'sector': 'Sector',
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['date', 'name', 'grade', 'sector', 'crag', 'country'];
+            column_keys = ['date', 'name', 'grade', 'style', 'sector', 'crag', 'country'];
 
 
         if (this.state.sort_key !== '') {

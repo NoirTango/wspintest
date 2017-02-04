@@ -21578,7 +21578,7 @@ function hasOwnProperty(obj, prop) {
 //jshint esnext:true
 
 var React = require('react'),
-    console = require('console')
+    console = require('console'),
     QueryableTextField = require('./QueryableTextField.js');
 
 var routeDisplay = function(route) {
@@ -21601,6 +21601,7 @@ module.exports = React.createClass({
         return {
             route: {value: '', id: null},
             grade: '',
+            style: '',
             sector: {value: '', id: null},
             crag: {value: '', id: null},
             country: '',
@@ -21644,6 +21645,10 @@ module.exports = React.createClass({
         this.disconnectRoute();
         this.setState((prevState, props) => (Object.assign({}, prevState, {grade: value})));
     },
+    onStyleChange: function(e) {
+        var value = e.target.value;
+        this.setState((prevState, props) => (Object.assign({}, prevState, {style: value})));
+    },
     onSectorChange: function(obj) {
         this.setState((prevState, props) =>(Object.assign({}, prevState, {sector: obj})));
         this.disconnectRoute();
@@ -21677,68 +21682,69 @@ module.exports = React.createClass({
     onSubmit: function(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
-        this.setState((prevState, props) => (Object.assign({}, prevState, {grade: ''})));
+        this.setState((prevState, props) => (Object.assign({}, prevState, {grade: '', style: ''})));
         this.routeComponent.setState({value: '', selected_object: null});
     },
     render: function() {
         return (
             React.createElement('div', {className: 'climb-record-form'},
                 React.createElement('form', {noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit},
-                    React.createElement('div', {},
-                        React.createElement(QueryableTextField, {
-                            value: this.state.route.value,
-                            id: 'route',
-                            placeholder: 'Route name',
-                            dataDisplay: routeDisplay,
-                            query: "/api/routes/?search=",
-                            onChange: this.onRouteChange,
-                            ref: (component) => this.routeComponent = component
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            id: 'grade',
-                            placeholder: 'grade',
-                            value: this.state.grade,
-                            onChange: this.onGradeChange
-                        }),
-                        React.createElement(QueryableTextField, {
-                            value: this.state.sector.value,
-                            id: 'sector',
-                            placeholder: 'Sector name',
-                            dataDisplay: sectorDisplay,
-                            query: "/api/sectors/?search=",
-                            onChange: this.onSectorChange,
-                            ref: (component) => this.sectorComponent = component
-                        })
-                    ),
-                    React.createElement('div', {},
-                        React.createElement(QueryableTextField, {
-                            value: this.state.crag.value,
-                            id: 'crag',
-                            placeholder: 'Crag name',
-                            dataDisplay: cragDisplay,
-                            query: "/api/crags/?search=",
-                            onChange: this.onCragChange,
-                            ref: (component) => this.cragComponent = component
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            id: 'country',
-                            placeholder: 'Country',
-                            value: this.state.country,
-                            onChange: this.onCountryChange
-                        }),
-                        React.createElement('input', {
-                            type: 'text',
-                            id: 'date',
-                            value: this.state.date,
-                            onChange: this.onDateChange
-                        })
-                    ),
+                    React.createElement(QueryableTextField, {
+                        value: this.state.route.value,
+                        id: 'route',
+                        placeholder: 'Route name',
+                        dataDisplay: routeDisplay,
+                        query: "/api/routes/?search=",
+                        onChange: this.onRouteChange,
+                        ref: (component) => this.routeComponent = component
+                    }),
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'grade',
+                        placeholder: 'grade',
+                        value: this.state.grade,
+                        onChange: this.onGradeChange
+                    }),
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'style',
+                        placeholder: 'style',
+                        value: this.state.style,
+                        onChange: this.onStyleChange
+                    }),
+                    React.createElement(QueryableTextField, {
+                        value: this.state.sector.value,
+                        id: 'sector',
+                        placeholder: 'Sector name',
+                        dataDisplay: sectorDisplay,
+                        query: "/api/sectors/?search=",
+                        onChange: this.onSectorChange,
+                        ref: (component) => this.sectorComponent = component
+                    }),
+                    React.createElement(QueryableTextField, {
+                        value: this.state.crag.value,
+                        id: 'crag',
+                        placeholder: 'Crag name',
+                        dataDisplay: cragDisplay,
+                        query: "/api/crags/?search=",
+                        onChange: this.onCragChange,
+                        ref: (component) => this.cragComponent = component
+                    }),
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'country',
+                        placeholder: 'Country',
+                        value: this.state.country,
+                        onChange: this.onCountryChange
+                    }),
+                    React.createElement('input', {
+                        type: 'text',
+                        id: 'date',
+                        value: this.state.date,
+                        onChange: this.onDateChange
+                    }),
                     //React.createElement('div', {}, JSON.stringify(this.state)),
-                    React.createElement('div', {className: 'submit'},
-                        React.createElement('button', {type: 'submit'}, 'Linked!')
-                    )
+                    React.createElement('button', {type: 'submit'}, 'Linked!')
                 )
             )
         );
@@ -21756,6 +21762,7 @@ var normalise = function(api_data) {
         id: api_data.id,
         name: api_data.route_name,
         grade: api_data.route_grade,
+        style: api_data.style,
         sector: api_data.sector_name,
         crag: api_data.crag_name,
         country: api_data.crag_country,
@@ -21763,6 +21770,7 @@ var normalise = function(api_data) {
         search_term: (api_data.date +' ' +
                       api_data.route_name.toLowerCase() + ' ' +
                       api_data.route_grade.toLowerCase() + ' ' +
+                      api_data.style.toLowerCase() + ' ' +
                       api_data.sector_name.toLowerCase() + ' ' +
                       api_data.crag_name.toLowerCase() + ' ' +
                       api_data.crag_country.toLowerCase())
@@ -21803,11 +21811,12 @@ module.exports = React.createClass({
                 'date': 'Date',
                 'name': 'Name',
                 'grade': 'Grade',
+                'style': 'Style',
                 'sector': 'Sector',
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['date', 'name', 'grade', 'sector', 'crag', 'country'];
+            column_keys = ['date', 'name', 'grade', 'style', 'sector', 'crag', 'country'];
 
 
         if (this.state.sort_key !== '') {
@@ -21870,6 +21879,7 @@ module.exports = React.createClass({
         date: React.PropTypes.string.isRequired,
         name: React.PropTypes.string.isRequired,
         grade: React.PropTypes.string.isRequired,
+        style: React.PropTypes.string.isRequired,
         sector: React.PropTypes.string.isRequired,
         crag: React.PropTypes.string.isRequired,
         country: React.PropTypes.string.isRequired,
@@ -21881,6 +21891,7 @@ module.exports = React.createClass({
                 React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
                 React.createElement('td', {key: this.props.id + 'N'}, this.props.name),
                 React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
+                React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
                 React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
                 React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
                 React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country)
@@ -22024,6 +22035,7 @@ var MainPage = React.createClass({
             crag: data.crag.id,
             route_name: data.route.value,
             route_grade: data.grade,
+            style: data.style,
             sector_name: data.sector.value,
             crag_name: data.crag.value,
             crag_country: data.country,

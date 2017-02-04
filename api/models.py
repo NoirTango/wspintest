@@ -34,9 +34,11 @@ class ClimbRecord(models.Model):
     route = models.ForeignKey(Route)
     date = models.DateField(default=datetime.date.today)
     user = models.ForeignKey(User, on_delete=CASCADE)
+    style = models.CharField(max_length=20)
 
     def __str__(self):
-        return '{}: {} - {} / {}'.format(self.user.username, self.route.name, self.route.grade, self.date)
+        return ('{}: {} - {} {} / {}'
+                .format(self.user.username, self.route.name, self.route.grade, self.style, self.date))
 
 
 class GradeScore(models.Model):
@@ -49,3 +51,15 @@ class GradeScore(models.Model):
 
     class Meta:
         unique_together = ('user', 'grade',)
+
+
+class ClimbStyle(models.Model):
+    style = models.CharField(max_length=20)
+    multiplier = models.FloatField()
+    user = models.ForeignKey(User, on_delete=CASCADE)
+
+    def __str__(self):
+        return '{} = {} / {}'.format(self.style, self.multiplier, self.user)
+
+    class Meta:
+        unique_together = ('user', 'style',)

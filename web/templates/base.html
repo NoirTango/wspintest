@@ -22,8 +22,13 @@
             <div id="navigation">
                 {% block navigation-home %}<span><a href="{% url 'home' %}">Home</a></span>{% endblock %}
                 {% block navigation-stats %}<span><a href="{% url 'stats' %}">Stats</a></span>{% endblock %}
-                {% block navigation-grades %}<span><a href="{% url 'grades' %}">Grades</a></span>{% endblock %}
-                {% block navigation-import %}<span><a href="{% url 'import' %}">Import/export</a></span>{% endblock %}
+                <div id="settings">
+                    <span class="icon-cog"></span>
+                    <div class="dropdown-content">
+                        {% block navigation-grades %}<span><a href="{% url 'grades' %}">Grades</a></span>{% endblock %}
+                        {% block navigation-import %}<span><a href="{% url 'import' %}">Import/export</a></span>{% endblock %}
+                    </div>
+                </div>
             </div>
             {% endblock %}
         </div>

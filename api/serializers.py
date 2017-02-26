@@ -1,6 +1,9 @@
+from collections import defaultdict
+
 from rest_framework import serializers
 
 from . import models
+from api.grade_score_calculator import GradeScoreCalculator
 
 
 class SectorSerializer(serializers.ModelSerializer):
@@ -45,15 +48,23 @@ class RouteSerializer(serializers.ModelSerializer):
 class ClimbRecordSerializer(serializers.ModelSerializer):
     route_name = serializers.SerializerMethodField()
     route_grade = serializers.SerializerMethodField()
+    route_score = serializers.SerializerMethodField()
     sector_name = serializers.SerializerMethodField()
     crag_name = serializers.SerializerMethodField()
     crag_country = serializers.SerializerMethodField()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.score_calculator = GradeScoreCalculator(kwargs['context']['request'].user)
+        
     def get_route_name(self, obj):
         return obj.route.name
 
     def get_route_grade(self, obj):
         return obj.route.grade
+    
+    def get_route_score(self, obj):
+        return self.score_calculator.get_total_score(obj.route.grade, obj.style)
 
     def get_sector_name(self, obj):
         return self.Meta.route_serializer.get_sector_name(obj.route)

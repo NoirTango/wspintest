@@ -21764,10 +21764,12 @@ var React = require('react'),
     ClimbRecordRow = require('./ClimbRecordRow.js');
 
 var normalise = function(api_data) {
+    console.log(api_data);
     return {
         id: api_data.id,
         name: api_data.route_name,
         grade: api_data.route_grade,
+        score: api_data.route_score,
         style: api_data.style,
         sector: api_data.sector_name,
         crag: api_data.crag_name,
@@ -21826,9 +21828,19 @@ module.exports = React.createClass({
 
 
         if (this.state.sort_key !== '') {
-            normalised_rows = normalised_rows.sort(
-                (a,b) => this.state.sort_order*a[this.state.sort_key].localeCompare(b[this.state.sort_key])
-            );
+            var key = this.state.sort_key, comparator;
+            if (key == 'grade') {
+                //normalised_rows = normalised_rows.sort(
+                //    (a,b) => this.state.sort_order*Math.sign(a.score - b.score)
+                //);
+                comparator = (a,b) => this.state.sort_order*Math.sign(a.score - b.score);
+            } else {
+                //normalised_rows = normalised_rows.sort(
+                //    (a,b) => this.state.sort_order*a[key].localeCompare(b[key])
+                //);
+                comparator = (a,b) => this.state.sort_order*a[key].localeCompare(b[key]);
+            }
+            normalised_rows = normalised_rows.sort(comparator);
         }
         return (
             React.createElement('div', {},

@@ -64,7 +64,7 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['date', 'name', 'grade', 'style', 'sector', 'crag', 'country'];
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;

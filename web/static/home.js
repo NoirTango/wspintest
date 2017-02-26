@@ -21824,24 +21824,18 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['date', 'name', 'grade', 'style', 'sector', 'crag', 'country'];
-
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;
             if (key == 'grade') {
-                //normalised_rows = normalised_rows.sort(
-                //    (a,b) => this.state.sort_order*Math.sign(a.score - b.score)
-                //);
                 comparator = (a,b) => this.state.sort_order*Math.sign(a.score - b.score);
             } else {
-                //normalised_rows = normalised_rows.sort(
-                //    (a,b) => this.state.sort_order*a[key].localeCompare(b[key])
-                //);
                 comparator = (a,b) => this.state.sort_order*a[key].localeCompare(b[key]);
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
+
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -21906,13 +21900,13 @@ module.exports = React.createClass({
     render: function() {
         return (
             React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
-                React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
                 React.createElement('td', {key: this.props.id + 'N'}, this.props.name),
                 React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
                 React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
                 React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
                 React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
-                React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country)
+                React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country),
+                React.createElement('td', {key: this.props.id + 'D'}, this.props.date)
             )
         );
     }

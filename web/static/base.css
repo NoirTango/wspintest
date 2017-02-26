@@ -39,7 +39,8 @@ body {
 #header_box {
     background-color: cornflowerblue;
     color: white;
-    min-height: 4em;    
+    min-height: 4em;  
+    margin-bottom: 1em;  
 }
 
 #welcome_message {
@@ -202,22 +203,6 @@ body {
     padding: 0px;
 }
 
-.navigation {
-    background-color: cornflowerblue;
-    color: white;
-}
-
-.navigation .active {
-    color: cornflowerblue;
-    background-color: white;
-
-}
-
-.navigation span {
-    margin: 2rem;
-    padding: .2rem;
-}
-
 .import-export .button {
     background-color: green;
     border: none;
@@ -246,18 +231,4 @@ body {
     text-decoration: none;
     display: inline-block;
     float: right;
-}
-
-#navigation{
-    background-color: cornflowerblue;
-    color: white;
-}
-
-#navigation .selected {
-    background-color: white;
-    color: black;
-}
-#navigation a {
-    color: white;
-    text-decoration: none;
 }

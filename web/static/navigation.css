@@ -1,0 +1,19 @@
+#navigation{
+    background-color: cornflowerblue;
+    color: white;
+}
+
+#navigation .selected {
+    font-weight: bold;
+    padding: .5rem 1rem;
+    display: inline-block;
+}
+/*#navigation .selected:before {
+    content: '<i class="icon-yes"></i>';
+}*/
+#navigation a {
+    color: white;
+    text-decoration: none;
+    padding: .5rem 1rem;
+    display: inline-block;
+}

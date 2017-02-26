@@ -1,0 +1,26 @@
+.climb-list {
+    padding: 1rem;
+    display: block;
+    overflow-x: auto;
+    font-size: 1rem;
+    word-wrap: none;
+    table-layout: fixed;
+    white-space: nowrap;    
+}
+
+.climb-list td {
+    padding: 0rem 1rem;
+}
+
+.even {
+    background-color: white;
+}
+
+.odd {
+    background-color: AliceBlue;
+}
+
+.filter input {
+    min-width: 50%;
+    margin: 1em .2em;
+}

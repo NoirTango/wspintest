@@ -24,3 +24,19 @@
     font-size: inherit;
     margin-top: 1rem;
 }
+
+.show-climb-record-form {
+    margin: .5em;
+    padding: .5em;
+    background: green;
+    color: white;
+    display: inline-block;    
+}
+
+.hide-climb-record-form {
+    margin: .5em;
+    padding: .5em;
+    background: grey;
+    color: white;
+    display: inline-block;    
+}

@@ -72,39 +72,6 @@ body {
     display: none;
 }
 
-.show-climb-record-form {
-    margin: .5em;
-    padding: .5em;
-    background: green;
-    color: white;
-    display: inline-block;    
-}
-
-.hide-climb-record-form {
-    margin: .5em;
-    padding: .5em;
-    background: grey;
-    color: white;
-    display: inline-block;    
-}
-
-.even {
-    background-color: white;
-}
-
-.odd {
-    background-color: AliceBlue;
-}
-
-.climb-list {
-    padding: 1rem;
-    width: 78%;
-}
-
-.climb-list td {
-    padding: 0rem 1rem;
-}
-
 .climb-stats {
     float: right;
     width: 20%;
@@ -205,10 +172,6 @@ input {
     font-size: 1rem;
 }
 
-.filter input {
-    width: auto;
-}
-
 .button {
     background-color: green;
     border: none;
@@ -218,5 +181,4 @@ input {
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    float: right;
 }

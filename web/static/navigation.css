@@ -8,11 +8,9 @@
     padding: .5rem 1rem;
     display: inline-block;
 }
-/*#navigation .selected:before {
-    content: '<i class="icon-yes"></i>';
-}*/
+
 #navigation a {
-    color: white;
+    color: lightgray;
     text-decoration: none;
     padding: .5rem 1rem;
     display: inline-block;

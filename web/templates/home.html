@@ -2,7 +2,14 @@
 {% load static %}
 
 {% block title %}Wspinologia{% endblock %}
-{% block navigation-home %}<span class="selected icon-yes">Home</span>{% endblock %}
+
+{% block navigation-home %}
+    <span class="selected icon-yes">Home</span>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static "climb_record_form.css" %}">
+{% endblock %}
 
 {% block content %}
     <div id="react-app"></div>

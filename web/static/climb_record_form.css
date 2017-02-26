@@ -1,0 +1,26 @@
+.climb-record-form {
+    background: lightyellow;
+    padding: .5rem;
+    margin: .5rem;
+}
+
+.climb-record-form input {
+    margin: .1rem;
+    padding: .2rem;
+}
+
+.climb-record-form .submit {
+}
+
+.climb-record-form button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: .2rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    font-size: inherit;
+    margin-top: 1rem;
+}

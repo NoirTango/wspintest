@@ -124,14 +124,14 @@ module.exports = React.createClass({
                     React.createElement('input', {
                         type: 'text',
                         id: 'grade',
-                        placeholder: 'grade',
+                        placeholder: 'Grade',
                         value: this.state.grade,
                         onChange: this.onGradeChange
                     }),
                     React.createElement('input', {
                         type: 'text',
                         id: 'style',
-                        placeholder: 'style',
+                        placeholder: 'Style',
                         value: this.state.style,
                         onChange: this.onStyleChange
                     }),

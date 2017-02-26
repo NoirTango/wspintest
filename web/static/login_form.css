@@ -1,0 +1,28 @@
+.vertical_form {
+    max-width: 30em;
+    background-color: white;
+    margin: 2rem auto;
+    font-size: inherit;
+}
+
+.vertical_form .button {
+    background-color: green;
+    border: none;
+    color: white;
+    padding: .5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    font-size: inherit;
+}
+
+.vertical_form input {
+    border: 0;
+    outline: 0;
+    background: transparent;
+    border-bottom: 2px solid grey;
+    width: 100%;
+    margin-bottom: 2em;
+    font-size: inherit;
+}

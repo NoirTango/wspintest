@@ -1,11 +1,19 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Wspinologia - logged out{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'logout_message.css' %}">
+{% endblock %}
+
+{% block navigation %}{% endblock %}
 
 {% block welcome %}<a href="{% url 'login' %}">Log in</a>
 or <a href="{% url 'register' %}">register</a>
 {% endblock %}
 
 {% block content %}
+<div id="logout_message">
     Logged out
+</div>
 {% endblock %}

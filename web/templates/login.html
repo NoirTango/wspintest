@@ -1,17 +1,22 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Wspinologia - log in to your account{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="{% static 'login_form.css' %}">
+{% endblock %}
 
 {% block welcome %}Login or <a href="{% url 'register' %}">register</a>{% endblock %}
+{% block navigation %}{% endblock %}
+
 
 {% block content %}
-
 <div id="failure_display">{{ failure }}</div>
 
 <form id="login_form" class="vertical_form" action="{{ request.path }}" method="post">
     {% csrf_token %}
-    E-mail: <input type="text" name="username"/><br/>
-    Password: <input type="password" name="password"/><br/>
+    E-mail: <input type="text" name="username"/>
+    Password: <input type="password" name="password"/>
     <input type="hidden" name="next" value="{{ request.GET.next }}"/>
     <input type="submit" class="button" value="Login"/>
 </form>

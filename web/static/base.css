@@ -36,9 +36,13 @@ body {
     font-size: 1rem;
 }
 
-#welcome_message {
+#header_box {
     background-color: cornflowerblue;
     color: white;
+    min-height: 4em;    
+}
+
+#welcome_message {
     text-align: right;
     padding: 1rem;
     margin: 0em;
@@ -65,33 +69,6 @@ body {
 
 #failure_display:empty {
     display: none;
-}
-
-.vertical_form {
-    width: 50%;
-    background-color: lightgrey;
-    margin: 2rem auto;
-    padding: 1rem;
-    font-size: inherit;
-}
-
-.vertical_form .button {
-    background-color: green;
-    border: none;
-    color: white;
-    padding: .5rem 1rem;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    width: 100%;
-    margin: 0rem 0rem 0rem 0rem;
-    font-size: inherit;
-}
-
-.vertical_form input {
-    width: 100%;
-    margin: 0rem 0rem 1rem 0rem;
-    font-size: inherit;
 }
 
 .even {
@@ -257,12 +234,6 @@ body {
 }
 
 .filter input {
-    border: 0;
-    outline: 0;
-    background: transparent;
-    border-bottom: 2px solid grey;
-    width: 50%;
-    margin-left: 2rem;
 }
 
 .button {

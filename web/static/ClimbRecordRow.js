@@ -26,7 +26,9 @@ module.exports = React.createClass({
     render: function() {
         return (
             React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
-                React.createElement('td', {key: this.props.id + 'N'}, this.props.name),
+                React.createElement('td', {key: this.props.id + 'N'}, this.props.name,
+                    this.props.children
+                ),
                 React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
                 React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
                 React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),

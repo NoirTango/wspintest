@@ -182,3 +182,10 @@ input {
     text-decoration: none;
     display: inline-block;
 }
+
+.pop-up {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    background: white;
+}

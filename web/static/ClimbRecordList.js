@@ -33,7 +33,7 @@ module.exports = React.createClass({
         onEdit: React.PropTypes.func
     },
     getInitialState: function() {
-        return {filter_text: '', sort_key: '', sort_order: 1, show_delete: null, show_edit: null};
+        return {filter_text: '', sort_key: '', sort_order: 1, show_delete_id: null, show_edit_id: null};
     },
     updateFilter: function(e) {
         var v = e.target.value;
@@ -55,10 +55,10 @@ module.exports = React.createClass({
         };
     },
     onDelete: function(row_data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: row_data.id}));
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: row_data.id}));
     },
     hideDialogs: function() {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: null, show_edit: null}));
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: null, show_edit_id: null}));
     },
     deleteRecord: function(record_id) {
         this.props.onDelete(record_id);
@@ -76,8 +76,7 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'],
-            action_box = null;
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;
@@ -88,7 +87,7 @@ module.exports = React.createClass({
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
-        
+
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -99,7 +98,6 @@ module.exports = React.createClass({
                        onChange: this.updateFilter
                     })
                 ),
-                action_box,
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {key: 'body'},
                         React.createElement('tr', {key: 'header'},
@@ -132,10 +130,10 @@ module.exports = React.createClass({
                             row_props.onEdit = component.props.onEdit;
                             row_props.onDelete = component.onDelete;
 
-                            if (component.state.show_delete === row_props.id ){
+                            if (component.state.show_delete_id === row_props.id ) {                                
                                 action_box = React.createElement(ConfirmationDialog, 
                                     {
-                                        className: 'delete-box', 
+                                        className: 'delete-box pop-up', 
                                         onOk: () => component.deleteRecord(row_props.id), 
                                         onCancel: component.hideDialogs
                                     },
@@ -143,7 +141,7 @@ module.exports = React.createClass({
                                 );
                             }
 
-                            return Array(React.createElement(ClimbRecordRow, row_props), action_box);
+                            return React.createElement(ClimbRecordRow, row_props, action_box);
                         })
                     )
                 )

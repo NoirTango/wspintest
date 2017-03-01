@@ -21815,9 +21815,11 @@ module.exports = React.createClass({
         };
     },
     onDelete: function(row_data) {
+        console.log('showing', this);
         this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: row_data.id}));
     },
     hideDialogs: function() {
+        console.log('hiding', this);
         this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: null, show_edit: null}));
     },
     deleteRecord: function(record_id) {
@@ -21836,8 +21838,7 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'],
-            action_box = null;
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;
@@ -21848,7 +21849,8 @@ module.exports = React.createClass({
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
-        
+
+        console.log(this.state);        
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -21859,7 +21861,6 @@ module.exports = React.createClass({
                        onChange: this.updateFilter
                     })
                 ),
-                action_box,
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {key: 'body'},
                         React.createElement('tr', {key: 'header'},
@@ -21892,10 +21893,10 @@ module.exports = React.createClass({
                             row_props.onEdit = component.props.onEdit;
                             row_props.onDelete = component.onDelete;
 
-                            if (component.state.show_delete === row_props.id ){
+                            if (component.state.show_delete === row_props.id ) {                                
                                 action_box = React.createElement(ConfirmationDialog, 
                                     {
-                                        className: 'delete-box', 
+                                        className: 'delete-box pop-up', 
                                         onOk: () => component.deleteRecord(row_props.id), 
                                         onCancel: component.hideDialogs
                                     },
@@ -21903,7 +21904,7 @@ module.exports = React.createClass({
                                 );
                             }
 
-                            return Array(React.createElement(ClimbRecordRow, row_props), action_box);
+                            return React.createElement(ClimbRecordRow, row_props, action_box);
                         })
                     )
                 )
@@ -21941,7 +21942,9 @@ module.exports = React.createClass({
     render: function() {
         return (
             React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
-                React.createElement('td', {key: this.props.id + 'N'}, this.props.name),
+                React.createElement('td', {key: this.props.id + 'N'}, this.props.name,
+                    this.props.children
+                ),
                 React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
                 React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
                 React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
@@ -21967,7 +21970,7 @@ module.exports = React.createClass({
         className: React.PropTypes.string
     },
     render: function() {
-        return React.createElement('span', {className: this.props.className},
+        return React.createElement('div', {className: this.props.className},
             this.props.children,
             React.createElement('span', {className: 'ok icon-yes', onClick: this.props.onOk}, 'OK'),
             React.createElement('span', {className: 'cancel icon-no', onClick: this.props.onCancel}, 'Cancel')

@@ -1,10 +1,10 @@
 // jshint esnext: true
 var React = require('react'),
     console = require('console'),
-    ClimbRecordRow = require('./ClimbRecordRow.js');
+    ClimbRecordRow = require('./ClimbRecordRow.js'),
+    ConfirmationDialog = require('./ConfirmationDialog.js');
 
 var normalise = function(api_data) {
-    console.log(api_data);
     return {
         id: api_data.id,
         name: api_data.route_name,
@@ -28,10 +28,12 @@ var normalise = function(api_data) {
 
 module.exports = React.createClass({
     props: {
-        climbs: React.PropTypes.array.required
+        climbs: React.PropTypes.array.required,
+        onDelete: React.PropTypes.func,
+        onEdit: React.PropTypes.func
     },
     getInitialState: function() {
-        return {filter_text: '', sort_key: '', sort_order: 1};
+        return {filter_text: '', sort_key: '', sort_order: 1, show_delete: null, show_edit: null};
     },
     updateFilter: function(e) {
         var v = e.target.value;
@@ -52,6 +54,16 @@ module.exports = React.createClass({
             component.setState((prevState, props) => Object.assign({}, prevState, {sort_key: key, sort_order: order}));
         };
     },
+    onDelete: function(row_data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: row_data.id}));
+    },
+    hideDialogs: function() {
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: null, show_edit: null}));
+    },
+    deleteRecord: function(record_id) {
+        this.props.onDelete(record_id);
+        this.hideDialogs();
+    },
     render: function() {
         var normalised_rows = this.props.climbs.map(normalise),
             component = this,
@@ -64,7 +76,8 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'],
+            action_box = null;
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;
@@ -75,7 +88,7 @@ module.exports = React.createClass({
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
-
+        
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -86,6 +99,7 @@ module.exports = React.createClass({
                        onChange: this.updateFilter
                     })
                 ),
+                action_box,
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {key: 'body'},
                         React.createElement('tr', {key: 'header'},
@@ -107,13 +121,29 @@ module.exports = React.createClass({
                             return cr.search_term.indexOf(component.state.filter_text) >= 0;
                         })
                         .map(function(row_props, i) {
+                            var action_box = null;
                             if (i%2) {
                                 row_props.className = 'odd';
                             } else {
                                 row_props.className = 'even';
                             }
+                            
                             row_props.key = row_props.id + 'CRR';
-                            return React.createElement(ClimbRecordRow, row_props);
+                            row_props.onEdit = component.props.onEdit;
+                            row_props.onDelete = component.onDelete;
+
+                            if (component.state.show_delete === row_props.id ){
+                                action_box = React.createElement(ConfirmationDialog, 
+                                    {
+                                        className: 'delete-box', 
+                                        onOk: () => component.deleteRecord(row_props.id), 
+                                        onCancel: component.hideDialogs
+                                    },
+                                    'Are you sure you want to delete ' + row_props.name + '?'
+                                );
+                            }
+
+                            return Array(React.createElement(ClimbRecordRow, row_props), action_box);
                         })
                     )
                 )

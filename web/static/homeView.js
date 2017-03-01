@@ -4,7 +4,8 @@ var React = require('react'),
     ClimbRecordList = require('./ClimbRecordList.js'),
     ClimbRecordForm = require('./ClimbRecordForm.js'),
     getAPIData = require('./getAPIData.js'),
-    postAPIData = require('./postAPIData.js');
+    postAPIData = require('./postAPIData.js'),
+    deleteAPI = require('./deleteAPI.js');
 
 var MainPage = React.createClass({
     getInitialState: function() {
@@ -32,6 +33,14 @@ var MainPage = React.createClass({
         };
         postAPIData(flatData, '/api/climb-records/ajax/', this.reloadData);
     },
+    deleteRecord: function(id) {
+        console.log('Deleting ' + id);
+        deleteAPI('/api/climb-records/'+id, this.reloadData);  
+    },
+    editRecord: function(id) {
+        console.log('Editing ' + id);
+        // ??  
+    },
     showForm: function() {
         this.setState((prevState, props) => Object.assign({}, prevState, {show_form: true}));
     },
@@ -52,7 +61,7 @@ var MainPage = React.createClass({
         return React.createElement('div', {},
             show_form_button,
             form_placeholder,
-            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs})
+            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs, onDelete: this.deleteRecord, onEdit: this.editRecord})
         );
     }
 });

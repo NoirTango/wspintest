@@ -21757,14 +21757,14 @@ module.exports = React.createClass({
     }
 });
 
-},{"./QueryableTextField.js":188,"console":2,"react":181}],186:[function(require,module,exports){
+},{"./QueryableTextField.js":189,"console":2,"react":181}],186:[function(require,module,exports){
 // jshint esnext: true
 var React = require('react'),
     console = require('console'),
-    ClimbRecordRow = require('./ClimbRecordRow.js');
+    ClimbRecordRow = require('./ClimbRecordRow.js'),
+    ConfirmationDialog = require('./ConfirmationDialog.js');
 
 var normalise = function(api_data) {
-    console.log(api_data);
     return {
         id: api_data.id,
         name: api_data.route_name,
@@ -21788,10 +21788,12 @@ var normalise = function(api_data) {
 
 module.exports = React.createClass({
     props: {
-        climbs: React.PropTypes.array.required
+        climbs: React.PropTypes.array.required,
+        onDelete: React.PropTypes.func,
+        onEdit: React.PropTypes.func
     },
     getInitialState: function() {
-        return {filter_text: '', sort_key: '', sort_order: 1};
+        return {filter_text: '', sort_key: '', sort_order: 1, show_delete: null, show_edit: null};
     },
     updateFilter: function(e) {
         var v = e.target.value;
@@ -21812,6 +21814,16 @@ module.exports = React.createClass({
             component.setState((prevState, props) => Object.assign({}, prevState, {sort_key: key, sort_order: order}));
         };
     },
+    onDelete: function(row_data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: row_data.id}));
+    },
+    hideDialogs: function() {
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: null, show_edit: null}));
+    },
+    deleteRecord: function(record_id) {
+        this.props.onDelete(record_id);
+        this.hideDialogs();
+    },
     render: function() {
         var normalised_rows = this.props.climbs.map(normalise),
             component = this,
@@ -21824,7 +21836,8 @@ module.exports = React.createClass({
                 'crag': 'Crag',
                 'country': 'Country'
             },
-            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
+            column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'],
+            action_box = null;
 
         if (this.state.sort_key !== '') {
             var key = this.state.sort_key, comparator;
@@ -21835,7 +21848,7 @@ module.exports = React.createClass({
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
-
+        
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -21846,6 +21859,7 @@ module.exports = React.createClass({
                        onChange: this.updateFilter
                     })
                 ),
+                action_box,
                 React.createElement('table', {className: 'climb-list'},
                     React.createElement('tbody', {key: 'body'},
                         React.createElement('tr', {key: 'header'},
@@ -21867,13 +21881,29 @@ module.exports = React.createClass({
                             return cr.search_term.indexOf(component.state.filter_text) >= 0;
                         })
                         .map(function(row_props, i) {
+                            var action_box = null;
                             if (i%2) {
                                 row_props.className = 'odd';
                             } else {
                                 row_props.className = 'even';
                             }
+                            
                             row_props.key = row_props.id + 'CRR';
-                            return React.createElement(ClimbRecordRow, row_props);
+                            row_props.onEdit = component.props.onEdit;
+                            row_props.onDelete = component.onDelete;
+
+                            if (component.state.show_delete === row_props.id ){
+                                action_box = React.createElement(ConfirmationDialog, 
+                                    {
+                                        className: 'delete-box', 
+                                        onOk: () => component.deleteRecord(row_props.id), 
+                                        onCancel: component.hideDialogs
+                                    },
+                                    'Are you sure you want to delete ' + row_props.name + '?'
+                                );
+                            }
+
+                            return Array(React.createElement(ClimbRecordRow, row_props), action_box);
                         })
                     )
                 )
@@ -21882,7 +21912,7 @@ module.exports = React.createClass({
     }
 });
 
-},{"./ClimbRecordRow.js":187,"console":2,"react":181}],187:[function(require,module,exports){
+},{"./ClimbRecordRow.js":187,"./ConfirmationDialog.js":188,"console":2,"react":181}],187:[function(require,module,exports){
 var React = require('react');
 
 module.exports = React.createClass({
@@ -21895,8 +21925,19 @@ module.exports = React.createClass({
         sector: React.PropTypes.string.isRequired,
         crag: React.PropTypes.string.isRequired,
         country: React.PropTypes.string.isRequired,
+        onEdit: React.PropTypes.func,
+        onDelete: React.PropTypes.func
     },
-
+    onEdit: function() {
+        if (typeof this.props.onEdit == 'function') {
+            this.props.onEdit(this.props);
+        }
+    },
+    onDelete: function() {
+        if (typeof this.props.onDelete == 'function') {
+            this.props.onDelete(this.props);
+        }
+    },
     render: function() {
         return (
             React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
@@ -21906,13 +21947,34 @@ module.exports = React.createClass({
                 React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
                 React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
                 React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country),
-                React.createElement('td', {key: this.props.id + 'D'}, this.props.date)
+                React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
+                React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
+                React.createElement('td', {className: 'icon-no climb-record-delete', onClick: this.onDelete})
             )
         );
     }
 });
 
 },{"react":181}],188:[function(require,module,exports){
+var React = require('react'),
+    console = require('console');
+    
+module.exports = React.createClass({
+    propTypes: {
+        onOk: React.PropTypes.func,
+        onCancel: React.PropTypes.func,
+        //text: React.PropTypes.string.required,
+        className: React.PropTypes.string
+    },
+    render: function() {
+        return React.createElement('span', {className: this.props.className},
+            this.props.children,
+            React.createElement('span', {className: 'ok icon-yes', onClick: this.props.onOk}, 'OK'),
+            React.createElement('span', {className: 'cancel icon-no', onClick: this.props.onCancel}, 'Cancel')
+        );         
+    }
+});
+},{"console":2,"react":181}],189:[function(require,module,exports){
 var React = require('react');
 
 module.exports = React.createClass({
@@ -21998,7 +22060,40 @@ module.exports = React.createClass({
     }
 });
 
-},{"react":181}],189:[function(require,module,exports){
+},{"react":181}],190:[function(require,module,exports){
+var console = require('console'),
+    Cookies = require('js.cookie');
+
+module.exports = function(url, callback, errback, headers=[]) {
+    var postReceived = function(e) {
+        var http_response = e.target;
+        if (http_response.readyState === 4 ) {
+            if (http_response.status < 400) {
+                console.log(http_response, http_response.status, http_response.response);
+                callback(http_response.response);
+            } else {
+                console.error(http_response.response);
+                if (typeof errback === 'function') {
+                    errback(http_response.response);
+                }
+            }
+        }
+    };
+    var csrfCookie = Cookies.get('csrftoken'),
+        client = new XMLHttpRequest();
+
+    client.onreadystatechange = postReceived;
+    client.open("DELETE", url, true);
+    client.setRequestHeader("Accept", "application/json");
+    client.setRequestHeader("X-CSRFToken", csrfCookie);
+    client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+    headers.map(function(val){console.log(val[0],val[1]);client.setRequestHeader(val[0], val[1]);});
+
+    client.send('');
+};
+
+},{"console":2,"js.cookie":27}],191:[function(require,module,exports){
 var console = require('console');
 
 module.exports = function(query, dataCallback, dataErrback){
@@ -22020,14 +22115,15 @@ module.exports = function(query, dataCallback, dataErrback){
     client.send();
 };
 
-},{"console":2}],190:[function(require,module,exports){
+},{"console":2}],192:[function(require,module,exports){
 // jshint esnext: true
 var React = require('react'),
     ReactDOM = require('react-dom'),
     ClimbRecordList = require('./ClimbRecordList.js'),
     ClimbRecordForm = require('./ClimbRecordForm.js'),
     getAPIData = require('./getAPIData.js'),
-    postAPIData = require('./postAPIData.js');
+    postAPIData = require('./postAPIData.js'),
+    deleteAPI = require('./deleteAPI.js');
 
 var MainPage = React.createClass({
     getInitialState: function() {
@@ -22055,6 +22151,14 @@ var MainPage = React.createClass({
         };
         postAPIData(flatData, '/api/climb-records/ajax/', this.reloadData);
     },
+    deleteRecord: function(id) {
+        console.log('Deleting ' + id);
+        deleteAPI('/api/climb-records/'+id, this.reloadData);  
+    },
+    editRecord: function(id) {
+        console.log('Editing ' + id);
+        // ??  
+    },
     showForm: function() {
         this.setState((prevState, props) => Object.assign({}, prevState, {show_form: true}));
     },
@@ -22075,7 +22179,7 @@ var MainPage = React.createClass({
         return React.createElement('div', {},
             show_form_button,
             form_placeholder,
-            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs})
+            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs, onDelete: this.deleteRecord, onEdit: this.editRecord})
         );
     }
 });
@@ -22090,7 +22194,7 @@ var buildApp = function() {
 buildApp();
 
 
-},{"./ClimbRecordForm.js":185,"./ClimbRecordList.js":186,"./getAPIData.js":189,"./postAPIData.js":191,"react":181,"react-dom":30}],191:[function(require,module,exports){
+},{"./ClimbRecordForm.js":185,"./ClimbRecordList.js":186,"./deleteAPI.js":190,"./getAPIData.js":191,"./postAPIData.js":193,"react":181,"react-dom":30}],193:[function(require,module,exports){
 var console = require('console'),
     Cookies = require('js.cookie');
 
@@ -22127,4 +22231,4 @@ module.exports = function(data, url, callback, errback, headers=[]) {
     client.send(postData);
 };
 
-},{"console":2,"js.cookie":27}]},{},[190]);
+},{"console":2,"js.cookie":27}]},{},[192]);

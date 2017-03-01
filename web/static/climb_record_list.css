@@ -12,6 +12,10 @@
     padding: 0rem 1rem;
 }
 
+.climb-record-delete {
+    color: red;
+}
+
 .even {
     background-color: white;
 }

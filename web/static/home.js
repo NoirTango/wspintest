@@ -21793,7 +21793,7 @@ module.exports = React.createClass({
         onEdit: React.PropTypes.func
     },
     getInitialState: function() {
-        return {filter_text: '', sort_key: '', sort_order: 1, show_delete: null, show_edit: null};
+        return {filter_text: '', sort_key: '', sort_order: 1, show_delete_id: null, show_edit_id: null};
     },
     updateFilter: function(e) {
         var v = e.target.value;
@@ -21815,12 +21815,10 @@ module.exports = React.createClass({
         };
     },
     onDelete: function(row_data) {
-        console.log('showing', this);
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: row_data.id}));
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: row_data.id}));
     },
     hideDialogs: function() {
-        console.log('hiding', this);
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete: null, show_edit: null}));
+        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: null, show_edit_id: null}));
     },
     deleteRecord: function(record_id) {
         this.props.onDelete(record_id);
@@ -21850,7 +21848,6 @@ module.exports = React.createClass({
             normalised_rows = normalised_rows.sort(comparator);
         }
 
-        console.log(this.state);        
         return (
             React.createElement('div', {},
                 React.createElement('div', {className: 'filter'},
@@ -21893,7 +21890,7 @@ module.exports = React.createClass({
                             row_props.onEdit = component.props.onEdit;
                             row_props.onDelete = component.onDelete;
 
-                            if (component.state.show_delete === row_props.id ) {                                
+                            if (component.state.show_delete_id === row_props.id ) {                                
                                 action_box = React.createElement(ConfirmationDialog, 
                                     {
                                         className: 'delete-box pop-up', 
@@ -21966,14 +21963,17 @@ module.exports = React.createClass({
     propTypes: {
         onOk: React.PropTypes.func,
         onCancel: React.PropTypes.func,
-        //text: React.PropTypes.string.required,
         className: React.PropTypes.string
     },
     render: function() {
         return React.createElement('div', {className: this.props.className},
-            this.props.children,
-            React.createElement('span', {className: 'ok icon-yes', onClick: this.props.onOk}, 'OK'),
-            React.createElement('span', {className: 'cancel icon-no', onClick: this.props.onCancel}, 'Cancel')
+            React.createElement('div', {className: 'confirmation-text'},
+                this.props.children
+            ),
+            React.createElement('div', {className: 'confirmation-buttons'},
+                React.createElement('span', {className: 'ok icon-yes', onClick: this.props.onOk}, 'OK'),
+                React.createElement('span', {className: 'cancel icon-no', onClick: this.props.onCancel}, 'Cancel')
+            )
         );         
     }
 });

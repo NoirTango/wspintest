@@ -184,8 +184,33 @@ input {
 }
 
 .pop-up {
-    position: absolute;
-    left: 0px;
+    position: fixed;
+    right: 10%;
     top: 50%;
     background: white;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    padding: 2em;
+}
+
+.confirmation-text {
+    text-align: center;
+}
+
+.confirmation-buttons {
+    text-align: right;
+    margin: 1em;
+}
+
+.confirmation-buttons .cancel {
+    color: white;
+    background: grey;
+    padding: .5em 2em .5em 1.5em;
+    margin: 1em;
+}
+
+.confirmation-buttons .ok {
+    color: white;
+    background: green;
+    padding: .5em 2em .5em 1.5em;
+    margin: 1em;
 }

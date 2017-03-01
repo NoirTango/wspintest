@@ -16,4 +16,5 @@ urlpatterns = [url(r'^', include(router.urls)),
                url(r'^scores-history/$', views.HistorySumView.as_view(), name='scores-history'),
                url(r'^csv-export/$', views.CSVExportView.as_view(), name='csv-export'),
                url(r'^csv-import/$', views.CSVImportView.as_view(), name='csv-import'),
+               url(r'^sum-history/$', views.SumHistoryView.as_view(), name='sum-history'),
                ]

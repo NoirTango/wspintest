@@ -35,7 +35,7 @@ module.exports = React.createClass({
                 React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
                 React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country),
                 React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
-                React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
+                //React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
                 React.createElement('td', {className: 'icon-no climb-record-delete', onClick: this.onDelete})
             )
         );

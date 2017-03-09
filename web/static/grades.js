@@ -1261,18 +1261,12 @@ module.exports = hyphenateStyleName;
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function validateFormat(format) {};
-
-if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function validateFormat(format) {
+function invariant(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
+  }
 
   if (!condition) {
     var error;
@@ -21581,6 +21575,8 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":183,"_process":29,"inherits":182}],185:[function(require,module,exports){
+'use strict';
+
 // jshint esnext: true
 var React = require('react'),
     ReactDOM = require('react-dom'),
@@ -21592,13 +21588,8 @@ var GradeScore = React.createClass({
         score: React.PropTypes.number.isRequired
     },
 
-    render: function() {
-        return (
-            React.createElement('tr', {className: this.props.className, key: this.props.grade+'ROW'},
-                React.createElement('td', {key: this.props.grade+'GRADE'}, this.props.grade),
-                React.createElement('td', {key: this.props.grade+'SCORE'}, this.props.score)
-            )
-        );
+    render: function render() {
+        return React.createElement('tr', { className: this.props.className, key: this.props.grade + 'ROW' }, React.createElement('td', { key: this.props.grade + 'GRADE' }, this.props.grade), React.createElement('td', { key: this.props.grade + 'SCORE' }, this.props.score));
     }
 });
 
@@ -21606,37 +21597,27 @@ module.exports = React.createClass({
     props: {
         grades: React.PropTypes.array.isRequired
     },
-    render: function() {
-        return (
-            React.createElement('div', {},
-                React.createElement('table', {className: 'climb-list'},
-                    React.createElement('tbody', {},
-                        React.createElement('tr', {key: 'header_row'},
-                            React.createElement('th', {key: 'header_grade'}, 'Grade'),
-                            React.createElement('th', {key: 'header_score'}, 'Score')
-                        ),
-                        this.props.grades.map(function(cr, i) {
-                            if (i%2) {
-                                cr.className = 'odd';
-                            } else {
-                                cr.className = 'even';
-                            }
-                            cr.key = cr.grade+'CONTAINER';
-                            return React.createElement(GradeScore, cr);
-                        })
-                    )
-                )
-            )
-        );
+    render: function render() {
+        return React.createElement('div', {}, React.createElement('table', { className: 'climb-list' }, React.createElement('tbody', {}, React.createElement('tr', { key: 'header_row' }, React.createElement('th', { key: 'header_grade' }, 'Grade'), React.createElement('th', { key: 'header_score' }, 'Score')), this.props.grades.map(function (cr, i) {
+            if (i % 2) {
+                cr.className = 'odd';
+            } else {
+                cr.className = 'even';
+            }
+            cr.key = cr.grade + 'CONTAINER';
+            return React.createElement(GradeScore, cr);
+        }))));
     }
 });
 
 },{"console":2,"react":181,"react-dom":30}],186:[function(require,module,exports){
+'use strict';
+
 var console = require('console');
 
-module.exports = function(query, dataCallback, dataErrback){
-    var loadData = function(e) {
-        if(e.target.status == 200) {
+module.exports = function (query, dataCallback, dataErrback) {
+    var loadData = function loadData(e) {
+        if (e.target.status == 200) {
             dataCallback(JSON.parse(e.target.response));
         } else {
             console.error(e.target.response);
@@ -21654,6 +21635,8 @@ module.exports = function(query, dataCallback, dataErrback){
 };
 
 },{"console":2}],187:[function(require,module,exports){
+'use strict';
+
 // jshint esnext: true
 var ReactDOM = require('react-dom'),
     React = require('react'),
@@ -21662,49 +21645,53 @@ var ReactDOM = require('react-dom'),
     postAPIData = require('./postAPIData.js');
 
 var GradesView = React.createClass({
-    getInitialState: function() {
+    getInitialState: function getInitialState() {
         this.reloadData();
-        return {grades: []};
+        return { grades: [] };
     },
-    setData: function(data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {grades: data}));
+    setData: function setData(data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { grades: data });
+        });
     },
-    reloadData: function() {
+    reloadData: function reloadData() {
         getAPIData('/api/scores/', this.setData);
     },
-    importStaticGrades: function(name){
-        return (() => postAPIData({type: name}, '/api/scores/import_static/', this.reloadData));
+    importStaticGrades: function importStaticGrades(name) {
+        var _this = this;
+
+        return function () {
+            return postAPIData({ type: name }, '/api/scores/import_static/', _this.reloadData);
+        };
     },
-    render: function() {
-        var scales = [
-            ['french', 'Import French scale'],
-            ['polish', 'Import Polish scale'],
-            ['uiaa', 'Import UIAA scale']
-        ];
-        return React.createElement('div', {},
-            scales.map((g) => React.createElement('div', {
+    render: function render() {
+        var _this2 = this;
+
+        var scales = [['french', 'Import French scale'], ['polish', 'Import Polish scale'], ['uiaa', 'Import UIAA scale']];
+        return React.createElement('div', {}, scales.map(function (g) {
+            return React.createElement('div', {
                 key: g[0] + 'button',
                 className: 'button',
-                onClick: this.importStaticGrades(g[0])
-            }, g[1])),
-            React.createElement(GradeScoreList, {className: 'climb-history', grades: this.state.grades})
-        );
+                onClick: _this2.importStaticGrades(g[0])
+            }, g[1]);
+        }), React.createElement(GradeScoreList, { className: 'climb-history', grades: this.state.grades }));
     }
 });
 
-ReactDOM.render(
-    React.createElement(GradesView),
-    document.getElementById('react-app')
-);
+ReactDOM.render(React.createElement(GradesView), document.getElementById('react-app'));
 
 },{"./GradeScoreList.js":185,"./getAPIData.js":186,"./postAPIData.js":188,"react":181,"react-dom":30}],188:[function(require,module,exports){
+'use strict';
+
 var console = require('console'),
     Cookies = require('js.cookie');
 
-module.exports = function(data, url, callback, errback, headers=[]) {
-    var postReceived = function(e) {
+module.exports = function (data, url, callback, errback) {
+    var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+
+    var postReceived = function postReceived(e) {
         var http_response = e.target;
-        if (http_response.readyState === 4 ) {
+        if (http_response.readyState === 4) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
                 callback(JSON.parse(http_response.response));
@@ -21729,7 +21716,9 @@ module.exports = function(data, url, callback, errback, headers=[]) {
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-    headers.map(function(val){console.log(val[0],val[1]);client.setRequestHeader(val[0], val[1]);});
+    headers.map(function (val) {
+        console.log(val[0], val[1]);client.setRequestHeader(val[0], val[1]);
+    });
 
     client.send(postData);
 };

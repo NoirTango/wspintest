@@ -1261,18 +1261,12 @@ module.exports = hyphenateStyleName;
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function validateFormat(format) {};
-
-if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function validateFormat(format) {
+function invariant(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
+  }
 
   if (!condition) {
     var error;
@@ -21581,60 +21575,64 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":183,"_process":29,"inherits":182}],185:[function(require,module,exports){
+'use strict';
+
 //jshint esnext: true
 var React = require('react'),
     ReactDOM = require('react-dom'),
     postAPIData = require('./postAPIData.js'),
     console = require('console');
 
-
 var ImportView = React.createClass({
     props: {},
-    submitImport: function() {
-        var r = new FileReader(), file = this.refs.filebutton.files[0];
-        r.onload = function(e) {
-            postAPIData(e.target.result, '/api/csv-import/',
-                function(){console.log('OK');},
-                function(){console.log('ERR');},
-                [['Content-Type', 'text/csv'], ['Content-Disposition', 'attachment; filename="'+file.name+'"']]
-            );
+    submitImport: function submitImport() {
+        var r = new FileReader(),
+            file = this.refs.filebutton.files[0];
+        r.onload = function (e) {
+            postAPIData(e.target.result, '/api/csv-import/', function () {
+                console.log('OK');
+            }, function () {
+                console.log('ERR');
+            }, [['Content-Type', 'text/csv'], ['Content-Disposition', 'attachment; filename="' + file.name + '"']]);
         };
         r.readAsText(file);
     },
-    render: function() {
-        return React.createElement('div', {className: 'import-export'},
-            React.createElement('span', {
-                className: 'button',
-                onClick: function() {location.replace('/api/csv-export/');}
-            }, 'Export'),
-            React.createElement('span', {
-                className: 'button',
-                onClick: (() => this.refs.filebutton.click())
-            },
-            React.createElement('input', {
-                type: 'file',
-                ref: 'filebutton',
-                style: {display: 'none'},
-                onChange: this.submitImport
-            }),
-            'Import'
-        ));
+    render: function render() {
+        var _this = this;
+
+        return React.createElement('div', { className: 'import-export' }, React.createElement('span', {
+            className: 'button',
+            onClick: function onClick() {
+                location.replace('/api/csv-export/');
+            }
+        }, 'Export'), React.createElement('span', {
+            className: 'button',
+            onClick: function onClick() {
+                return _this.refs.filebutton.click();
+            }
+        }, React.createElement('input', {
+            type: 'file',
+            ref: 'filebutton',
+            style: { display: 'none' },
+            onChange: this.submitImport
+        }), 'Import'));
     }
 });
 
-ReactDOM.render(
-    React.createElement(ImportView),
-    document.getElementById('react-app')
-);
+ReactDOM.render(React.createElement(ImportView), document.getElementById('react-app'));
 
 },{"./postAPIData.js":186,"console":2,"react":181,"react-dom":30}],186:[function(require,module,exports){
+'use strict';
+
 var console = require('console'),
     Cookies = require('js.cookie');
 
-module.exports = function(data, url, callback, errback, headers=[]) {
-    var postReceived = function(e) {
+module.exports = function (data, url, callback, errback) {
+    var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+
+    var postReceived = function postReceived(e) {
         var http_response = e.target;
-        if (http_response.readyState === 4 ) {
+        if (http_response.readyState === 4) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
                 callback(JSON.parse(http_response.response));
@@ -21659,7 +21657,9 @@ module.exports = function(data, url, callback, errback, headers=[]) {
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-    headers.map(function(val){console.log(val[0],val[1]);client.setRequestHeader(val[0], val[1]);});
+    headers.map(function (val) {
+        console.log(val[0], val[1]);client.setRequestHeader(val[0], val[1]);
+    });
 
     client.send(postData);
 };

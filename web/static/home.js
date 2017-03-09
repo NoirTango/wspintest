@@ -1261,18 +1261,12 @@ module.exports = hyphenateStyleName;
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function validateFormat(format) {};
-
-if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function validateFormat(format) {
+function invariant(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
+  }
 
   if (!condition) {
     var error;
@@ -21581,190 +21575,218 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":183,"_process":29,"inherits":182}],185:[function(require,module,exports){
+'use strict';
+
 //jshint esnext:true
 
 var React = require('react'),
     console = require('console'),
     QueryableTextField = require('./QueryableTextField.js');
 
-var routeDisplay = function(route) {
+var routeDisplay = function routeDisplay(route) {
     return route.name + ' ' + route.grade + ' - ' + route.sector_name + ' - ' + route.crag_name;
 };
 
-var sectorDisplay = function(sector) {
+var sectorDisplay = function sectorDisplay(sector) {
     return sector.name + ' - ' + sector.crag_name + ' / ' + sector.crag_country;
 };
 
-var cragDisplay = function(crag) {
-    return crag.name  + ' / ' + crag.country;
+var cragDisplay = function cragDisplay(crag) {
+    return crag.name + ' / ' + crag.country;
 };
 
 module.exports = React.createClass({
     propTypes: {
-        onChange: React.PropTypes.func,
+        onChange: React.PropTypes.func
     },
-    getInitialState: function() {
+    getInitialState: function getInitialState() {
         return {
-            route: {value: '', id: null},
+            route: { value: '', id: null },
             grade: '',
             style: '',
-            sector: {value: '', id: null},
-            crag: {value: '', id: null},
+            sector: { value: '', id: null },
+            crag: { value: '', id: null },
             country: '',
-            date: new Date().toISOString().substring(0,10)
+            date: new Date().toISOString().substring(0, 10)
         };
     },
-    disconnectRoute: function() {
-        this.setState((prevState, props) => (Object.assign({}, prevState, {
-            route: {value: prevState.route.value, id: null, selected_object: null}
-        })));
+    disconnectRoute: function disconnectRoute() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, {
+                route: { value: prevState.route.value, id: null, selected_object: null }
+            });
+        });
     },
-    disconnectSector: function() {
-        this.setState((prevState, props) => (Object.assign({}, prevState, {sector: {
-            value: prevState.sector.value, id: null, selected_object: null}
-        })));
+    disconnectSector: function disconnectSector() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { sector: {
+                    value: prevState.sector.value, id: null, selected_object: null }
+            });
+        });
         this.disconnectRoute();
     },
-    disconnectCrag: function() {
-        this.setState((prevState, props) => (Object.assign({}, prevState, {
-            crag: {value: prevState.crag.value, id: null, selected_object: null}
-        })));
+    disconnectCrag: function disconnectCrag() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, {
+                crag: { value: prevState.crag.value, id: null, selected_object: null }
+            });
+        });
         this.disconnectSector();
     },
-    onRouteChange: function(obj) {
-        this.setState((prevState, props) => (Object.assign({}, prevState, {route: obj})));
+    onRouteChange: function onRouteChange(obj) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { route: obj });
+        });
         if (obj.selected_object !== null) {
-            var sector = {value: obj.selected_object.sector_name, id: obj.selected_object.sector},
-                crag = {value: obj.selected_object.crag_name, id: obj.selected_object.crag};
-            this.setState((prevState, props) => (Object.assign({}, prevState, {
-                grade: obj.selected_object.grade,
-                sector: sector,
-                crag: crag,
-                country: obj.selected_object.crag_country
-            })));
+            var sector = { value: obj.selected_object.sector_name, id: obj.selected_object.sector },
+                crag = { value: obj.selected_object.crag_name, id: obj.selected_object.crag };
+            this.setState(function (prevState, props) {
+                return Object.assign({}, prevState, {
+                    grade: obj.selected_object.grade,
+                    sector: sector,
+                    crag: crag,
+                    country: obj.selected_object.crag_country
+                });
+            });
             this.sectorComponent.setState(sector);
             this.cragComponent.setState(crag);
         }
     },
-    onGradeChange: function(e) {
+    onGradeChange: function onGradeChange(e) {
         var value = e.target.value;
         this.disconnectRoute();
-        this.setState((prevState, props) => (Object.assign({}, prevState, {grade: value})));
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { grade: value });
+        });
     },
-    onStyleChange: function(e) {
+    onStyleChange: function onStyleChange(e) {
         var value = e.target.value;
-        this.setState((prevState, props) => (Object.assign({}, prevState, {style: value})));
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { style: value });
+        });
     },
-    onSectorChange: function(obj) {
-        this.setState((prevState, props) =>(Object.assign({}, prevState, {sector: obj})));
+    onSectorChange: function onSectorChange(obj) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { sector: obj });
+        });
         this.disconnectRoute();
         if (obj.selected_object !== null) {
-            var crag = {value: obj.selected_object.crag_name, id: obj.selected_object.crag};
-            this.setState((prevState, props) => (Object.assign({}, prevState, {
-                crag: crag,
-                country: obj.selected_object.crag_country
-            })));
+            var crag = { value: obj.selected_object.crag_name, id: obj.selected_object.crag };
+            this.setState(function (prevState, props) {
+                return Object.assign({}, prevState, {
+                    crag: crag,
+                    country: obj.selected_object.crag_country
+                });
+            });
             this.cragComponent.setState(crag);
         }
     },
-    onCragChange: function(obj) {
-        this.setState((prevState, props) => (Object.assign({}, prevState, {crag: obj})));
+    onCragChange: function onCragChange(obj) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { crag: obj });
+        });
         this.disconnectSector();
         if (obj.selected_object !== null) {
-            this.setState((prevState, props) => (Object.assign({}, prevState, {
-                country: obj.selected_object.country
-            })));
+            this.setState(function (prevState, props) {
+                return Object.assign({}, prevState, {
+                    country: obj.selected_object.country
+                });
+            });
         }
     },
-    onCountryChange: function(e) {
+    onCountryChange: function onCountryChange(e) {
         var value = e.target.value;
         this.disconnectCrag();
-        this.setState((prevState, props) => (Object.assign({}, prevState, {country: value})));
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { country: value });
+        });
     },
-    onDateChange: function(e) {
+    onDateChange: function onDateChange(e) {
         var value = e.target.value;
-        this.setState((prevState, props) => (Object.assign({}, prevState, {date: value})));
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { date: value });
+        });
     },
-    onSubmit: function(e) {
+    onSubmit: function onSubmit(e) {
         e.preventDefault();
         this.props.onSubmit(this.state);
-        this.setState((prevState, props) => (Object.assign({}, prevState, {grade: '', style: ''})));
-        this.routeComponent.setState({value: '', selected_object: null});
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { grade: '', style: '' });
+        });
+        this.routeComponent.setState({ value: '', selected_object: null });
     },
-    render: function() {
-        return (
-            React.createElement('div', {className: 'climb-record-form'},
-                React.createElement('form', {noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit},
-                    React.createElement(QueryableTextField, {
-                        value: this.state.route.value,
-                        id: 'route',
-                        placeholder: 'Route name',
-                        dataDisplay: routeDisplay,
-                        query: "/api/routes/?search=",
-                        onChange: this.onRouteChange,
-                        ref: (component) => this.routeComponent = component
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'grade',
-                        placeholder: 'Grade',
-                        value: this.state.grade,
-                        onChange: this.onGradeChange
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'style',
-                        placeholder: 'Style',
-                        value: this.state.style,
-                        onChange: this.onStyleChange
-                    }),
-                    React.createElement(QueryableTextField, {
-                        value: this.state.sector.value,
-                        id: 'sector',
-                        placeholder: 'Sector name',
-                        dataDisplay: sectorDisplay,
-                        query: "/api/sectors/?search=",
-                        onChange: this.onSectorChange,
-                        ref: (component) => this.sectorComponent = component
-                    }),
-                    React.createElement(QueryableTextField, {
-                        value: this.state.crag.value,
-                        id: 'crag',
-                        placeholder: 'Crag name',
-                        dataDisplay: cragDisplay,
-                        query: "/api/crags/?search=",
-                        onChange: this.onCragChange,
-                        ref: (component) => this.cragComponent = component
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'country',
-                        placeholder: 'Country',
-                        value: this.state.country,
-                        onChange: this.onCountryChange
-                    }),
-                    React.createElement('input', {
-                        type: 'text',
-                        id: 'date',
-                        value: this.state.date,
-                        onChange: this.onDateChange
-                    }),
-                    //React.createElement('div', {}, JSON.stringify(this.state)),
-                    React.createElement('button', {type: 'submit'}, 'Linked!')
-                )
-            )
-        );
+    render: function render() {
+        var _this = this;
+
+        return React.createElement('div', { className: 'climb-record-form' }, React.createElement('form', { noValidate: true, className: 'climb-record-form', onSubmit: this.onSubmit }, React.createElement(QueryableTextField, {
+            value: this.state.route.value,
+            id: 'route',
+            placeholder: 'Route name',
+            dataDisplay: routeDisplay,
+            query: "/api/routes/?search=",
+            onChange: this.onRouteChange,
+            ref: function ref(component) {
+                return _this.routeComponent = component;
+            }
+        }), React.createElement('input', {
+            type: 'text',
+            id: 'grade',
+            placeholder: 'Grade',
+            value: this.state.grade,
+            onChange: this.onGradeChange
+        }), React.createElement('input', {
+            type: 'text',
+            id: 'style',
+            placeholder: 'Style',
+            value: this.state.style,
+            onChange: this.onStyleChange
+        }), React.createElement(QueryableTextField, {
+            value: this.state.sector.value,
+            id: 'sector',
+            placeholder: 'Sector name',
+            dataDisplay: sectorDisplay,
+            query: "/api/sectors/?search=",
+            onChange: this.onSectorChange,
+            ref: function ref(component) {
+                return _this.sectorComponent = component;
+            }
+        }), React.createElement(QueryableTextField, {
+            value: this.state.crag.value,
+            id: 'crag',
+            placeholder: 'Crag name',
+            dataDisplay: cragDisplay,
+            query: "/api/crags/?search=",
+            onChange: this.onCragChange,
+            ref: function ref(component) {
+                return _this.cragComponent = component;
+            }
+        }), React.createElement('input', {
+            type: 'text',
+            id: 'country',
+            placeholder: 'Country',
+            value: this.state.country,
+            onChange: this.onCountryChange
+        }), React.createElement('input', {
+            type: 'text',
+            id: 'date',
+            value: this.state.date,
+            onChange: this.onDateChange
+        }),
+        //React.createElement('div', {}, JSON.stringify(this.state)),
+        React.createElement('button', { type: 'submit' }, 'Linked!')));
     }
 });
 
 },{"./QueryableTextField.js":189,"console":2,"react":181}],186:[function(require,module,exports){
+'use strict';
+
 // jshint esnext: true
 var React = require('react'),
     console = require('console'),
     ClimbRecordRow = require('./ClimbRecordRow.js'),
     ConfirmationDialog = require('./ConfirmationDialog.js');
 
-var normalise = function(api_data) {
+var normalise = function normalise(api_data) {
     return {
         id: api_data.id,
         name: api_data.route_name,
@@ -21775,16 +21797,9 @@ var normalise = function(api_data) {
         crag: api_data.crag_name,
         country: api_data.crag_country,
         date: api_data.date,
-        search_term: (api_data.date +' ' +
-                      api_data.route_name.toLowerCase() + ' ' +
-                      api_data.route_grade.toLowerCase() + ' ' +
-                      api_data.style.toLowerCase() + ' ' +
-                      api_data.sector_name.toLowerCase() + ' ' +
-                      api_data.crag_name.toLowerCase() + ' ' +
-                      api_data.crag_country.toLowerCase())
+        search_term: api_data.date + ' ' + api_data.route_name.toLowerCase() + ' ' + api_data.route_grade.toLowerCase() + ' ' + api_data.style.toLowerCase() + ' ' + api_data.sector_name.toLowerCase() + ' ' + api_data.crag_name.toLowerCase() + ' ' + api_data.crag_country.toLowerCase()
     };
 };
-
 
 module.exports = React.createClass({
     props: {
@@ -21792,17 +21807,20 @@ module.exports = React.createClass({
         onDelete: React.PropTypes.func,
         onEdit: React.PropTypes.func
     },
-    getInitialState: function() {
-        return {filter_text: '', sort_key: '', sort_order: 1, show_delete_id: null, show_edit_id: null};
+    getInitialState: function getInitialState() {
+        return { filter_text: '', sort_key: '', sort_order: 1, show_delete_id: null, show_edit_id: null };
     },
-    updateFilter: function(e) {
+    updateFilter: function updateFilter(e) {
         var v = e.target.value;
-        this.setState((prevState, props) => Object.assign({}, prevState, {filter_text: v}));
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { filter_text: v });
+        });
     },
-    updateSort: function(column) {
+    updateSort: function updateSort(column) {
         var component = this;
-        return function() {
-            var key = column, order = 1;
+        return function () {
+            var key = column,
+                order = 1;
             if (component.state.sort_key == column) {
                 if (component.state.sort_order === 1) {
                     order = -1;
@@ -21811,106 +21829,103 @@ module.exports = React.createClass({
                     order = 1;
                 }
             }
-            component.setState((prevState, props) => Object.assign({}, prevState, {sort_key: key, sort_order: order}));
+            component.setState(function (prevState, props) {
+                return Object.assign({}, prevState, { sort_key: key, sort_order: order });
+            });
         };
     },
-    onDelete: function(row_data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: row_data.id}));
+    onDelete: function onDelete(row_data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { show_delete_id: row_data.id });
+        });
     },
-    hideDialogs: function() {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_delete_id: null, show_edit_id: null}));
+    hideDialogs: function hideDialogs() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { show_delete_id: null, show_edit_id: null });
+        });
     },
-    deleteRecord: function(record_id) {
+    deleteRecord: function deleteRecord(record_id) {
         this.props.onDelete(record_id);
         this.hideDialogs();
     },
-    render: function() {
+    render: function render() {
+        var _this = this;
+
         var normalised_rows = this.props.climbs.map(normalise),
             component = this,
             columns = {
-                'date': 'Date',
-                'name': 'Name',
-                'grade': 'Grade',
-                'style': 'Style',
-                'sector': 'Sector',
-                'crag': 'Crag',
-                'country': 'Country'
-            },
+            'date': 'Date',
+            'name': 'Name',
+            'grade': 'Grade',
+            'style': 'Style',
+            'sector': 'Sector',
+            'crag': 'Crag',
+            'country': 'Country'
+        },
             column_keys = ['name', 'grade', 'style', 'sector', 'crag', 'country', 'date'];
 
         if (this.state.sort_key !== '') {
-            var key = this.state.sort_key, comparator;
+            var key = this.state.sort_key,
+                comparator;
             if (key == 'grade') {
-                comparator = (a,b) => this.state.sort_order*Math.sign(a.score - b.score);
+                comparator = function comparator(a, b) {
+                    return _this.state.sort_order * Math.sign(a.score - b.score);
+                };
             } else {
-                comparator = (a,b) => this.state.sort_order*a[key].localeCompare(b[key]);
+                comparator = function comparator(a, b) {
+                    return _this.state.sort_order * a[key].localeCompare(b[key]);
+                };
             }
             normalised_rows = normalised_rows.sort(comparator);
         }
 
-        return (
-            React.createElement('div', {},
-                React.createElement('div', {className: 'filter'},
-                    'Filter:',
-                    React.createElement('input', {
-                       type: 'text',
-                       value: this.state.filter_text,
-                       onChange: this.updateFilter
-                    })
-                ),
-                React.createElement('table', {className: 'climb-list'},
-                    React.createElement('tbody', {key: 'body'},
-                        React.createElement('tr', {key: 'header'},
-                            column_keys.map(function(column_key, i){
-                                var icon = null;
-                                if (column_key == component.state.sort_key) {
-                                    icon = React.createElement('i', {
-                                        className: component.state.sort_order > 0 ? 'icon-down-dir' : 'icon-up-dir'
-                                    });
-                                }
-                                return React.createElement('th', {
-                                    onClick: component.updateSort(column_key),
-                                    key: column_key+'H'
-                                }, icon, columns[column_key], icon);
-                            })
-                        ),
-                        normalised_rows
-                        .filter(function(cr) {
-                            return cr.search_term.indexOf(component.state.filter_text) >= 0;
-                        })
-                        .map(function(row_props, i) {
-                            var action_box = null;
-                            if (i%2) {
-                                row_props.className = 'odd';
-                            } else {
-                                row_props.className = 'even';
-                            }
-                            
-                            row_props.key = row_props.id + 'CRR';
-                            row_props.onEdit = component.props.onEdit;
-                            row_props.onDelete = component.onDelete;
+        return React.createElement('div', {}, React.createElement('div', { className: 'filter' }, 'Filter:', React.createElement('input', {
+            type: 'text',
+            value: this.state.filter_text,
+            onChange: this.updateFilter
+        })), React.createElement('table', { className: 'climb-list' }, React.createElement('tbody', { key: 'body' }, React.createElement('tr', { key: 'header' }, column_keys.map(function (column_key, i) {
+            var icon = null;
+            if (column_key == component.state.sort_key) {
+                icon = React.createElement('i', {
+                    className: component.state.sort_order > 0 ? 'icon-down-dir' : 'icon-up-dir'
+                });
+            }
+            return React.createElement('th', {
+                onClick: component.updateSort(column_key),
+                key: column_key + 'H'
+            }, icon, columns[column_key], icon);
+        })), normalised_rows.filter(function (cr) {
+            return cr.search_term.indexOf(component.state.filter_text) >= 0;
+        }).map(function (row_props, i) {
+            var action_box = null;
+            if (i % 2) {
+                row_props.className = 'odd';
+            } else {
+                row_props.className = 'even';
+            }
 
-                            if (component.state.show_delete_id === row_props.id ) {                                
-                                action_box = React.createElement(ConfirmationDialog, 
-                                    {
-                                        className: 'delete-box pop-up', 
-                                        onOk: () => component.deleteRecord(row_props.id), 
-                                        onCancel: component.hideDialogs
-                                    },
-                                    'Are you sure you want to delete ' + row_props.name + '?'
-                                );
-                            }
+            row_props.key = row_props.id + 'CRR';
+            row_props.onEdit = component.props.onEdit;
+            row_props.onDelete = component.onDelete;
 
-                            return React.createElement(ClimbRecordRow, row_props, action_box);
-                        })
-                    )
-                )
-            )
-        );
+            if (component.state.show_delete_id === row_props.id) {
+                action_box = React.createElement(ConfirmationDialog, {
+                    className: 'delete-box pop-up',
+                    onOk: function onOk() {
+                        return component.deleteRecord(row_props.id);
+                    },
+                    onCancel: component.hideDialogs
+                }, 'Are you sure you want to delete ' + row_props.name + '?');
+            }
+
+            return React.createElement(ClimbRecordRow, row_props, action_box);
+        }))));
     }
 });
 
 },{"./ClimbRecordRow.js":187,"./ConfirmationDialog.js":188,"console":2,"react":181}],187:[function(require,module,exports){
+'use strict';
+
 var React = require('react');
 
 module.exports = React.createClass({
@@ -21926,58 +21941,43 @@ module.exports = React.createClass({
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func
     },
-    onEdit: function() {
+    onEdit: function onEdit() {
         if (typeof this.props.onEdit == 'function') {
             this.props.onEdit(this.props);
         }
     },
-    onDelete: function() {
+    onDelete: function onDelete() {
         if (typeof this.props.onDelete == 'function') {
             this.props.onDelete(this.props);
         }
     },
-    render: function() {
-        return (
-            React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
-                React.createElement('td', {key: this.props.id + 'N'}, this.props.name,
-                    this.props.children
-                ),
-                React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
-                React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
-                React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
-                React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
-                React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country),
-                React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
-                //React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
-                React.createElement('td', {className: 'icon-no climb-record-delete', onClick: this.onDelete})
-            )
-        );
+    render: function render() {
+        return React.createElement('tr', { className: this.props.className, key: this.props.id + 'R' }, React.createElement('td', { key: this.props.id + 'N' }, this.props.name, this.props.children), React.createElement('td', { key: this.props.id + 'G' }, this.props.grade), React.createElement('td', { key: this.props.id + 'St' }, this.props.style), React.createElement('td', { key: this.props.id + 'S' }, this.props.sector), React.createElement('td', { key: this.props.id + 'Cr' }, this.props.crag), React.createElement('td', { key: this.props.id + 'Ct' }, this.props.country), React.createElement('td', { key: this.props.id + 'D' }, this.props.date),
+        //React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
+        React.createElement('td', { className: 'icon-no climb-record-delete', onClick: this.onDelete }));
     }
 });
 
 },{"react":181}],188:[function(require,module,exports){
+'use strict';
+
 var React = require('react'),
     console = require('console');
-    
+
 module.exports = React.createClass({
     propTypes: {
         onOk: React.PropTypes.func,
         onCancel: React.PropTypes.func,
         className: React.PropTypes.string
     },
-    render: function() {
-        return React.createElement('div', {className: this.props.className},
-            React.createElement('div', {className: 'confirmation-text'},
-                this.props.children
-            ),
-            React.createElement('div', {className: 'confirmation-buttons'},
-                React.createElement('span', {className: 'ok icon-yes', onClick: this.props.onOk}, 'OK'),
-                React.createElement('span', {className: 'cancel icon-no', onClick: this.props.onCancel}, 'Cancel')
-            )
-        );         
+    render: function render() {
+        return React.createElement('div', { className: this.props.className }, React.createElement('div', { className: 'confirmation-text' }, this.props.children), React.createElement('div', { className: 'confirmation-buttons' }, React.createElement('span', { className: 'ok icon-yes', onClick: this.props.onOk }, 'OK'), React.createElement('span', { className: 'cancel icon-no', onClick: this.props.onCancel }, 'Cancel')));
     }
 });
+
 },{"console":2,"react":181}],189:[function(require,module,exports){
+"use strict";
+
 var React = require('react');
 
 module.exports = React.createClass({
@@ -21989,18 +21989,20 @@ module.exports = React.createClass({
         dataDisplay: React.PropTypes.func.isRequired,
         onChange: React.PropTypes.func
     },
-    getInitialState: function() {
+    getInitialState: function getInitialState() {
         return {
             value: this.props.value,
             choice_list: [],
             selected_object: null
         };
     },
-    findOption: function(text) {
+    findOption: function findOption(text) {
         var display_func = this.props.dataDisplay;
-        return this.state.choice_list.find(function(opt) {return display_func(opt)==text;});
+        return this.state.choice_list.find(function (opt) {
+            return display_func(opt) == text;
+        });
     },
-    onTextChange: function(e) {
+    onTextChange: function onTextChange(e) {
         var selected_object = this.findOption(e.target.value);
         var new_state;
         if (selected_object) {
@@ -22014,15 +22016,15 @@ module.exports = React.createClass({
             var query = this.props.query;
             var component = this;
             var client = new XMLHttpRequest();
-            client.onload = function() {
-                if(this.status == 200) {
-                    component.setState(Object.assign({}, component.state, {choice_list: JSON.parse(this.response)}));
+            client.onload = function () {
+                if (this.status == 200) {
+                    component.setState(Object.assign({}, component.state, { choice_list: JSON.parse(this.response) }));
                 }
             };
             client.open("GET", query + e.target.value);
             client.setRequestHeader("Accept", "application/json");
             client.send();
-            new_state = Object.assign({}, this.state, {selected_object: null, id:null, value: e.target.value});
+            new_state = Object.assign({}, this.state, { selected_object: null, id: null, value: e.target.value });
         }
         this.setState(new_state);
         if (typeof this.props.onChange === 'function') {
@@ -22033,44 +22035,43 @@ module.exports = React.createClass({
             });
         }
     },
-    render: function() {
+    render: function render() {
         var datalist_name = this.props.id + '_datalist';
         var display_func = this.props.dataDisplay;
-        var option_list = this.state.choice_list.map(function(c) {
+        var option_list = this.state.choice_list.map(function (c) {
             return React.createElement('option', {
                 key: c.id,
                 value: display_func(c)
             }, display_func(c));
         });
-        return (
-            React.createElement('span', {},
-                React.createElement('input', {
-                    placeholder: this.props.placeholder,
-                    type: 'text',
-                    list: datalist_name,
-                    value: this.state.value,
-                    onChange: this.onTextChange
-                    // Note: I would rather use the following:
-                    //id: this.props.id,
-                    //autoComplete: 'off'
-                    // But chrome insists on hiding datalist if autocomplete is off
-                }),
-                React.createElement('datalist', {
-                    id: datalist_name
-                }, option_list)
-            )
-        );
+        return React.createElement('span', {}, React.createElement('input', {
+            placeholder: this.props.placeholder,
+            type: 'text',
+            list: datalist_name,
+            value: this.state.value,
+            onChange: this.onTextChange
+            // Note: I would rather use the following:
+            //id: this.props.id,
+            //autoComplete: 'off'
+            // But chrome insists on hiding datalist if autocomplete is off
+        }), React.createElement('datalist', {
+            id: datalist_name
+        }, option_list));
     }
 });
 
 },{"react":181}],190:[function(require,module,exports){
+'use strict';
+
 var console = require('console'),
     Cookies = require('js.cookie');
 
-module.exports = function(url, callback, errback, headers=[]) {
-    var postReceived = function(e) {
+module.exports = function (url, callback, errback) {
+    var headers = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+    var postReceived = function postReceived(e) {
         var http_response = e.target;
-        if (http_response.readyState === 4 ) {
+        if (http_response.readyState === 4) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
                 callback(http_response.response);
@@ -22091,17 +22092,21 @@ module.exports = function(url, callback, errback, headers=[]) {
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-    headers.map(function(val){console.log(val[0],val[1]);client.setRequestHeader(val[0], val[1]);});
+    headers.map(function (val) {
+        console.log(val[0], val[1]);client.setRequestHeader(val[0], val[1]);
+    });
 
     client.send('');
 };
 
 },{"console":2,"js.cookie":27}],191:[function(require,module,exports){
+'use strict';
+
 var console = require('console');
 
-module.exports = function(query, dataCallback, dataErrback){
-    var loadData = function(e) {
-        if(e.target.status == 200) {
+module.exports = function (query, dataCallback, dataErrback) {
+    var loadData = function loadData(e) {
+        if (e.target.status == 200) {
             dataCallback(JSON.parse(e.target.response));
         } else {
             console.error(e.target.response);
@@ -22119,6 +22124,8 @@ module.exports = function(query, dataCallback, dataErrback){
 };
 
 },{"console":2}],192:[function(require,module,exports){
+'use strict';
+
 // jshint esnext: true
 var React = require('react'),
     ReactDOM = require('react-dom'),
@@ -22129,17 +22136,19 @@ var React = require('react'),
     deleteAPI = require('./deleteAPI.js');
 
 var MainPage = React.createClass({
-    getInitialState: function() {
+    getInitialState: function getInitialState() {
         this.reloadData();
-        return {climbs: [], show_form: false};
+        return { climbs: [], show_form: false };
     },
-    setData: function(data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {climbs: data}));
+    setData: function setData(data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { climbs: data });
+        });
     },
-    reloadData: function() {
+    reloadData: function reloadData() {
         getAPIData('/api/climb-records/', this.setData);
     },
-    submitForm: function(data) {
+    submitForm: function submitForm(data) {
         var flatData = {
             route: data.route.id,
             sector: data.sector.id,
@@ -22154,57 +22163,57 @@ var MainPage = React.createClass({
         };
         postAPIData(flatData, '/api/climb-records/ajax/', this.reloadData);
     },
-    deleteRecord: function(id) {
+    deleteRecord: function deleteRecord(id) {
         console.log('Deleting ' + id);
-        deleteAPI('/api/climb-records/'+id, this.reloadData);  
+        deleteAPI('/api/climb-records/' + id, this.reloadData);
     },
-    editRecord: function(id) {
+    editRecord: function editRecord(id) {
         console.log('Editing ' + id);
         // ??  
     },
-    showForm: function() {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_form: true}));
+    showForm: function showForm() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { show_form: true });
+        });
     },
-    hideForm: function() {
-        this.setState((prevState, props) => Object.assign({}, prevState, {show_form: false}));
+    hideForm: function hideForm() {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { show_form: false });
+        });
     },
-    render: function() {
+    render: function render() {
         var show_form_button, form_placeholder;
         if (this.state.show_form) {
-            show_form_button = React.createElement('div', {className: 'hide-climb-record-form icon-left-open', onClick: this.hideForm}, 'Hide form');
+            show_form_button = React.createElement('div', { className: 'hide-climb-record-form icon-left-open', onClick: this.hideForm }, 'Hide form');
             form_placeholder = React.createElement(ClimbRecordForm, {
                 onSubmit: this.submitForm
             });
         } else {
-            show_form_button = React.createElement('div', {className: 'show-climb-record-form icon-right-open', onClick: this.showForm}, 'Add route');
+            show_form_button = React.createElement('div', { className: 'show-climb-record-form icon-right-open', onClick: this.showForm }, 'Add route');
             form_placeholder = '';
         }
-        return React.createElement('div', {},
-            show_form_button,
-            form_placeholder,
-            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs, onDelete: this.deleteRecord, onEdit: this.editRecord})
-        );
+        return React.createElement('div', {}, show_form_button, form_placeholder, React.createElement(ClimbRecordList, { className: 'climb-list', climbs: this.state.climbs, onDelete: this.deleteRecord, onEdit: this.editRecord }));
     }
 });
 
-var buildApp = function() {
-    ReactDOM.render(
-        React.createElement(MainPage),
-        document.getElementById('react-app')
-    );
+var buildApp = function buildApp() {
+    ReactDOM.render(React.createElement(MainPage), document.getElementById('react-app'));
 };
 
 buildApp();
 
-
 },{"./ClimbRecordForm.js":185,"./ClimbRecordList.js":186,"./deleteAPI.js":190,"./getAPIData.js":191,"./postAPIData.js":193,"react":181,"react-dom":30}],193:[function(require,module,exports){
+'use strict';
+
 var console = require('console'),
     Cookies = require('js.cookie');
 
-module.exports = function(data, url, callback, errback, headers=[]) {
-    var postReceived = function(e) {
+module.exports = function (data, url, callback, errback) {
+    var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+
+    var postReceived = function postReceived(e) {
         var http_response = e.target;
-        if (http_response.readyState === 4 ) {
+        if (http_response.readyState === 4) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
                 callback(JSON.parse(http_response.response));
@@ -22229,7 +22238,9 @@ module.exports = function(data, url, callback, errback, headers=[]) {
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
-    headers.map(function(val){console.log(val[0],val[1]);client.setRequestHeader(val[0], val[1]);});
+    headers.map(function (val) {
+        console.log(val[0], val[1]);client.setRequestHeader(val[0], val[1]);
+    });
 
     client.send(postData);
 };

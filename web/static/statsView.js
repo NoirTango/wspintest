@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import getAPIData from './getAPIData.js';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
 const data = [
       {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
@@ -13,26 +13,37 @@ const data = [
       {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
 ];
 
-const StackedBarChart = React.createClass({
+const SumHistoryChart = React.createClass({
+    getInitialState() {
+        this.reloadData();
+        return {history_totals: [], show_form: false};
+    },
+    setData(data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {history_totals: data}));
+    },
+    reloadData() {
+        getAPIData('/api/sum-history/', this.setData);
+    },
 	render () {
-  	return (
-    	<BarChart width={600} height={300} data={data}
-            margin={{top: 20, right: 30, left: 20, bottom: 5}}>
-       <XAxis dataKey="name"/>
-       <YAxis/>
-       <CartesianGrid strokeDasharray="3 3"/>
-       <Tooltip/>
-       <Legend />
-       <Bar dataKey="pv" stackId="a" fill="#8884d8" />
-       <Bar dataKey="uv" stackId="a" fill="#82ca9d" />
-      </BarChart>
-    );
-  }
-})
+	  	return (
+  			<ResponsiveContainer width='70%' aspect={4.0/3.0}>	
+  				<BarChart data={this.state.history_totals}
+  						margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+  					<XAxis dataKey="year"/>
+  					<YAxis/>
+  					<CartesianGrid strokeDasharray="3 3"/>
+  					<Tooltip/>
+  					<Legend />
+  					<Bar dataKey="other" stackId="a" fill="#8884d8" />
+  				</BarChart>
+  			</ResponsiveContainer>
+	    );
+	}
+});
 
 
 ReactDOM.render(
-	<StackedBarChart />,
+	<SumHistoryChart />,
     document.getElementById('react-app')
 );
 

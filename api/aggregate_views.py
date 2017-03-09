@@ -117,24 +117,26 @@ class HistorySumView(views.APIView):
             'total_counts': dict(aggregator.get_total_count()),
             'total_points': dict(aggregator.get_total_points())
         })
-        
+
+
 class SumHistoryView(views.APIView):
     def get(self, request):
         try:
             end_year = int(request.query_params['end_year'])
         except (KeyError, ValueError):
             end_year = datetime.date.today().year
-            
+
         try:
             start_year = int(request.query_params['start_year'])
         except (KeyError, ValueError):
             start_year = end_year - 10
-        
+
         calc = GradeScoreCalculator(request.user)
         data = {}
         for year in range(start_year, end_year + 1):
-            data[year] = 0
+            data[year] = {'year': year, 'other': 0}
         for record in models.ClimbRecord.objects.filter(user=request.user, date__year__lte=end_year, date__year__gte=start_year):
-            data[record.date.year] += calc.get_total_score(record.route.grade, record.style)
+            data[record.date.year]['other'] += calc.get_total_score(record.route.grade, record.style)
 
-        return Response(data)
+        list_data = [data[year] for year in range(start_year, end_year + 1)]
+        return Response(list_data)

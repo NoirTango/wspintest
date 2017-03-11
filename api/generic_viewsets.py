@@ -102,8 +102,10 @@ class CragViewSet(viewsets.ModelViewSet):
 class StyleViewSet(ModelViewSetWithUserPermissions):
     model = models.ClimbStyle
     base_name = 'Styles'
-    queryset = models.ClimbStyle.objects.all().order_by('-multiplier')
     serializer_class = serializers.ClimbStyleSerializer
+
+    def get_queryset(self):
+        return super().get_queryset().order_by('-multiplier')
 
 
 class GradeScoreViewset(ModelViewSetWithUserPermissions):

@@ -9,7 +9,7 @@ router.register(r'routes', views.RouteViewSet, base_name='routes')
 router.register(r'sectors', views.SectorViewSet, base_name='sectors')
 router.register(r'crags', views.CragViewSet, base_name='crags')
 router.register(r'scores', views.GradeScoreViewset, base_name='scores')
-router.register(r'styles', views.StyleViewSet, base_name='scores')
+router.register(r'styles', views.StyleViewSet, base_name='styles')
 
 
 urlpatterns = [url(r'^', include(router.urls)),

@@ -1,9 +1,9 @@
 import datetime
 
 from django.test import TestCase
+from rest_framework.reverse import reverse
 
 from api.tests import mixins
-from rest_framework.reverse import reverse
 from api import models
 
 

@@ -55283,24 +55283,38 @@ var _recharts = require('recharts');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var data = [{ name: 'Page A', uv: 4000, pv: 2400, amt: 2400 }, { name: 'Page B', uv: 3000, pv: 1398, amt: 2210 }, { name: 'Page C', uv: 2000, pv: 9800, amt: 2290 }, { name: 'Page D', uv: 2780, pv: 3908, amt: 2000 }, { name: 'Page E', uv: 1890, pv: 4800, amt: 2181 }, { name: 'Page F', uv: 2390, pv: 3800, amt: 2500 }, { name: 'Page G', uv: 3490, pv: 4300, amt: 2100 }];
+var colormap = ['#8884d8', '#4444d8', '#d88884', '#8844d8', '#4484d8'];
 
 var SumHistoryChart = _react2.default.createClass({
     getInitialState: function getInitialState() {
         this.reloadData();
-        return { history_totals: [], show_form: false };
+        return { history_totals: [], all_styles: [], show_form: false };
     },
     setData: function setData(data) {
         this.setState(function (prevState, props) {
             return Object.assign({}, prevState, { history_totals: data });
         });
     },
+    setStyles: function setStyles(data) {
+        data.push({ 'style': 'other' });
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { all_styles: data.map(function (s) {
+                    return s.style;
+                }) });
+        });
+    },
     reloadData: function reloadData() {
         (0, _getAPIData2.default)('/api/sum-history/', this.setData);
+        (0, _getAPIData2.default)('/api/styles/', this.setStyles);
     },
     render: function render() {
+        var bars = [];
+        this.state.all_styles.forEach(function (style, i) {
+            bars.push(_react2.default.createElement(_recharts.Bar, { key: style, dataKey: style, stackId: 'a', fill: colormap[i] }));
+        });
+
         return _react2.default.createElement(_recharts.ResponsiveContainer, { width: '70%', aspect: 4.0 / 3.0 }, _react2.default.createElement(_recharts.BarChart, { data: this.state.history_totals,
-            margin: { top: 20, right: 30, left: 20, bottom: 5 } }, _react2.default.createElement(_recharts.XAxis, { dataKey: 'year' }), _react2.default.createElement(_recharts.YAxis, null), _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: '3 3' }), _react2.default.createElement(_recharts.Tooltip, null), _react2.default.createElement(_recharts.Legend, null), _react2.default.createElement(_recharts.Bar, { dataKey: 'other', stackId: 'a', fill: '#8884d8' })));
+            margin: { top: 20, right: 30, left: 20, bottom: 5 } }, _react2.default.createElement(_recharts.XAxis, { dataKey: 'year' }), _react2.default.createElement(_recharts.YAxis, null), _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: '3 3' }), _react2.default.createElement(_recharts.Tooltip, null), _react2.default.createElement(_recharts.Legend, null), bars));
     }
 });
 

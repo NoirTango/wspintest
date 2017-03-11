@@ -3,28 +3,32 @@ import ReactDOM from 'react-dom';
 import getAPIData from './getAPIData.js';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer} from 'recharts';
 
-const data = [
-      {name: 'Page A', uv: 4000, pv: 2400, amt: 2400},
-      {name: 'Page B', uv: 3000, pv: 1398, amt: 2210},
-      {name: 'Page C', uv: 2000, pv: 9800, amt: 2290},
-      {name: 'Page D', uv: 2780, pv: 3908, amt: 2000},
-      {name: 'Page E', uv: 1890, pv: 4800, amt: 2181},
-      {name: 'Page F', uv: 2390, pv: 3800, amt: 2500},
-      {name: 'Page G', uv: 3490, pv: 4300, amt: 2100},
-];
+const colormap = ['#8884d8', '#4444d8', '#d88884', '#8844d8', '#4484d8'];
 
 const SumHistoryChart = React.createClass({
     getInitialState() {
         this.reloadData();
-        return {history_totals: [], show_form: false};
+        return {history_totals: [], all_styles: [], show_form: false};
     },
     setData(data) {
         this.setState((prevState, props) => Object.assign({}, prevState, {history_totals: data}));
     },
+    setStyles(data) {
+    	data.push({'style': 'other'});
+    	this.setState((prevState, props) => Object.assign({}, prevState, {all_styles: data.map((s) => s.style)}));
+    },
     reloadData() {
         getAPIData('/api/sum-history/', this.setData);
+        getAPIData('/api/styles/', this.setStyles);
     },
 	render () {
+    	var bars = [];
+    	this.state.all_styles.forEach(function(style, i){
+    		bars.push(
+    			<Bar key={style} dataKey={style} stackId="a" fill={colormap[i]} />
+    		);
+    	});
+    
 	  	return (
   			<ResponsiveContainer width='70%' aspect={4.0/3.0}>	
   				<BarChart data={this.state.history_totals}
@@ -34,7 +38,7 @@ const SumHistoryChart = React.createClass({
   					<CartesianGrid strokeDasharray="3 3"/>
   					<Tooltip/>
   					<Legend />
-  					<Bar dataKey="other" stackId="a" fill="#8884d8" />
+  					{bars}
   				</BarChart>
   			</ResponsiveContainer>
 	    );

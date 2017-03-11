@@ -131,12 +131,21 @@ class SumHistoryView(views.APIView):
         except (KeyError, ValueError):
             start_year = end_year - 10
 
+        styles = [cs.style for cs in models.ClimbStyle.objects.filter(user=request.user)]
+
         calc = GradeScoreCalculator(request.user)
         data = {}
         for year in range(start_year, end_year + 1):
             data[year] = {'year': year, 'other': 0}
+            for climbing_style in styles:
+                data[year][climbing_style] = 0
+
         for record in models.ClimbRecord.objects.filter(user=request.user, date__year__lte=end_year, date__year__gte=start_year):
-            data[record.date.year]['other'] += calc.get_total_score(record.route.grade, record.style)
+            if record.style in styles:
+                key = record.style
+            else:
+                key = 'other'
+            data[record.date.year][key] += calc.get_total_score(record.route.grade, record.style)
 
         list_data = [data[year] for year in range(start_year, end_year + 1)]
         return Response(list_data)

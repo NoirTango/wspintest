@@ -85,6 +85,13 @@ class CragViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
 
 
+class StyleViewSet(viewsets.ModelViewSet):
+    model = models.ClimbStyle
+    base_name = 'Styles'
+    queryset = models.ClimbStyle.objects.all().order_by('-multiplier')
+    serializer_class = serializers.ClimbStyleSerializer
+
+
 class GradeScoreViewset(viewsets.ModelViewSet):
     model = models.GradeScore
     serializer_class = serializers.ClimbScoreSerializer

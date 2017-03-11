@@ -91,3 +91,9 @@ class ClimbScoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.GradeScore
         fields = '__all__'
+
+
+class ClimbStyleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.ClimbStyle
+        fields = '__all__'

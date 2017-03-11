@@ -7,7 +7,22 @@ from . import models
 from . import serializers
 
 
-class ClimbRecordViewSet(viewsets.ModelViewSet):
+class ModelViewSetWithUserPermissions(viewsets.ModelViewSet):
+    def create(self, request, *args, **kwargs):
+        if 'user' not in request.data:
+            request.data['user'] = request.user.id
+
+        if int(request.data.get('user')) == request.user.id or request.user.is_staff:
+            return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
+        else:
+            raise exceptions.PermissionDenied('Not allowed to add {} for another user'.format(self.__class__))
+
+    def get_queryset(self):
+        user = self.request.user
+        return self.model.objects.filter(user=user)
+
+
+class ClimbRecordViewSet(ModelViewSetWithUserPermissions):
     model = models.ClimbRecord
     base_name = 'Climb Records'
     serializer_class = serializers.ClimbRecordSerializer
@@ -26,8 +41,7 @@ class ClimbRecordViewSet(viewsets.ModelViewSet):
         return viewsets.ModelViewSet.list(self, request, *args, **kwargs)
 
     def get_queryset(self):
-        user = self.request.user
-        return models.ClimbRecord.objects.filter(user=user).order_by('-date')
+        return super().get_queryset().order_by('-date')
 
     @list_route(methods=['post'])
     def ajax(self, request):
@@ -85,14 +99,14 @@ class CragViewSet(viewsets.ModelViewSet):
     search_fields = ('name',)
 
 
-class StyleViewSet(viewsets.ModelViewSet):
+class StyleViewSet(ModelViewSetWithUserPermissions):
     model = models.ClimbStyle
     base_name = 'Styles'
     queryset = models.ClimbStyle.objects.all().order_by('-multiplier')
     serializer_class = serializers.ClimbStyleSerializer
 
 
-class GradeScoreViewset(viewsets.ModelViewSet):
+class GradeScoreViewset(ModelViewSetWithUserPermissions):
     model = models.GradeScore
     serializer_class = serializers.ClimbScoreSerializer
 
@@ -142,8 +156,7 @@ class GradeScoreViewset(viewsets.ModelViewSet):
                 yield g
 
     def get_queryset(self):
-        user = self.request.user
-        return models.GradeScore.objects.filter(user=user).order_by('-score')
+        return super().get_queryset().order_by('-score')
 
     @classmethod
     def grade_scores_by_type(cls, grade_type):

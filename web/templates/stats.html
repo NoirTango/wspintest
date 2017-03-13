@@ -2,6 +2,11 @@
 {% load static %}
 
 {% block title %}Wspinologia{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static "stats_view.css" %}">
+{% endblock %}
+
 {% block navigation-stats %}<span class="selected icon-yes">Stats</span>{% endblock %}
 
 {% block content %}

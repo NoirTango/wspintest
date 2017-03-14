@@ -55241,6 +55241,121 @@ function hasOwnProperty(obj, prop) {
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./support/isBuffer":498,"_process":217,"inherits":497}],500:[function(require,module,exports){
+"use strict";
+
+module.exports = {
+	"piechartcolors": ["#17c9ca", "#04928c", "#474747", "#0f6465", "#05200f"],
+	"stylebarcolors": ["#d11149", "#f17105", "#e6c229", "#1a8fe3", "#6610f2"]
+};
+
+},{}],501:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _getAPIData = require('./getAPIData.js');
+
+var _getAPIData2 = _interopRequireDefault(_getAPIData);
+
+var _ChartColormap = require('./ChartColormap.js');
+
+var _recharts = require('recharts');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var colormap = ['#8884d8', '#4444d8', '#d88884', '#8844d8', '#4484d8'];
+
+var RADIAN = Math.PI / 180;
+var renderCustomizedLabel = function renderCustomizedLabel(_ref) {
+	var cx = _ref.cx,
+	    cy = _ref.cy,
+	    midAngle = _ref.midAngle,
+	    innerRadius = _ref.innerRadius,
+	    outerRadius = _ref.outerRadius,
+	    percent = _ref.percent,
+	    index = _ref.index,
+	    name = _ref.name,
+	    value = _ref.value;
+
+	var x = cx + outerRadius * Math.cos(-midAngle * RADIAN);
+	var y = cy + outerRadius * Math.sin(-midAngle * RADIAN);
+
+	return _react2.default.createElement('text', { x: x, y: y, fill: 'black', textAnchor: x > cx ? 'start' : 'end', dominantBaseline: 'central' }, name);
+};
+
+module.exports = _react2.default.createClass({
+	getInitialState: function getInitialState() {
+		(0, _getAPIData2.default)('/api/aggregate-places/', this.setData);
+		return { 'crag_data': [], 'country_data': [] };
+	},
+	setData: function setData(data) {
+		this.setState(function (prevState, props) {
+			return Object.assign({}, prevState, { 'crag_data': data.crag, 'country_data': data.country });
+		});
+	},
+	render: function render() {
+		return _react2.default.createElement(_recharts.PieChart, { width: 300, height: 300 }, _react2.default.createElement(_recharts.Pie, { data: this.state.crag_data, outerRadius: 60 }, this.state.crag_data.map(function (entry, index) {
+			return _react2.default.createElement(_recharts.Cell, { key: 'crag' + index, fill: _ChartColormap.piechartcolors[index % _ChartColormap.piechartcolors.length] });
+		})), _react2.default.createElement(_recharts.Pie, { data: this.state.country_data, innerRadius: 70, outerRadius: 80, label: renderCustomizedLabel, labelLine: false }, this.state.country_data.map(function (entry, index) {
+			return _react2.default.createElement(_recharts.Cell, { key: 'country' + index, fill: _ChartColormap.piechartcolors[index % _ChartColormap.piechartcolors.length] });
+		})), _react2.default.createElement(_recharts.Tooltip, null));
+	}
+});
+
+},{"./ChartColormap.js":500,"./getAPIData.js":503,"react":392,"recharts":431}],502:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _getAPIData = require('./getAPIData.js');
+
+var _getAPIData2 = _interopRequireDefault(_getAPIData);
+
+var _ChartColormap = require('./ChartColormap.js');
+
+var _recharts = require('recharts');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _react2.default.createClass({
+    getInitialState: function getInitialState() {
+        this.reloadData();
+        return { history_totals: [], all_styles: [], show_form: false };
+    },
+    setData: function setData(data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { history_totals: data });
+        });
+    },
+    setStyles: function setStyles(data) {
+        data.push({ 'style': 'other' });
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { all_styles: data.map(function (s) {
+                    return s.style;
+                }) });
+        });
+    },
+    reloadData: function reloadData() {
+        (0, _getAPIData2.default)('/api/sum-history/', this.setData);
+        (0, _getAPIData2.default)('/api/styles/', this.setStyles);
+    },
+    render: function render() {
+        var bars = [];
+        this.state.all_styles.forEach(function (style, i) {
+            bars.push(_react2.default.createElement(_recharts.Bar, { key: style, dataKey: style, stackId: 'a', fill: _ChartColormap.stylebarcolors[i] }));
+        });
+
+        return _react2.default.createElement(_recharts.BarChart, { data: this.state.history_totals,
+            width: 600, height: 300,
+            margin: { top: 20, right: 30, left: 20, bottom: 5 } }, _react2.default.createElement(_recharts.XAxis, { dataKey: 'year' }), _react2.default.createElement(_recharts.YAxis, null), _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: '3 3' }), _react2.default.createElement(_recharts.Tooltip, null), _react2.default.createElement(_recharts.Legend, null), bars);
+    }
+});
+
+},{"./ChartColormap.js":500,"./getAPIData.js":503,"react":392,"recharts":431}],503:[function(require,module,exports){
 'use strict';
 
 var console = require('console');
@@ -55264,7 +55379,7 @@ module.exports = function (query, dataCallback, dataErrback) {
     client.send();
 };
 
-},{"console":4}],501:[function(require,module,exports){
+},{"console":4}],504:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -55275,83 +55390,16 @@ var _reactDom = require('react-dom');
 
 var _reactDom2 = _interopRequireDefault(_reactDom);
 
-var _getAPIData = require('./getAPIData.js');
+var _SumHistoryChart = require('./SumHistoryChart.js');
 
-var _getAPIData2 = _interopRequireDefault(_getAPIData);
+var _SumHistoryChart2 = _interopRequireDefault(_SumHistoryChart);
 
-var _recharts = require('recharts');
+var _CragCountryChart = require('./CragCountryChart.js');
+
+var _CragCountryChart2 = _interopRequireDefault(_CragCountryChart);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var colormap = ['#8884d8', '#4444d8', '#d88884', '#8844d8', '#4484d8'];
+_reactDom2.default.render(_react2.default.createElement('div', null, _react2.default.createElement('div', { className: 'history-chart' }, _react2.default.createElement(_SumHistoryChart2.default, null)), _react2.default.createElement('div', { className: 'places-chart' }, _react2.default.createElement(_CragCountryChart2.default, null))), document.getElementById('react-app'));
 
-var SumHistoryChart = _react2.default.createClass({
-	getInitialState: function getInitialState() {
-		this.reloadData();
-		return { history_totals: [], all_styles: [], show_form: false };
-	},
-	setData: function setData(data) {
-		this.setState(function (prevState, props) {
-			return Object.assign({}, prevState, { history_totals: data });
-		});
-	},
-	setStyles: function setStyles(data) {
-		data.push({ 'style': 'other' });
-		this.setState(function (prevState, props) {
-			return Object.assign({}, prevState, { all_styles: data.map(function (s) {
-					return s.style;
-				}) });
-		});
-	},
-	reloadData: function reloadData() {
-		(0, _getAPIData2.default)('/api/sum-history/', this.setData);
-		(0, _getAPIData2.default)('/api/styles/', this.setStyles);
-	},
-	render: function render() {
-		var bars = [];
-		this.state.all_styles.forEach(function (style, i) {
-			bars.push(_react2.default.createElement(_recharts.Bar, { key: style, dataKey: style, stackId: 'a', fill: colormap[i] }));
-		});
-
-		return _react2.default.createElement(_recharts.BarChart, { data: this.state.history_totals,
-			width: 600, height: 300,
-			margin: { top: 20, right: 30, left: 20, bottom: 5 } }, _react2.default.createElement(_recharts.XAxis, { dataKey: 'year' }), _react2.default.createElement(_recharts.YAxis, null), _react2.default.createElement(_recharts.CartesianGrid, { strokeDasharray: '3 3' }), _react2.default.createElement(_recharts.Tooltip, null), _react2.default.createElement(_recharts.Legend, null), bars);
-	}
-});
-
-var RADIAN = Math.PI / 180;
-var renderCustomizedLabel = function renderCustomizedLabel(_ref) {
-	var cx = _ref.cx,
-	    cy = _ref.cy,
-	    midAngle = _ref.midAngle,
-	    innerRadius = _ref.innerRadius,
-	    outerRadius = _ref.outerRadius,
-	    percent = _ref.percent,
-	    index = _ref.index,
-	    name = _ref.name,
-	    value = _ref.value;
-
-	var radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-	var x = cx + radius * Math.cos(-midAngle * RADIAN);
-	var y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-	return _react2.default.createElement('text', { x: x, y: y, fill: 'black', textAnchor: x > cx ? 'start' : 'end', dominantBaseline: 'central' }, name);
-};
-
-var CragCountryChart = _react2.default.createClass({
-	getInitialState: function getInitialState() {
-		(0, _getAPIData2.default)('/api/aggregate-places/', this.setData);
-		return { 'crag_data': [], 'country_data': [] };
-	},
-	setData: function setData(data) {
-		this.setState(function (prevState, props) {
-			return Object.assign({}, prevState, { 'crag_data': data.crag, 'country_data': data.country });
-		});
-	},
-	render: function render() {
-		return _react2.default.createElement(_recharts.PieChart, { width: 300, height: 300 }, _react2.default.createElement(_recharts.Pie, { data: this.state.crag_data, outerRadius: 60, fill: '#8884d8' }), _react2.default.createElement(_recharts.Pie, { data: this.state.country_data, innerRadius: 70, outerRadius: 80, fill: '#82ca9d', label: renderCustomizedLabel }), _react2.default.createElement(_recharts.Tooltip, null));
-	}
-});
-_reactDom2.default.render(_react2.default.createElement('div', null, _react2.default.createElement('div', { className: 'history-chart' }, _react2.default.createElement(SumHistoryChart, null)), _react2.default.createElement('div', { className: 'places-chart' }, _react2.default.createElement(CragCountryChart, null))), document.getElementById('react-app'));
-
-},{"./getAPIData.js":500,"react":392,"react-dom":220,"recharts":431}]},{},[501]);
+},{"./CragCountryChart.js":501,"./SumHistoryChart.js":502,"react":392,"react-dom":220}]},{},[504]);

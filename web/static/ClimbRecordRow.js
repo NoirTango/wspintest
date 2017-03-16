@@ -1,4 +1,4 @@
-var React = require('react');
+import React from 'react';
 
 module.exports = React.createClass({
     propTypes: {
@@ -13,31 +13,31 @@ module.exports = React.createClass({
         onEdit: React.PropTypes.func,
         onDelete: React.PropTypes.func
     },
-    onEdit: function() {
+    onEdit() {
         if (typeof this.props.onEdit == 'function') {
             this.props.onEdit(this.props);
         }
     },
-    onDelete: function() {
+    onDelete() {
         if (typeof this.props.onDelete == 'function') {
             this.props.onDelete(this.props);
         }
     },
-    render: function() {
-        return (
-            React.createElement('tr', {className: this.props.className, key:this.props.id + 'R'},
-                React.createElement('td', {key: this.props.id + 'N'}, this.props.name,
-                    this.props.children
-                ),
-                React.createElement('td', {key: this.props.id + 'G'}, this.props.grade),
-                React.createElement('td', {key: this.props.id + 'St'}, this.props.style),
-                React.createElement('td', {key: this.props.id + 'S'}, this.props.sector),
-                React.createElement('td', {key: this.props.id + 'Cr'}, this.props.crag),
-                React.createElement('td', {key: this.props.id + 'Ct'}, this.props.country),
-                React.createElement('td', {key: this.props.id + 'D'}, this.props.date),
-                //React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
-                React.createElement('td', {className: 'icon-no climb-record-delete', onClick: this.onDelete})
-            )
+    render() {
+        return( 
+            <tr className={this.props.className} key={this.props.id + 'R'}>
+                <td>
+                    {this.props.name}
+                    {this.props.children}
+                </td>
+                <td>{this.props.grade}</td>
+                <td>{this.props.style}</td>
+                <td>{this.props.sector}</td>
+                <td>{this.props.crag}</td>
+                <td>{this.props.country}</td>
+                <td>{this.props.date}</td>
+                <td className="icon-no climb-record-delete" onClick={this.onDelete}></td>
+            </tr>
         );
     }
 });

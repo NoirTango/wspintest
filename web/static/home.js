@@ -21926,20 +21926,24 @@ module.exports = React.createClass({
 },{"./ClimbRecordRow.js":187,"./ConfirmationDialog.js":188,"console":2,"react":181}],187:[function(require,module,exports){
 'use strict';
 
-var React = require('react');
+var _react = require('react');
 
-module.exports = React.createClass({
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+module.exports = _react2.default.createClass({
     propTypes: {
-        id: React.PropTypes.number.isRequired,
-        date: React.PropTypes.string.isRequired,
-        name: React.PropTypes.string.isRequired,
-        grade: React.PropTypes.string.isRequired,
-        style: React.PropTypes.string.isRequired,
-        sector: React.PropTypes.string.isRequired,
-        crag: React.PropTypes.string.isRequired,
-        country: React.PropTypes.string.isRequired,
-        onEdit: React.PropTypes.func,
-        onDelete: React.PropTypes.func
+        id: _react2.default.PropTypes.number.isRequired,
+        date: _react2.default.PropTypes.string.isRequired,
+        name: _react2.default.PropTypes.string.isRequired,
+        grade: _react2.default.PropTypes.string.isRequired,
+        style: _react2.default.PropTypes.string.isRequired,
+        sector: _react2.default.PropTypes.string.isRequired,
+        crag: _react2.default.PropTypes.string.isRequired,
+        country: _react2.default.PropTypes.string.isRequired,
+        onEdit: _react2.default.PropTypes.func,
+        onDelete: _react2.default.PropTypes.func
     },
     onEdit: function onEdit() {
         if (typeof this.props.onEdit == 'function') {
@@ -21952,9 +21956,7 @@ module.exports = React.createClass({
         }
     },
     render: function render() {
-        return React.createElement('tr', { className: this.props.className, key: this.props.id + 'R' }, React.createElement('td', { key: this.props.id + 'N' }, this.props.name, this.props.children), React.createElement('td', { key: this.props.id + 'G' }, this.props.grade), React.createElement('td', { key: this.props.id + 'St' }, this.props.style), React.createElement('td', { key: this.props.id + 'S' }, this.props.sector), React.createElement('td', { key: this.props.id + 'Cr' }, this.props.crag), React.createElement('td', { key: this.props.id + 'Ct' }, this.props.country), React.createElement('td', { key: this.props.id + 'D' }, this.props.date),
-        //React.createElement('td', {className: 'icon-pencil', onClick: this.onEdit}),
-        React.createElement('td', { className: 'icon-no climb-record-delete', onClick: this.onDelete }));
+        return _react2.default.createElement('tr', { className: this.props.className, key: this.props.id + 'R' }, _react2.default.createElement('td', null, this.props.name, this.props.children), _react2.default.createElement('td', null, this.props.grade), _react2.default.createElement('td', null, this.props.style), _react2.default.createElement('td', null, this.props.sector), _react2.default.createElement('td', null, this.props.crag), _react2.default.createElement('td', null, this.props.country), _react2.default.createElement('td', null, this.props.date), _react2.default.createElement('td', { className: 'icon-no climb-record-delete', onClick: this.onDelete }));
     }
 });
 

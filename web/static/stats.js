@@ -55265,8 +55265,6 @@ var _recharts = require('recharts');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var colormap = ['#8884d8', '#4444d8', '#d88884', '#8844d8', '#4484d8'];
-
 var RADIAN = Math.PI / 180;
 var renderCustomizedLabel = function renderCustomizedLabel(_ref) {
 	var cx = _ref.cx,

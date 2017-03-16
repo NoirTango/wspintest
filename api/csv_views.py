@@ -21,6 +21,7 @@ class CSVExportView(views.APIView):
                     Date=cr.date,
                     Route=cr.route.name,
                     Grade=cr.route.grade,
+                    Style=cr.style,
                     Sector=cr.route.sector.name,
                     Crag=cr.route.sector.crag.name,
                     Country=cr.route.sector.crag.country
@@ -35,16 +36,14 @@ class CSVImportView(views.APIView):
 
     def text_file(self, request):
         for line in request.data['file']:
-            print(line)
             yield line.decode('utf-8')
 
     def post(self, request):
         reader = csv.DictReader(self.text_file(request))
         for row in reader:
-            print(row)
             crag, _ = models.Crag.objects.get_or_create(name=row['Crag'], country=row['Country'])
             sector, _ = models.Sector.objects.get_or_create(name=row['Sector'], crag=crag)
             route, _ = models.Route.objects.get_or_create(name=row['Route'], grade=row['Grade'], sector=sector)
-            cr = models.ClimbRecord(date=row['Date'], route=route, user=request.user)
+            cr = models.ClimbRecord(date=row['Date'], style=row.get('style', ''), route=route, user=request.user)
             cr.save()
         return Response({"status": "OK"}, status=201)

@@ -4,7 +4,7 @@ if [[ ${OSTYPE} =~ linux ]] ; then
 fi
 
 for name in home stats grades import ; do
-  ${NODE} ./node_modules/browserify/bin/cmd.js -t babelify  web/static/${name}View.js -o web/static/${name}.js
+  ${NODE} ./node_modules/browserify/bin/cmd.js -t babelify web/static/${name}View.js -o web/static/${name}.js
 done
 
 

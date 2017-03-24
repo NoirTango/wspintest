@@ -1,20 +1,35 @@
-// jshint esnext: true
-var React = require('react'),
-    ReactDOM = require('react-dom'),
-    console = require('console');
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {RIEInput, RIENumber} from 'riek';
 
-var GradeScore = React.createClass({
+const GradeScore = React.createClass({
     propTypes: {
-        grade: React.PropTypes.string.isRequired,
-        score: React.PropTypes.number.isRequired
+        data: React.PropTypes.object.isRequired
     },
-
-    render: function() {
+    render() {
         return (
-            React.createElement('tr', {className: this.props.className, key: this.props.grade+'ROW'},
-                React.createElement('td', {key: this.props.grade+'GRADE'}, this.props.grade),
-                React.createElement('td', {key: this.props.grade+'SCORE'}, this.props.score)
-            )
+            <tr className={this.props.className}>
+                <td>
+                    <RIEInput
+                        value={this.props.data.grade}
+                        change={(v) => (this.props.callback(v, this.props.data))}
+                        propName="grade"
+                    />
+                </td>
+                <td>
+                    <RIEInput
+                        value={this.props.data.score}
+                        change={(v) => (this.props.callback(
+                            Object.assign({}, v, {score: parseFloat(v.score)}), 
+                            this.props.data
+                        ))}
+                        validate={(v) => (v.match(/^\w*[0-9]+\.?[0-9]*\w*$/) !== null)}
+                        propName="score"
+                    />
+                </td>
+                <td className="icon-no climb-record-delete" onClick={this.onDelete}>
+                </td>
+            </tr>
         );
     }
 });
@@ -23,27 +38,21 @@ module.exports = React.createClass({
     props: {
         grades: React.PropTypes.array.isRequired
     },
-    render: function() {
+    render() {
         return (
-            React.createElement('div', {},
-                React.createElement('table', {className: 'climb-list'},
-                    React.createElement('tbody', {},
-                        React.createElement('tr', {key: 'header_row'},
-                            React.createElement('th', {key: 'header_grade'}, 'Grade'),
-                            React.createElement('th', {key: 'header_score'}, 'Score')
-                        ),
-                        this.props.grades.map(function(cr, i) {
-                            if (i%2) {
-                                cr.className = 'odd';
-                            } else {
-                                cr.className = 'even';
-                            }
-                            cr.key = cr.grade+'CONTAINER';
-                            return React.createElement(GradeScore, cr);
-                        })
-                    )
-                )
-            )
+            <div>
+                <table className='climb-list'>
+                    <tbody>
+                        <tr key='header_row'>
+                            <th key='header_grade'>Grade</th>
+                            <th key='header_score'>Score</th>
+                        </tr>
+                        {this.props.grades.map((cr, i) => ( 
+                                <GradeScore className={(i%2)?('even'):('odd')} key={cr.id} data={cr} callback={this.props.rowEditCallback}/>
+                            ))}
+                    </tbody>
+                </table>
+            </div>
         );
     }
 });

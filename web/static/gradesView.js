@@ -6,65 +6,50 @@ import getAPIData from './getAPIData.js';
 import postAPIData from './postAPIData.js';
 
 const GradesView = React.createClass({
-    getInitialState: function() {
+    getInitialState() {
         this.reloadData();
         return {grades: []};
     },
-    setData: function(data) {
+    setData(data) {
         this.setState((prevState, props) => Object.assign({}, prevState, {grades: data}));
     },
-    reloadData: function() {
+    reloadData() {
         getAPIData('/api/scores/', this.setData);
     },
-    importStaticGrades: function(name){
+    importStaticGrades(name){
         return (() => postAPIData({type: name}, '/api/scores/import_static/', this.reloadData));
     },
-    rowEditCallback: function(new_value, old_row) {
-        // In fact it should be simpler by calling update to API
-        console.log(new_value);
-        console.log(old_row);
-        var newgrades = [];
-        this.setData(this.state.grades.map(function(row){
-            if (row.id != old_row.id) {
-                return row;
-            } else {
-                return Object.assign({}, old_row, new_value);
-            }
-        }));
+    rowEditCallback(new_value, old_row) {
+        var updated_data = Object.assign({}, old_row, new_value), component = this;
+        console.log(new_value, old_row);
+        postAPIData(updated_data, '/api/scores/' + old_row.id + '/', 
+                    component.reloadData,
+                    console.log,
+                    [],
+                    'PUT');
     },
-    render: function() {
+    render() {
         var scales = [
             ['french', 'Import French scale'],
             ['polish', 'Import Polish scale'],
             ['uiaa', 'Import UIAA scale']
         ];
-        return React.createElement('div', {},
-            scales.map((g) => React.createElement('div', {
-                key: g[0] + 'button',
-                className: 'button',
-                onClick: this.importStaticGrades(g[0])
-            }, g[1])),
-            React.createElement(GradeScoreList, {className: 'climb-history', grades: this.state.grades, rowEditCallback: this.rowEditCallback})
+        return (
+            <div>
+                {
+                    scales.map((g) => (
+                        <div key={g[0] + 'button'} className='button' onClick={this.importStaticGrades(g[0])}>
+                            {g[1]}
+                        </div>
+                    ))
+                }
+                <GradeScoreList className='climb-history' grades={this.state.grades} rowEditCallback={this.rowEditCallback} />
+            </div>
         );
     }
 });
 
-const rows = [
-              {
-                id: 100,
-                name: 'Adam',
-                dad: 'John',
-                lovesBeeGees: true
-              },
-              {
-                id: 101,
-                name: 'Brian',
-                dad: 'George',
-                lovesBeeGees: false
-              },
-            ];
-
-            const columns = [
+const columns = [
               {
                 property: 'style',
                 header: {

@@ -1261,18 +1261,12 @@ module.exports = hyphenateStyleName;
  * will remain to ensure logic does not differ in production.
  */
 
-var validateFormat = function validateFormat(format) {};
-
-if (process.env.NODE_ENV !== 'production') {
-  validateFormat = function validateFormat(format) {
+function invariant(condition, format, a, b, c, d, e, f) {
+  if (process.env.NODE_ENV !== 'production') {
     if (format === undefined) {
       throw new Error('invariant requires an error message argument');
     }
-  };
-}
-
-function invariant(condition, format, a, b, c, d, e, f) {
-  validateFormat(format);
+  }
 
   if (!condition) {
     var error;
@@ -22218,6 +22212,7 @@ var console = require('console'),
 
 module.exports = function (data, url, callback, errback) {
     var headers = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+    var method = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'POST';
 
     var postReceived = function postReceived(e) {
         var http_response = e.target;
@@ -22241,7 +22236,7 @@ module.exports = function (data, url, callback, errback) {
         postData = JSON.stringify(data);
     }
     client.onreadystatechange = postReceived;
-    client.open("POST", url, true);
+    client.open(method, url, true);
     client.setRequestHeader("Accept", "application/json");
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

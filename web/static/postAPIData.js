@@ -1,7 +1,7 @@
 var console = require('console'),
     Cookies = require('js.cookie');
 
-module.exports = function(data, url, callback, errback, headers=[]) {
+module.exports = function(data, url, callback, errback, headers=[], method='POST') {
     var postReceived = function(e) {
         var http_response = e.target;
         if (http_response.readyState === 4 ) {
@@ -24,7 +24,7 @@ module.exports = function(data, url, callback, errback, headers=[]) {
         postData = JSON.stringify(data);
     }
     client.onreadystatechange = postReceived;
-    client.open("POST", url, true);
+    client.open(method, url, true);
     client.setRequestHeader("Accept", "application/json");
     client.setRequestHeader("X-CSRFToken", csrfCookie);
     client.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

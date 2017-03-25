@@ -12,9 +12,10 @@
     "js.cookie": "0.0.4",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
-    "recharts": "^0.21.2",
     "reactabular": "^8.3.0",
-    "reactabular-table": "^8.6.0"
+    "reactabular-table": "^8.6.0",
+    "recharts": "^0.21.2",
+    "riek": "^1.0.7"
   },
   "babel": {
     "plugins": [

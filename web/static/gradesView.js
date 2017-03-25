@@ -1,11 +1,11 @@
-// jshint esnext: true
-var ReactDOM = require('react-dom'),
-    React = require('react'),
-    GradeScoreList = require('./GradeScoreList.js'),
-    getAPIData = require('./getAPIData.js'),
-    postAPIData = require('./postAPIData.js');
+import * as Table from 'reactabular-table';
+import ReactDOM  from 'react-dom';
+import React from 'react';
+import GradeScoreList from './GradeScoreList.js';
+import getAPIData from './getAPIData.js';
+import postAPIData from './postAPIData.js';
 
-var GradesView = React.createClass({
+const GradesView = React.createClass({
     getInitialState: function() {
         this.reloadData();
         return {grades: []};
@@ -49,7 +49,64 @@ var GradesView = React.createClass({
     }
 });
 
+const rows = [
+              {
+                id: 100,
+                name: 'Adam',
+                dad: 'John',
+                lovesBeeGees: true
+              },
+              {
+                id: 101,
+                name: 'Brian',
+                dad: 'George',
+                lovesBeeGees: false
+              },
+            ];
+
+            const columns = [
+              {
+                property: 'style',
+                header: {
+                  label: 'Climb style'
+                }
+              },
+              {
+                property: 'multiplier',
+                header: {
+                  label: 'Score multiplier'
+                }
+              }
+            ];
+
+const StylesTable = React.createClass({
+    getInitialState() {
+        this.reloadData();
+        return {styles: []}
+    },
+    setData: function(data) {
+        this.setState((prevState, props) => Object.assign({}, prevState, {styles: data}));
+    },
+    reloadData: function() {
+        getAPIData('/api/styles/', this.setData);
+    },
+    render() {
+        return (
+            <Table.Provider
+                className="pure-table pure-table-striped"
+                columns={columns}>
+                <Table.Header />
+                <Table.Body rows={this.state.styles} rowKey="id" />
+            </Table.Provider>    
+        );
+    }
+});
+
 ReactDOM.render(
-    React.createElement(GradesView),
+    <div>
+        <StylesTable />
+        <GradesView />
+    </div>
+    ,
     document.getElementById('react-app')
 );

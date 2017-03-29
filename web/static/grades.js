@@ -26955,128 +26955,48 @@ module.exports = function (data, url, callback, errback) {
 },{"console":3,"js.cookie":28}],332:[function(require,module,exports){
 'use strict';
 
-var _reactabularTable = require('reactabular-table');
-
-var Table = _interopRequireWildcard(_reactabularTable);
-
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
-
-var _getAPIData = require('../getAPIData.js');
-
-var _getAPIData2 = _interopRequireDefault(_getAPIData);
-
-var _postAPIData = require('../postAPIData.js');
-
-var _postAPIData2 = _interopRequireDefault(_postAPIData);
 
 var _generic = require('./generic.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-var GradesTable = _react2.default.createClass({
-    getInitialState: function getInitialState() {
-        this.reloadData();
-        return { styles: [] };
-    },
-    setData: function setData(data) {
-        this.setState(function (prevState, props) {
-            return Object.assign({}, prevState, { styles: data });
-        });
-    },
-    reloadData: function reloadData() {
-        (0, _getAPIData2.default)('/api/scores/', this.setData);
-    },
-    putData: function putData(value, row_data) {
-        (0, _postAPIData2.default)(Object.assign({}, row_data, value), '/api/scores/' + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
-    },
-    deleteData: function deleteData(id) {
-        (0, _postAPIData2.default)('', '/api/scores/' + id + '/', this.reloadData, console.log, [], 'DELETE');
-    },
-    createData: function createData(v) {
-        (0, _postAPIData2.default)({ grade: 'New grade', score: 1.0 }, '/api/scores/', this.reloadData, console.log);
-    },
-    getColumns: function getColumns() {
-        return [(0, _generic.editableColumn)('grade', 'Climb grade', function () {
-            return true;
-        }, this.putData), (0, _generic.editableColumn)('score', 'Score', function (v) {
-            return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
-        }, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
-    },
-    render: function render() {
-        return _react2.default.createElement(Table.Provider, {
-            className: 'pure-table pure-table-striped',
-            columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.styles, rowKey: 'id' }));
-    }
-});
+var GradesTable = _react2.default.createClass(Object.assign({}, (0, _generic.apiConnectedTable)('/api/scores/', { grade: 'New grade', score: 1.0 }), {
+	getColumns: function getColumns() {
+		return [(0, _generic.editableColumn)('grade', 'Climb grade', function () {
+			return true;
+		}, this.putData), (0, _generic.editableColumn)('score', 'Score', function (v) {
+			return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+		}, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
+	}
+}));
 
 module.exports = GradesTable;
 
-},{"../getAPIData.js":329,"../postAPIData.js":331,"./generic.js":334,"react":305,"reactabular-table":313}],333:[function(require,module,exports){
+},{"./generic.js":334,"react":305}],333:[function(require,module,exports){
 'use strict';
-
-var _reactabularTable = require('reactabular-table');
-
-var Table = _interopRequireWildcard(_reactabularTable);
 
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _getAPIData = require('../getAPIData.js');
-
-var _getAPIData2 = _interopRequireDefault(_getAPIData);
-
-var _postAPIData = require('../postAPIData.js');
-
-var _postAPIData2 = _interopRequireDefault(_postAPIData);
-
 var _generic = require('./generic.js');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+module.exports = _react2.default.createClass(Object.assign({}, (0, _generic.apiConnectedTable)('/api/styles/', { style: 'New style', multiplier: 1.0 }), {
+	getColumns: function getColumns() {
+		return [(0, _generic.editableColumn)('style', 'Climb style', function () {
+			return true;
+		}, this.putData), (0, _generic.editableColumn)('multiplier', 'Score multiplier', function (v) {
+			return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+		}, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
+	}
+}));
 
-module.exports = _react2.default.createClass({
-    getInitialState: function getInitialState() {
-        this.reloadData();
-        return { styles: [] };
-    },
-    setData: function setData(data) {
-        this.setState(function (prevState, props) {
-            return Object.assign({}, prevState, { styles: data });
-        });
-    },
-    reloadData: function reloadData() {
-        (0, _getAPIData2.default)('/api/styles/', this.setData);
-    },
-    putData: function putData(value, row_data) {
-        (0, _postAPIData2.default)(Object.assign({}, row_data, value), '/api/styles/' + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
-    },
-    deleteData: function deleteData(id) {
-        (0, _postAPIData2.default)('', '/api/styles/' + id + '/', this.reloadData, console.log, [], 'DELETE');
-    },
-    createData: function createData(v) {
-        (0, _postAPIData2.default)({ style: 'New style', multiplier: 1.0 }, '/api/styles/', this.reloadData, console.log);
-    },
-    getColumns: function getColumns() {
-        return [(0, _generic.editableColumn)('style', 'Climb style', function () {
-            return true;
-        }, this.putData), (0, _generic.editableColumn)('multiplier', 'Score multiplier', function (v) {
-            return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
-        }, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
-    },
-    render: function render() {
-        return _react2.default.createElement(Table.Provider, {
-            className: 'pure-table pure-table-striped',
-            columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.styles, rowKey: 'id' }));
-    }
-});
-
-},{"../getAPIData.js":329,"../postAPIData.js":331,"./generic.js":334,"react":305,"reactabular-table":313}],334:[function(require,module,exports){
+},{"./generic.js":334,"react":305}],334:[function(require,module,exports){
 'use strict';
 
 var _react = require('react');
@@ -27085,58 +27005,104 @@ var _react2 = _interopRequireDefault(_react);
 
 var _riek = require('riek');
 
+var _reactabularTable = require('reactabular-table');
+
+var Table = _interopRequireWildcard(_reactabularTable);
+
+var _getAPIData = require('../getAPIData.js');
+
+var _getAPIData2 = _interopRequireDefault(_getAPIData);
+
+var _postAPIData = require('../postAPIData.js');
+
+var _postAPIData2 = _interopRequireDefault(_postAPIData);
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var editableColumn = function editableColumn(property_name, label, validation, onchange) {
-    return {
-        property: property_name,
-        header: {
-            label: label
-        },
-        cell: {
-            formatters: [function (value, cell_info) {
-                return _react2.default.createElement(_riek.RIEInput, {
-                    value: value,
-                    propName: property_name,
-                    change: function change(v) {
-                        return onchange(v, cell_info.rowData);
-                    },
-                    validate: validation
-                });
-            }]
-        }
-    };
+				return {
+								property: property_name,
+								header: {
+												label: label
+								},
+								cell: {
+												formatters: [function (value, cell_info) {
+																return _react2.default.createElement(_riek.RIEInput, {
+																				value: value,
+																				propName: property_name,
+																				change: function change(v) {
+																								return onchange(v, cell_info.rowData);
+																				},
+																				validate: validation
+																});
+												}]
+								}
+				};
 };
 
 var deleteColumn = function deleteColumn(property_name, ondelete, oncreate) {
-    return {
-        property: property_name,
-        header: {
-            transforms: [function () {
-                return {
-                    className: "icon-plus-squared table-row-new",
-                    onClick: oncreate,
-                    children: " "
-                };
-            }]
-        },
-        cell: {
-            transforms: [function (v) {
-                return {
-                    className: "icon-no table-row-delete",
-                    onClick: function onClick() {
-                        return ondelete(v);
-                    },
-                    children: " "
-                };
-            }]
-        }
-    };
+				return {
+								property: property_name,
+								header: {
+												transforms: [function () {
+																return {
+																				className: "icon-plus-squared table-row-new",
+																				onClick: oncreate,
+																				children: " "
+																};
+												}]
+								},
+								cell: {
+												transforms: [function (v) {
+																return {
+																				className: "icon-no table-row-delete",
+																				onClick: function onClick() {
+																								return ondelete(v);
+																				},
+																				children: " "
+																};
+												}]
+								}
+				};
+};
+
+var apiConnectedTable = function apiConnectedTable(uri, new_data_template) {
+				return {
+								getInitialState: function getInitialState() {
+												this.reloadData();
+												return { data: [] };
+								},
+								setData: function setData(data) {
+												this.setState(function (prevState, props) {
+																return Object.assign({}, prevState, { data: data });
+												});
+								},
+								reloadData: function reloadData() {
+												(0, _getAPIData2.default)(uri, this.setData);
+								},
+								putData: function putData(value, row_data) {
+												(0, _postAPIData2.default)(Object.assign({}, row_data, value), uri + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
+								},
+								deleteData: function deleteData(id) {
+												(0, _postAPIData2.default)('', uri + id + '/', this.reloadData, console.log, [], 'DELETE');
+								},
+								createData: function createData(v) {
+												(0, _postAPIData2.default)(new_data_template, uri, this.reloadData, console.log);
+								},
+								render: function render() {
+												return _react2.default.createElement(Table.Provider, {
+																className: 'pure-table pure-table-striped',
+																columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.data, rowKey: 'id' }));
+								}
+				};
 };
 
 module.exports = {
-    editableColumn: editableColumn,
-    deleteColumn: deleteColumn
+				editableColumn: editableColumn,
+				deleteColumn: deleteColumn,
+				apiConnectedTable: apiConnectedTable
 };
 
-},{"react":305,"riek":325}]},{},[330]);
+},{"../getAPIData.js":329,"../postAPIData.js":331,"react":305,"reactabular-table":313,"riek":325}]},{},[330]);

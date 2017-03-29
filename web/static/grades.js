@@ -26833,60 +26833,6 @@ function hasOwnProperty(obj, prop) {
 },{"./support/isBuffer":327,"_process":153,"inherits":326}],329:[function(require,module,exports){
 'use strict';
 
-var _react = require('react');
-
-var _react2 = _interopRequireDefault(_react);
-
-var _reactDom = require('react-dom');
-
-var _reactDom2 = _interopRequireDefault(_reactDom);
-
-var _riek = require('riek');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var GradeScore = _react2.default.createClass({
-    propTypes: {
-        data: _react2.default.PropTypes.object.isRequired
-    },
-    render: function render() {
-        var _this = this;
-
-        return _react2.default.createElement('tr', { className: this.props.className }, _react2.default.createElement('td', null, _react2.default.createElement(_riek.RIEInput, {
-            value: this.props.data.grade,
-            change: function change(v) {
-                return _this.props.callback(v, _this.props.data);
-            },
-            propName: 'grade'
-        })), _react2.default.createElement('td', null, _react2.default.createElement(_riek.RIEInput, {
-            value: this.props.data.score,
-            change: function change(v) {
-                return _this.props.callback(Object.assign({}, v, { score: parseFloat(v.score) }), _this.props.data);
-            },
-            validate: function validate(v) {
-                return v.match(/^\w*[0-9]+\.?[0-9]*\w*$/) !== null;
-            },
-            propName: 'score'
-        })), _react2.default.createElement('td', { className: 'icon-no climb-record-delete', onClick: this.onDelete }));
-    }
-});
-
-module.exports = _react2.default.createClass({
-    props: {
-        grades: _react2.default.PropTypes.array.isRequired
-    },
-    render: function render() {
-        var _this2 = this;
-
-        return _react2.default.createElement('div', null, _react2.default.createElement('table', { className: 'climb-list' }, _react2.default.createElement('tbody', null, _react2.default.createElement('tr', { key: 'header_row' }, _react2.default.createElement('th', { key: 'header_grade' }, 'Grade'), _react2.default.createElement('th', { key: 'header_score' }, 'Score')), this.props.grades.map(function (cr, i) {
-            return _react2.default.createElement(GradeScore, { className: i % 2 ? 'even' : 'odd', key: cr.id, data: cr, callback: _this2.props.rowEditCallback });
-        }))));
-    }
-});
-
-},{"react":305,"react-dom":154,"riek":325}],330:[function(require,module,exports){
-'use strict';
-
 var console = require('console');
 
 module.exports = function (query, dataCallback, dataErrback) {
@@ -26908,12 +26854,8 @@ module.exports = function (query, dataCallback, dataErrback) {
     client.send();
 };
 
-},{"console":3}],331:[function(require,module,exports){
+},{"console":3}],330:[function(require,module,exports){
 'use strict';
-
-var _reactabularTable = require('reactabular-table');
-
-var Table = _interopRequireWildcard(_reactabularTable);
 
 var _reactDom = require('react-dom');
 
@@ -26923,35 +26865,21 @@ var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _GradeScoreList = require('./GradeScoreList.js');
-
-var _GradeScoreList2 = _interopRequireDefault(_GradeScoreList);
-
-var _getAPIData = require('./getAPIData.js');
-
-var _getAPIData2 = _interopRequireDefault(_getAPIData);
-
 var _postAPIData = require('./postAPIData.js');
 
 var _postAPIData2 = _interopRequireDefault(_postAPIData);
 
+var _StylesTable = require('./tables/StylesTable.js');
+
+var _StylesTable2 = _interopRequireDefault(_StylesTable);
+
+var _GradesTable = require('./tables/GradesTable.js');
+
+var _GradesTable2 = _interopRequireDefault(_GradesTable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
 var GradesView = _react2.default.createClass({
-    getInitialState: function getInitialState() {
-        this.reloadData();
-        return { grades: [] };
-    },
-    setData: function setData(data) {
-        this.setState(function (prevState, props) {
-            return Object.assign({}, prevState, { grades: data });
-        });
-    },
-    reloadData: function reloadData() {
-        (0, _getAPIData2.default)('/api/scores/', this.setData);
-    },
     importStaticGrades: function importStaticGrades(name) {
         var _this = this;
 
@@ -26959,11 +26887,8 @@ var GradesView = _react2.default.createClass({
             return (0, _postAPIData2.default)({ type: name }, '/api/scores/import_static/', _this.reloadData);
         };
     },
-    rowEditCallback: function rowEditCallback(new_value, old_row) {
-        var updated_data = Object.assign({}, old_row, new_value),
-            component = this;
-        console.log(new_value, old_row);
-        (0, _postAPIData2.default)(updated_data, '/api/scores/' + old_row.id + '/', component.reloadData, console.log, [], 'PUT');
+    reloadData: function reloadData() {
+        location.reload();
     },
     render: function render() {
         var _this2 = this;
@@ -26971,46 +26896,13 @@ var GradesView = _react2.default.createClass({
         var scales = [['french', 'Import French scale'], ['polish', 'Import Polish scale'], ['uiaa', 'Import UIAA scale']];
         return _react2.default.createElement('div', null, scales.map(function (g) {
             return _react2.default.createElement('div', { key: g[0] + 'button', className: 'button', onClick: _this2.importStaticGrades(g[0]) }, g[1]);
-        }), _react2.default.createElement(_GradeScoreList2.default, { className: 'climb-history', grades: this.state.grades, rowEditCallback: this.rowEditCallback }));
+        }));
     }
 });
 
-var columns = [{
-    property: 'style',
-    header: {
-        label: 'Climb style'
-    }
-}, {
-    property: 'multiplier',
-    header: {
-        label: 'Score multiplier'
-    }
-}];
+_reactDom2.default.render(_react2.default.createElement('div', null, _react2.default.createElement(GradesView, null), _react2.default.createElement(_StylesTable2.default, null), _react2.default.createElement(_GradesTable2.default, null)), document.getElementById('react-app'));
 
-var StylesTable = _react2.default.createClass({
-    getInitialState: function getInitialState() {
-        this.reloadData();
-        return { styles: [] };
-    },
-
-    setData: function setData(data) {
-        this.setState(function (prevState, props) {
-            return Object.assign({}, prevState, { styles: data });
-        });
-    },
-    reloadData: function reloadData() {
-        (0, _getAPIData2.default)('/api/styles/', this.setData);
-    },
-    render: function render() {
-        return _react2.default.createElement(Table.Provider, {
-            className: 'pure-table pure-table-striped',
-            columns: columns }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.styles, rowKey: 'id' }));
-    }
-});
-
-_reactDom2.default.render(_react2.default.createElement('div', null, _react2.default.createElement(StylesTable, null), _react2.default.createElement(GradesView, null)), document.getElementById('react-app'));
-
-},{"./GradeScoreList.js":329,"./getAPIData.js":330,"./postAPIData.js":332,"react":305,"react-dom":154,"reactabular-table":313}],332:[function(require,module,exports){
+},{"./postAPIData.js":331,"./tables/GradesTable.js":332,"./tables/StylesTable.js":333,"react":305,"react-dom":154}],331:[function(require,module,exports){
 'use strict';
 
 var console = require('console'),
@@ -27021,11 +26913,17 @@ module.exports = function (data, url, callback, errback) {
     var method = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 'POST';
 
     var postReceived = function postReceived(e) {
-        var http_response = e.target;
+        var http_response = e.target,
+            data;
         if (http_response.readyState === 4) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
-                callback(JSON.parse(http_response.response));
+                if (http_response.status === 204) {
+                    data = null;
+                } else {
+                    data = JSON.parse(http_response.response);
+                }
+                callback(data);
             } else {
                 console.error(http_response.response);
                 if (typeof errback === 'function') {
@@ -27054,4 +26952,191 @@ module.exports = function (data, url, callback, errback) {
     client.send(postData);
 };
 
-},{"console":3,"js.cookie":28}]},{},[331]);
+},{"console":3,"js.cookie":28}],332:[function(require,module,exports){
+'use strict';
+
+var _reactabularTable = require('reactabular-table');
+
+var Table = _interopRequireWildcard(_reactabularTable);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _getAPIData = require('../getAPIData.js');
+
+var _getAPIData2 = _interopRequireDefault(_getAPIData);
+
+var _postAPIData = require('../postAPIData.js');
+
+var _postAPIData2 = _interopRequireDefault(_postAPIData);
+
+var _generic = require('./generic.js');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+var GradesTable = _react2.default.createClass({
+    getInitialState: function getInitialState() {
+        this.reloadData();
+        return { styles: [] };
+    },
+    setData: function setData(data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { styles: data });
+        });
+    },
+    reloadData: function reloadData() {
+        (0, _getAPIData2.default)('/api/scores/', this.setData);
+    },
+    putData: function putData(value, row_data) {
+        (0, _postAPIData2.default)(Object.assign({}, row_data, value), '/api/scores/' + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
+    },
+    deleteData: function deleteData(id) {
+        (0, _postAPIData2.default)('', '/api/scores/' + id + '/', this.reloadData, console.log, [], 'DELETE');
+    },
+    createData: function createData(v) {
+        (0, _postAPIData2.default)({ grade: 'New grade', score: 1.0 }, '/api/scores/', this.reloadData, console.log);
+    },
+    getColumns: function getColumns() {
+        return [(0, _generic.editableColumn)('grade', 'Climb grade', function () {
+            return true;
+        }, this.putData), (0, _generic.editableColumn)('score', 'Score', function (v) {
+            return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+        }, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
+    },
+    render: function render() {
+        return _react2.default.createElement(Table.Provider, {
+            className: 'pure-table pure-table-striped',
+            columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.styles, rowKey: 'id' }));
+    }
+});
+
+module.exports = GradesTable;
+
+},{"../getAPIData.js":329,"../postAPIData.js":331,"./generic.js":334,"react":305,"reactabular-table":313}],333:[function(require,module,exports){
+'use strict';
+
+var _reactabularTable = require('reactabular-table');
+
+var Table = _interopRequireWildcard(_reactabularTable);
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _getAPIData = require('../getAPIData.js');
+
+var _getAPIData2 = _interopRequireDefault(_getAPIData);
+
+var _postAPIData = require('../postAPIData.js');
+
+var _postAPIData2 = _interopRequireDefault(_postAPIData);
+
+var _generic = require('./generic.js');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+module.exports = _react2.default.createClass({
+    getInitialState: function getInitialState() {
+        this.reloadData();
+        return { styles: [] };
+    },
+    setData: function setData(data) {
+        this.setState(function (prevState, props) {
+            return Object.assign({}, prevState, { styles: data });
+        });
+    },
+    reloadData: function reloadData() {
+        (0, _getAPIData2.default)('/api/styles/', this.setData);
+    },
+    putData: function putData(value, row_data) {
+        (0, _postAPIData2.default)(Object.assign({}, row_data, value), '/api/styles/' + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
+    },
+    deleteData: function deleteData(id) {
+        (0, _postAPIData2.default)('', '/api/styles/' + id + '/', this.reloadData, console.log, [], 'DELETE');
+    },
+    createData: function createData(v) {
+        (0, _postAPIData2.default)({ style: 'New style', multiplier: 1.0 }, '/api/styles/', this.reloadData, console.log);
+    },
+    getColumns: function getColumns() {
+        return [(0, _generic.editableColumn)('style', 'Climb style', function () {
+            return true;
+        }, this.putData), (0, _generic.editableColumn)('multiplier', 'Score multiplier', function (v) {
+            return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+        }, this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.createData)];
+    },
+    render: function render() {
+        return _react2.default.createElement(Table.Provider, {
+            className: 'pure-table pure-table-striped',
+            columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.styles, rowKey: 'id' }));
+    }
+});
+
+},{"../getAPIData.js":329,"../postAPIData.js":331,"./generic.js":334,"react":305,"reactabular-table":313}],334:[function(require,module,exports){
+'use strict';
+
+var _react = require('react');
+
+var _react2 = _interopRequireDefault(_react);
+
+var _riek = require('riek');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var editableColumn = function editableColumn(property_name, label, validation, onchange) {
+    return {
+        property: property_name,
+        header: {
+            label: label
+        },
+        cell: {
+            formatters: [function (value, cell_info) {
+                return _react2.default.createElement(_riek.RIEInput, {
+                    value: value,
+                    propName: property_name,
+                    change: function change(v) {
+                        return onchange(v, cell_info.rowData);
+                    },
+                    validate: validation
+                });
+            }]
+        }
+    };
+};
+
+var deleteColumn = function deleteColumn(property_name, ondelete, oncreate) {
+    return {
+        property: property_name,
+        header: {
+            transforms: [function () {
+                return {
+                    className: "icon-plus-squared table-row-new",
+                    onClick: oncreate,
+                    children: " "
+                };
+            }]
+        },
+        cell: {
+            transforms: [function (v) {
+                return {
+                    className: "icon-no table-row-delete",
+                    onClick: function onClick() {
+                        return ondelete(v);
+                    },
+                    children: " "
+                };
+            }]
+        }
+    };
+};
+
+module.exports = {
+    editableColumn: editableColumn,
+    deleteColumn: deleteColumn
+};
+
+},{"react":305,"riek":325}]},{},[330]);

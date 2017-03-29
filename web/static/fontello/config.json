@@ -53,6 +53,12 @@
       "css": "pencil",
       "code": 59399,
       "src": "fontawesome"
+    },
+    {
+      "uid": "1a5cfa186647e8c929c2b17b9fc4dac1",
+      "css": "plus-squared",
+      "code": 61694,
+      "src": "fontawesome"
     }
   ]
 }

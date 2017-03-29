@@ -17,6 +17,10 @@ class ModelViewSetWithUserPermissions(viewsets.ModelViewSet):
         else:
             raise exceptions.PermissionDenied('Not allowed to add {} for another user'.format(self.__class__))
 
+    def destroy(self, request, *args, **kwargs):
+        super().destroy(request, *args, **kwargs)
+        return Response({'deleted': 'OK'})
+
     def get_queryset(self):
         user = self.request.user
         return self.model.objects.filter(user=user)

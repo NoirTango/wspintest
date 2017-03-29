@@ -3,11 +3,16 @@ var console = require('console'),
 
 module.exports = function(data, url, callback, errback, headers=[], method='POST') {
     var postReceived = function(e) {
-        var http_response = e.target;
+        var http_response = e.target, data;
         if (http_response.readyState === 4 ) {
             if (http_response.status < 400) {
                 console.log(http_response, http_response.status, http_response.response);
-                callback(JSON.parse(http_response.response));
+                if (http_response.status === 204) {
+                	data = null;
+                } else {
+                	data = JSON.parse(http_response.response);
+                }
+                callback(data);
             } else {
                 console.error(http_response.response);
                 if (typeof errback === 'function') {

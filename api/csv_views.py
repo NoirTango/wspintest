@@ -14,7 +14,7 @@ class CSVExportView(views.APIView):
     def get(self, request):
         climb_data = models.ClimbRecord.objects.filter(user=request.user)
         with StringIO() as payload:
-            writer = csv.DictWriter(payload, fieldnames=['Date', 'Route', 'Grade', 'Sector', 'Crag', 'Country'])
+            writer = csv.DictWriter(payload, fieldnames=['Date', 'Route', 'Style', 'Grade', 'Sector', 'Crag', 'Country'])
             writer.writeheader()
             for cr in climb_data:
                 writer.writerow(dict(
@@ -44,6 +44,6 @@ class CSVImportView(views.APIView):
             crag, _ = models.Crag.objects.get_or_create(name=row['Crag'], country=row['Country'])
             sector, _ = models.Sector.objects.get_or_create(name=row['Sector'], crag=crag)
             route, _ = models.Route.objects.get_or_create(name=row['Route'], grade=row['Grade'], sector=sector)
-            cr = models.ClimbRecord(date=row['Date'], style=row.get('style', ''), route=route, user=request.user)
+            cr = models.ClimbRecord(date=row['Date'], style=row.get('Style', ''), route=route, user=request.user)
             cr.save()
         return Response({"status": "OK"}, status=201)

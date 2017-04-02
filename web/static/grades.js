@@ -26999,6 +26999,11 @@ module.exports = _react2.default.createClass(Object.assign({}, (0, _generic.apiC
 },{"./generic.js":334,"react":305}],334:[function(require,module,exports){
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+				value: true
+});
+exports.apiConnectedTable = exports.deleteColumn = exports.editableColumn = undefined;
+
 var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
@@ -27021,7 +27026,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var editableColumn = function editableColumn(property_name, label, validation, onchange) {
+var editableColumn = exports.editableColumn = function editableColumn(property_name, label, validation, onchange) {
 				return {
 								property: property_name,
 								header: {
@@ -27042,7 +27047,7 @@ var editableColumn = function editableColumn(property_name, label, validation, o
 				};
 };
 
-var deleteColumn = function deleteColumn(property_name, ondelete, oncreate) {
+var deleteColumn = exports.deleteColumn = function deleteColumn(property_name, ondelete, oncreate) {
 				return {
 								property: property_name,
 								header: {
@@ -27068,7 +27073,7 @@ var deleteColumn = function deleteColumn(property_name, ondelete, oncreate) {
 				};
 };
 
-var apiConnectedTable = function apiConnectedTable(uri, new_data_template) {
+var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(uri, new_data_template) {
 				return {
 								getInitialState: function getInitialState() {
 												this.reloadData();
@@ -27097,12 +27102,6 @@ var apiConnectedTable = function apiConnectedTable(uri, new_data_template) {
 																columns: this.getColumns() }, _react2.default.createElement(Table.Header, null), _react2.default.createElement(Table.Body, { rows: this.state.data, rowKey: 'id' }));
 								}
 				};
-};
-
-module.exports = {
-				editableColumn: editableColumn,
-				deleteColumn: deleteColumn,
-				apiConnectedTable: apiConnectedTable
 };
 
 },{"../getAPIData.js":329,"../postAPIData.js":331,"react":305,"reactabular-table":313,"riek":325}]},{},[330]);

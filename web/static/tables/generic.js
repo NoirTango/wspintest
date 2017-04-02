@@ -4,7 +4,7 @@ import * as Table from 'reactabular-table';
 import getAPIData from '../getAPIData.js';
 import postAPIData from '../postAPIData.js';
 
-const editableColumn = function(property_name, label, validation, onchange) {
+export const editableColumn = function(property_name, label, validation, onchange) {
     return {
         property: property_name,
         header: {
@@ -25,7 +25,7 @@ const editableColumn = function(property_name, label, validation, onchange) {
     };
 };
 
-const deleteColumn = function(property_name, ondelete, oncreate) {
+export const deleteColumn = function(property_name, ondelete, oncreate) {
     return {
         property: property_name,
         header: {
@@ -49,7 +49,7 @@ const deleteColumn = function(property_name, ondelete, oncreate) {
     };
 };
 
-const apiConnectedTable = function(uri, new_data_template) {
+export const apiConnectedTable = function(uri, new_data_template) {
 	return {
 	    getInitialState() {
 	        this.reloadData();
@@ -100,10 +100,4 @@ const apiConnectedTable = function(uri, new_data_template) {
 	        );
 	    }
 	}
-};
-
-module.exports = {
-	editableColumn: editableColumn,
-	deleteColumn: deleteColumn,
-	apiConnectedTable: apiConnectedTable
 };

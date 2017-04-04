@@ -41,9 +41,21 @@ class CSVImportView(views.APIView):
     def post(self, request):
         reader = csv.DictReader(self.text_file(request))
         for row in reader:
-            crag, _ = models.Crag.objects.get_or_create(name=row['Crag'], country=row['Country'])
-            sector, _ = models.Sector.objects.get_or_create(name=row['Sector'], crag=crag)
-            route, _ = models.Route.objects.get_or_create(name=row['Route'], grade=row['Grade'], sector=sector)
+            try:
+                crag, _ = models.Crag.objects.get_or_create(name=row['Crag'], country=row['Country'])
+            except:
+                crag = models.Crag.objects.filter(name=row['Crag'], country=row['Country'])[0]
+                
+            try:
+                sector, _ = models.Sector.objects.get_or_create(name=row['Sector'], crag=crag)
+            except:
+                sector = models.Sector.objects.filter(name=row['Sector'], crag=crag)[0]
+            
+            try:
+                route, _ = models.Route.objects.get_or_create(name=row['Route'], grade=row['Grade'], sector=sector)
+            except:
+                route = models.Route.objects.filter(name=row['Route'], grade=row['Grade'], sector=sector)[0]
+
             cr = models.ClimbRecord(date=row['Date'], style=row.get('Style', ''), route=route, user=request.user)
             cr.save()
         return Response({"status": "OK"}, status=201)

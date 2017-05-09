@@ -1,11 +1,20 @@
 import datetime
 
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
 from django.db.models.deletion import CASCADE
 
 
-class Crag(models.Model):
+class GetFirstOrCreateMixin():
+    @classmethod
+    def get_first_or_create(cls, **kwargs):
+        try:
+            return cls.objects.filter(**kwargs)[0], False
+        except:
+            return cls.object.create(**kwargs), True
+
+
+class Crag(GetFirstOrCreateMixin, models.Model):
     name = models.TextField()
     country = models.TextField()
 
@@ -13,7 +22,7 @@ class Crag(models.Model):
         return '{} - {}'.format(self.name, self.country)
 
 
-class Sector(models.Model):
+class Sector(GetFirstOrCreateMixin, models.Model):
     name = models.TextField()
     crag = models.ForeignKey(Crag)
 
@@ -21,7 +30,7 @@ class Sector(models.Model):
         return '{} - {}'.format(self.name, self.crag.name)
 
 
-class Route(models.Model):
+class Route(GetFirstOrCreateMixin, models.Model):
     name = models.TextField()
     sector = models.ForeignKey(Sector)
     grade = models.CharField(max_length=20)

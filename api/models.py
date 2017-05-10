@@ -11,7 +11,7 @@ class GetFirstOrCreateMixin():
         try:
             return cls.objects.filter(**kwargs)[0], False
         except:
-            return cls.object.create(**kwargs), True
+            return cls.objects.create(**kwargs), True
 
 
 class Crag(GetFirstOrCreateMixin, models.Model):

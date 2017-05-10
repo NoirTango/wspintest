@@ -1,4 +1,5 @@
 import csv
+import datetime
 from io import StringIO
 
 from django.contrib.auth.models import User
@@ -50,15 +51,74 @@ class TestExportCSV(mixins.WithLoggedUserMixin, mixins.WithOneRouteMixin, TestCa
 class TestImportCSV(mixins.WithLoggedUserMixin, APITestCase):
     def setUp(self):
         self.setUpLogin()
+        
+    def get_csv(self, rows):
         columns = ['Date', 'Route', 'Style', 'Grade', 'Sector', 'Crag', 'Country']
         output = StringIO()
         writer = csv.DictWriter(output, fieldnames=columns)
-        for i in range(5):
-            writer.writerow({k: '{}{}'.format(k, i) for k in columns})
-        self.csv = output
+        writer.writeheader()
+        for row in rows:
+            row = {k: v for k, v in zip(columns, row)}
+            writer.writerow(row)
+        
+        return output.getvalue()
 
-    def test_import(self):
-        response = self.client.post(reverse('csv-import'), {'file': self.csv}, format='multipart',
+    def assert_record_equal_tuple(self, record, values):
+        self.assertEqual(record.date, datetime.datetime.strptime(values.pop(0), '%Y-%m-%d').date())
+        self.assertEqual(record.route.name, values.pop(0))
+        self.assertEqual(record.style, values.pop(0))
+        self.assertEqual(record.route.grade, values.pop(0))
+        self.assertEqual(record.route.sector.name, values.pop(0))
+        self.assertEqual(record.route.sector.crag.name, values.pop(0))
+        self.assertEqual(record.route.sector.crag.country, values.pop(0))
+    
+    def assert_successful_post(self, rows):
+        csv_data = self.get_csv(rows)
+        response = self.client.post(reverse('csv-import'), data=csv_data, content_type='text/csv', 
                                     HTTP_CONTENT_DISPOSITION='attachment; filename="testfile.csv"')
-        print(response.content)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
+        
+    def test_import_single_line(self):
+        row = ['2017-01-01', 'Route', 'RP', '6a', 'Sect', 'Crg', 'Country']
+        self.assert_successful_post([row])
+        self.assertEqual(models.ClimbRecord.objects.count(), 1)
+        self.assert_record_equal_tuple(models.ClimbRecord.objects.first(), row)
+        
+    def test_import_multiple_routes(self):
+        rows = [['2017-01-01', 'R1', 'RP', '6a', 'S1', 'C1', 'C1'],
+                ['2017-01-01', 'R2', 'RP', '6b', 'S2', 'C2', 'C1']]
+        self.assert_successful_post(rows)
+        self.assert_record_equal_tuple(models.ClimbRecord.objects.first(), rows[0])
+        self.assert_record_equal_tuple(models.ClimbRecord.objects.last(), rows[1])
+        
+        self.assertEqual(models.ClimbRecord.objects.count(), 2)
+        self.assertEqual(models.Route.objects.count(), 2)
+        self.assertEqual(models.Sector.objects.count(), 2)
+        self.assertEqual(models.Crag.objects.count(), 2)
+
+    def test_import_multiple_orutes_same_crag(self):
+        rows = [['2017-01-01', 'R1', 'RP', '6a', 'S1', 'C1', 'C1'],
+                ['2017-01-01', 'R2', 'RP', '6b', 'S2', 'C1', 'C1']]
+        self.assert_successful_post(rows)
+        self.assertEqual(models.ClimbRecord.objects.count(), 2)
+        self.assertEqual(models.Route.objects.count(), 2)
+        self.assertEqual(models.Sector.objects.count(), 2)
+        self.assertEqual(models.Crag.objects.count(), 1)
+
+    def test_import_multiple_orutes_same_sector(self):
+        rows = [['2017-01-01', 'R1', 'RP', '6a', 'S1', 'C1', 'C1'],
+                ['2017-01-01', 'R2', 'RP', '6b', 'S1', 'C1', 'C1']]
+        self.assert_successful_post(rows)
+        self.assertEqual(models.ClimbRecord.objects.count(), 2)
+        self.assertEqual(models.Route.objects.count(), 2)
+        self.assertEqual(models.Sector.objects.count(), 1)
+        self.assertEqual(models.Crag.objects.count(), 1)
+
+    def test_import_multiple_orutes_same_route(self):
+        rows = [['2017-01-01', 'R1', 'RP', '6a', 'S1', 'C1', 'C1'],
+                ['2017-01-01', 'R1', 'F', '6a', 'S1', 'C1', 'C1']]
+        self.assert_successful_post(rows)
+        self.assertEqual(models.ClimbRecord.objects.count(), 2)
+        self.assertEqual(models.Route.objects.count(), 1)
+        self.assertEqual(models.Sector.objects.count(), 1)
+        self.assertEqual(models.Crag.objects.count(), 1)

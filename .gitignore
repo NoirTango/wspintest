@@ -21,6 +21,4 @@ db.sqlite3
 *,cover
 .coverage
 
-web/static/react-dom.js
-web/static/react-with-addons.js
 *~

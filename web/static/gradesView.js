@@ -17,6 +17,7 @@ const GradesView = React.createClass({
             ['polish', 'Import Polish scale'],
             ['uiaa', 'Import UIAA scale']
         ];
+
         return (
             <div>
                 {

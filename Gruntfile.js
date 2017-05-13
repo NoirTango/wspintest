@@ -5,10 +5,10 @@ module.exports = function(grunt) {
       './web/static/build/home.js': ['./web/static/homeView.js'],
       './web/static/build/stats.js': ['./web/static/statsView.js'],
       './web/static/build/import.js': ['./web/static/importView.js'],
-      './web/static/build/grades.js': ['./web/static/gradesVuew.js']
+      './web/static/build/grades.js': ['./web/static/gradesView.js']
     },
     watch: {
-      files: [ "./web/static/*.js"],
+      files: [ "./web/static/*.js", './web/static/tables/*.js' ],
       tasks: [ 'browserify' ]
     }
   })

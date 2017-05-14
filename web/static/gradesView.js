@@ -1,3 +1,4 @@
+//jshint esnext: true
 import ReactDOM  from 'react-dom';
 import React from 'react';
 import postAPIData from './postAPIData.js';
@@ -17,7 +18,6 @@ const GradesView = React.createClass({
             ['polish', 'Import Polish scale'],
             ['uiaa', 'Import UIAA scale']
         ];
-
         return (
             <div>
                 {

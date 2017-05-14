@@ -10,16 +10,14 @@ from . import serializers
 class ModelViewSetWithUserPermissions(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         if 'user' not in request.data:
+            request.data._mutable = True
             request.data['user'] = request.user.id
+            request.data._mutable = False
 
-        if int(request.data.get('user')) == request.user.id or request.user.is_staff:
+        if int(request.data['user']) == request.user.id or request.user.is_staff:
             return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
         else:
             raise exceptions.PermissionDenied('Not allowed to add {} for another user'.format(self.__class__))
-
-    def destroy(self, request, *args, **kwargs):
-        super().destroy(request, *args, **kwargs)
-        return Response({'deleted': 'OK'})
 
     def get_queryset(self):
         user = self.request.user
@@ -30,15 +28,6 @@ class ClimbRecordViewSet(ModelViewSetWithUserPermissions):
     model = models.ClimbRecord
     base_name = 'Climb Records'
     serializer_class = serializers.ClimbRecordSerializer
-
-    def create(self, request, *args, **kwargs):
-        if 'user' not in request.data:
-            request.data['user'] = request.user.id
-
-        if int(request.data.get('user')) == request.user.id or request.user.is_staff:
-            return viewsets.ModelViewSet.create(self, request, *args, **kwargs)
-        else:
-            raise exceptions.PermissionDenied('Not allowed to add for another user')
 
     def list(self, request, *args, **kwargs):
         self.current_scores = models.GradeScore.objects.all()

@@ -82,6 +82,7 @@ export const apiConnectedTable = function(uri, new_data_template) {
 	    },
 	    putData(value, row_data) {
 	        if (row_data.id === null) {
+	        	Object.assign(row_data, row_data, value);
 	            return;
 	        }
 	        postAPIData(
@@ -109,8 +110,7 @@ export const apiConnectedTable = function(uri, new_data_template) {
 	        );
 	    },
 	    createData(v, y) {
-            console.log(v, y);
-            return;
+            console.log('Sending', v, y);
 	        postAPIData(
 	            this.state.edit_row,
 	            uri,

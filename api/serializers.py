@@ -2,8 +2,9 @@ from collections import defaultdict
 
 from rest_framework import serializers
 
-from . import models
 from api.grade_score_calculator import GradeScoreCalculator
+
+from . import models
 
 
 class SectorSerializer(serializers.ModelSerializer):
@@ -56,13 +57,13 @@ class ClimbRecordSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.score_calculator = GradeScoreCalculator(kwargs['context']['request'].user)
-        
+
     def get_route_name(self, obj):
         return obj.route.name
 
     def get_route_grade(self, obj):
         return obj.route.grade
-    
+
     def get_route_score(self, obj):
         return self.score_calculator.get_total_score(obj.route.grade, obj.style)
 

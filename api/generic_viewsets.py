@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 from rest_framework import viewsets, filters, exceptions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
@@ -7,12 +9,24 @@ from . import models
 from . import serializers
 
 
+@contextmanager
+def unlock_data(dict_like):
+    if hasattr(dict_like, '_mutable'):
+        dict_like._mutable = True
+        yield
+        dict_like._mutable = False
+    else:
+        yield
+
+
 class ModelViewSetWithUserPermissions(viewsets.ModelViewSet):
+    def augment_with_user(self, request):
+        with unlock_data(request.data):
+            request.data['user'] = request.user.id
+
     def create(self, request, *args, **kwargs):
         if 'user' not in request.data:
-            request.data._mutable = True
-            request.data['user'] = request.user.id
-            request.data._mutable = False
+            self.augment_with_user(request)
 
         if int(request.data['user']) == request.user.id or request.user.is_staff:
             return viewsets.ModelViewSet.create(self, request, *args, **kwargs)

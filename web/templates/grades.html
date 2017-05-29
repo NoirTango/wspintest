@@ -4,6 +4,10 @@
 {% block title %}Wspinologia{% endblock %}
 {% block navigation-grades %}<span class="selected icon-yes">Grades</span>{% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{% static "tables/tables.css" %}">
+{%endblock %}
+
 {% block content %}
     <div id="react-app"></div>
     <script src='{% static "build/grades.js" %}'></script>

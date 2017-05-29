@@ -1,11 +1,12 @@
 import json
-from django.test import TestCase
+
 from django.contrib.auth.models import User
+from django.test import TestCase
 from rest_framework.reverse import reverse
+from rest_framework.test import RequestsClient
 
 from api import models
 from api.admin import consolidate_crag, consolidate_sector, consolidate_route
-
 from api.tests import mixins
 
 
@@ -57,6 +58,12 @@ class TestPostClimbingRecord(mixins.WithLoggedUserMixin, mixins.WithOneRouteMixi
         })
         self.assertEqual(resp.status_code, 201)
         self.assertEqual(models.ClimbRecord.objects.count(), 1)
+
+    def test_get_with_requests(self):
+        client = RequestsClient()
+        response = client.get('http://testserver/api/climb-records/',
+                              cookies={'sessionid': self.client.cookies['sessionid'].coded_value})
+        self.assertEqual(response.status_code, 200)
 
 
 class TestClimbRecordWithAjax(mixins.WithLoggedUserMixin, TestCase):

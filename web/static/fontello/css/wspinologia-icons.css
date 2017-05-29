@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'wspinologia-icons';
-  src: url('../font/wspinologia-icons.eot?78267302');
-  src: url('../font/wspinologia-icons.eot?78267302#iefix') format('embedded-opentype'),
-       url('../font/wspinologia-icons.woff2?78267302') format('woff2'),
-       url('../font/wspinologia-icons.woff?78267302') format('woff'),
-       url('../font/wspinologia-icons.ttf?78267302') format('truetype'),
-       url('../font/wspinologia-icons.svg?78267302#wspinologia-icons') format('svg');
+  src: url('../font/wspinologia-icons.eot?27770394');
+  src: url('../font/wspinologia-icons.eot?27770394#iefix') format('embedded-opentype'),
+       url('../font/wspinologia-icons.woff2?27770394') format('woff2'),
+       url('../font/wspinologia-icons.woff?27770394') format('woff'),
+       url('../font/wspinologia-icons.ttf?27770394') format('truetype'),
+       url('../font/wspinologia-icons.svg?27770394#wspinologia-icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -15,7 +15,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) {
   @font-face {
     font-family: 'wspinologia-icons';
-    src: url('../font/wspinologia-icons.svg?78267302#wspinologia-icons') format('svg');
+    src: url('../font/wspinologia-icons.svg?27770394#wspinologia-icons') format('svg');
   }
 }
 */
@@ -64,3 +64,4 @@
 .icon-cog:before { content: '\e806'; } /* '' */
 .icon-pencil:before { content: '\e807'; } /* '' */
 .icon-plus-squared:before { content: '\f0fe'; } /* '' */
+.icon-ok-squared:before { content: '\f14a'; } /* '' */

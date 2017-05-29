@@ -5,7 +5,7 @@ import {editableColumn, deleteColumn, apiConnectedTable} from './generic.js';
 export default React.createClass(
 	Object.assign(
 		{}, 
-		apiConnectedTable('/api/scores/', {grade: 'New grade', score: 1.0}),
+		apiConnectedTable('/api/scores/'),
 		{
 		    getColumns() {
 		        return [

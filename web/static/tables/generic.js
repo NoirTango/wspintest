@@ -5,10 +5,10 @@ import * as Table from 'reactabular-table';
 import getAPIData from '../getAPIData.js';
 import postAPIData from '../postAPIData.js';
 
-export const editableColumn = function(property_name, label, validation, dummy_value, onchange) {
+export const editableColumn = function(property_name, label, validation, new_value, onchange) {
     return {
         property: property_name,
-        empty_value: dummy_value,
+        empty_value: new_value,
         header: {
             label: label
         },
@@ -34,7 +34,7 @@ export const deleteColumn = function(property_name, ondelete, onshowempty, oncre
         header: {
             transforms: [
                 () => ({
-                    className: "icon-plus-squared table-row-new",
+                    className: "icon-plus-squared manipulation-column",
                     onClick: onshowempty,
                     children: " "
                 })
@@ -43,11 +43,11 @@ export const deleteColumn = function(property_name, ondelete, onshowempty, oncre
         cell: {
             transforms: [
                 (v, cell_info) => ((v === null) ? { 
-                    className: "icon-plus-squared table-row-new",
+                    className: "icon-ok-squared manipulation-column",
                     onClick: () => oncreate(v, cell_info),
                     children: " "
                 } : {
-                    className: "icon-no table-row-delete",
+                    className: "icon-no manipulation-column",
                     onClick: () => ondelete(v),
                     children: " "
                 })
@@ -56,7 +56,7 @@ export const deleteColumn = function(property_name, ondelete, onshowempty, oncre
     };
 };
 
-export const apiConnectedTable = function(uri, new_data_template) {
+export const apiConnectedTable = function(uri) {
 	return {
 	    getInitialState() {
 	        this.reloadData();
@@ -110,9 +110,8 @@ export const apiConnectedTable = function(uri, new_data_template) {
 	        );
 	    },
 	    createData(v, y) {
-            console.log('Sending', v, y);
 	        postAPIData(
-	            this.state.edit_row,
+	            y.rowData,
 	            uri,
 	            this.reloadData,
 	            console.log
@@ -131,7 +130,7 @@ export const apiConnectedTable = function(uri, new_data_template) {
 	        }
 	        return (
 	            <Table.Provider
-	                className="pure-table pure-table-striped"
+	                className="editable-table"
 	                columns={this.getColumns()}>
 	                <Table.Header />
 	                <Table.Body rows={table_rows} rowKey="id" />

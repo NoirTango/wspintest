@@ -59,6 +59,12 @@
       "css": "plus-squared",
       "code": 61694,
       "src": "fontawesome"
+    },
+    {
+      "uid": "1400d5103edd2fa6d2d61688fee79a5a",
+      "css": "ok-squared",
+      "code": 61770,
+      "src": "fontawesome"
     }
   ]
 }

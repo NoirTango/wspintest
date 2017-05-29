@@ -1,0 +1,35 @@
+.editable-table {
+    padding: 1rem;
+    display: block;
+    overflow-x: auto;
+    font-size: 1rem;
+    word-wrap: none;
+    table-layout: fixed;
+    white-space: nowrap;    
+}
+
+.editable-table td {
+    padding: 0rem 1rem;
+    width: 5rem;
+}
+
+.editable-table tbody tr:nth-child(2n-1) {
+	background-color: AliceBlue;
+}
+
+.editable-table input {
+	width: 5rem;
+	padding: 0em 0em;
+}
+
+.editable-table .icon-no {
+    color: red;
+}
+
+.editable-table .icon-ok-squared {
+    color: green;
+}
+
+.editable-table .manipulation-column {
+	width: 0em;
+}

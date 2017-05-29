@@ -34,14 +34,17 @@ consolidate_sector.short_description = 'Consolidate selected sectors'
 
 class CragAdmin(admin.ModelAdmin):
     actions = [consolidate_crag]
+    ordering = ('name', 'country')
 
 
 class SectorAdmin(admin.ModelAdmin):
     actions = [consolidate_sector]
+    ordering = ('name',)
 
 
 class RouteAdmin(admin.ModelAdmin):
     actions = [consolidate_route]
+    ordering = ('name',)
 
 
 admin.site.register(Crag, CragAdmin)

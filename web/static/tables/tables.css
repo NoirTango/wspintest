@@ -10,16 +10,10 @@
 
 .editable-table td {
     padding: 0rem 1rem;
-    width: 5rem;
 }
 
 .editable-table tbody tr:nth-child(2n-1) {
 	background-color: AliceBlue;
-}
-
-.editable-table input {
-	width: 5rem;
-	padding: 0em 0em;
 }
 
 .editable-table .icon-no {
@@ -31,5 +25,17 @@
 }
 
 .editable-table .manipulation-column {
+	width: 0em;
+}
+
+.editable-table.fixed-width td {
+	width: 5rem;
+}
+
+.editable-table.fixed-width input {
+	width: 5rem;
+}
+
+.editable-table.fixed-width .manipulation-column {
 	width: 0em;
 }

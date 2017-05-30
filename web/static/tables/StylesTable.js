@@ -4,16 +4,15 @@ import {editableColumn, deleteColumn, apiConnectedTable} from './generic.js';
 
 export default React.createClass(
 	Object.assign(
-		{}, 
-		apiConnectedTable('/api/styles/'),
+		apiConnectedTable({uri: '/api/styles/', className: 'editable-table fixed-width'}),
 		{
 			getColumns() {
 				return [
-					editableColumn('style', 'Climb style', ()=>(true), 'Style?', this.putData),
-					editableColumn('multiplier', 'Score multiplier', 
-							       (v) => (v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null), 
-								   '1.0', this.putData),
-					deleteColumn('id', this.deleteData, this.toggleEmptyRow, this.createData)
+					editableColumn({property: 'style', label: 'Climb style', new_value: 'Style?', onchange: this.putData}),
+					editableColumn({property: 'multiplier', label: 'Score multiplier', 
+							       validation: (v) => (v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null), 
+								   new_value: '1.0', onchange: this.putData}),
+					deleteColumn({ondelete: this.deleteData, onshowempty: this.toggleEmptyRow, oncreate: this.createData})
 				];
 			}
 		}

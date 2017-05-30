@@ -5,21 +5,22 @@ import * as Table from 'reactabular-table';
 import getAPIData from '../getAPIData.js';
 import postAPIData from '../postAPIData.js';
 
-export const editableColumn = function(property_name, label, validation, new_value, onchange) {
+export const editableColumn = function(props) {
+	var final_props = Object.assign({validation: (v) => true, new_value: 'value?'}, props);
     return {
-        property: property_name,
-        empty_value: new_value,
+        property: final_props.property,
+        new_value: final_props.new_value,
         header: {
-            label: label
+            label: final_props.label
         },
         cell: {
             formatters: [
                 (value, cell_info) => (
                     <RIEInput
                         value={value}
-                        propName={property_name}
-                        change={(v) => onchange(v, cell_info.rowData)}
-                        validate={validation}
+                        propName={final_props.property}
+                        change={(v) => final_props.onchange(v, cell_info.rowData)}
+                        validate={final_props.validation}
                     />
                 )
             ]
@@ -27,15 +28,16 @@ export const editableColumn = function(property_name, label, validation, new_val
     };
 };
 
-export const deleteColumn = function(property_name, ondelete, onshowempty, oncreate) {
+export const deleteColumn = function(props) {
+	var final_props = Object.assign({property: 'id'}, props);
     return {
-        property: property_name,
-        empty_value: null,
+        property: final_props.property,
+        new_value: null,
         header: {
             transforms: [
                 () => ({
                     className: "icon-plus-squared manipulation-column",
-                    onClick: onshowempty,
+                    onClick: final_props.onshowempty,
                     children: " "
                 })
             ]
@@ -44,11 +46,11 @@ export const deleteColumn = function(property_name, ondelete, onshowempty, oncre
             transforms: [
                 (v, cell_info) => ((v === null) ? { 
                     className: "icon-ok-squared manipulation-column",
-                    onClick: () => oncreate(v, cell_info),
+                    onClick: () => final_props.oncreate(v, cell_info),
                     children: " "
                 } : {
                     className: "icon-no manipulation-column",
-                    onClick: () => ondelete(v),
+                    onClick: () => final_props.ondelete(v),
                     children: " "
                 })
             ]
@@ -56,7 +58,7 @@ export const deleteColumn = function(property_name, ondelete, onshowempty, oncre
     };
 };
 
-export const apiConnectedTable = function(uri) {
+export const apiConnectedTable = function(props) {
 	return {
 	    getInitialState() {
 	        this.reloadData();
@@ -78,7 +80,7 @@ export const apiConnectedTable = function(uri) {
             this.setState((prevState, props) => Object.assign({}, prevState, {show_empty: !prevState.show_empty}));
         },
 	    reloadData() {
-	        getAPIData(uri, this.setData);
+	        getAPIData(props.uri, this.setData);
 	    },
 	    putData(value, row_data) {
 	        if (row_data.id === null) {
@@ -87,7 +89,7 @@ export const apiConnectedTable = function(uri) {
 	        }
 	        postAPIData(
 	            Object.assign({}, row_data, value), 
-	            uri+row_data.id+'/', 
+	            props.uri+row_data.id+'/', 
 	            this.reloadData, 
 	            console.log, 
 	            [], 
@@ -102,7 +104,7 @@ export const apiConnectedTable = function(uri) {
 	        
 	        postAPIData(
 	            '',
-	            uri+id+'/',
+	            props.uri+id+'/',
 	            this.reloadData,
 	            console.log,
 	            [],
@@ -112,7 +114,7 @@ export const apiConnectedTable = function(uri) {
 	    createData(v, y) {
 	        postAPIData(
 	            y.rowData,
-	            uri,
+	            props.uri,
 	            this.reloadData,
 	            console.log
 	        );
@@ -121,7 +123,7 @@ export const apiConnectedTable = function(uri) {
 	    render() {
             var empty_row = {}, table_rows;
 	        this.getColumns().map(function(v) {
-	            empty_row[v.property] = v.empty_value;
+	            empty_row[v.property] = v.new_value;
 	        });
 	        if (this.state.show_empty) {
 	            table_rows = [empty_row].concat(this.state.data);
@@ -130,7 +132,7 @@ export const apiConnectedTable = function(uri) {
 	        }
 	        return (
 	            <Table.Provider
-	                className="editable-table"
+	                className={props.className}
 	                columns={this.getColumns()}>
 	                <Table.Header />
 	                <Table.Body rows={table_rows} rowKey="id" />

@@ -26983,13 +26983,12 @@ var _generic = require('./generic.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // jshint esnext:true
-exports.default = _react2.default.createClass(Object.assign({}, (0, _generic.apiConnectedTable)('/api/scores/'), {
+exports.default = _react2.default.createClass(Object.assign((0, _generic.apiConnectedTable)({ uri: '/api/scores/', className: 'editable-table fixed-width' }), {
 	getColumns: function getColumns() {
-		return [(0, _generic.editableColumn)('grade', 'Climb grade', function () {
-			return true;
-		}, 'Grade?', this.putData), (0, _generic.editableColumn)('score', 'Score', function (v) {
-			return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
-		}, '0.0', this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.toggleEmptyRow, this.createData)];
+		return [(0, _generic.editableColumn)({ property: 'grade', label: 'Climb grade', new_value: 'Grade?', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'score', label: 'Score', validation: function validation(v) {
+				return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+			},
+			new_value: '0.0', onchange: this.putData }), (0, _generic.deleteColumn)({ ondelete: this.deleteData, onshowempty: this.toggleEmptyRow, oncreate: this.createData })];
 	}
 }));
 
@@ -27009,13 +27008,13 @@ var _generic = require('./generic.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // jshint esnext:true
-exports.default = _react2.default.createClass(Object.assign({}, (0, _generic.apiConnectedTable)('/api/styles/'), {
+exports.default = _react2.default.createClass(Object.assign((0, _generic.apiConnectedTable)({ uri: '/api/styles/', className: 'editable-table fixed-width' }), {
 	getColumns: function getColumns() {
-		return [(0, _generic.editableColumn)('style', 'Climb style', function () {
-			return true;
-		}, 'Style?', this.putData), (0, _generic.editableColumn)('multiplier', 'Score multiplier', function (v) {
-			return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
-		}, '1.0', this.putData), (0, _generic.deleteColumn)('id', this.deleteData, this.toggleEmptyRow, this.createData)];
+		return [(0, _generic.editableColumn)({ property: 'style', label: 'Climb style', new_value: 'Style?', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'multiplier', label: 'Score multiplier',
+			validation: function validation(v) {
+				return v.match(/^\s*[0-9]+\.?[0-9]*\s*$/) !== null;
+			},
+			new_value: '1.0', onchange: this.putData }), (0, _generic.deleteColumn)({ ondelete: this.deleteData, onshowempty: this.toggleEmptyRow, oncreate: this.createData })];
 	}
 }));
 
@@ -27049,36 +27048,40 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var editableColumn = exports.editableColumn = function editableColumn(property_name, label, validation, new_value, onchange) {
+var editableColumn = exports.editableColumn = function editableColumn(props) {
+				var final_props = Object.assign({ validation: function validation(v) {
+												return true;
+								}, new_value: 'value?' }, props);
 				return {
-								property: property_name,
-								empty_value: new_value,
+								property: final_props.property,
+								new_value: final_props.new_value,
 								header: {
-												label: label
+												label: final_props.label
 								},
 								cell: {
 												formatters: [function (value, cell_info) {
 																return _react2.default.createElement(_riek.RIEInput, {
 																				value: value,
-																				propName: property_name,
+																				propName: final_props.property,
 																				change: function change(v) {
-																								return onchange(v, cell_info.rowData);
+																								return final_props.onchange(v, cell_info.rowData);
 																				},
-																				validate: validation
+																				validate: final_props.validation
 																});
 												}]
 								}
 				};
 }; // jshint esnext:true
-var deleteColumn = exports.deleteColumn = function deleteColumn(property_name, ondelete, onshowempty, oncreate) {
+var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
+				var final_props = Object.assign({ property: 'id' }, props);
 				return {
-								property: property_name,
-								empty_value: null,
+								property: final_props.property,
+								new_value: null,
 								header: {
 												transforms: [function () {
 																return {
 																				className: "icon-plus-squared manipulation-column",
-																				onClick: onshowempty,
+																				onClick: final_props.onshowempty,
 																				children: " "
 																};
 												}]
@@ -27088,13 +27091,13 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(property_name, o
 																return v === null ? {
 																				className: "icon-ok-squared manipulation-column",
 																				onClick: function onClick() {
-																								return oncreate(v, cell_info);
+																								return final_props.oncreate(v, cell_info);
 																				},
 																				children: " "
 																} : {
 																				className: "icon-no manipulation-column",
 																				onClick: function onClick() {
-																								return ondelete(v);
+																								return final_props.ondelete(v);
 																				},
 																				children: " "
 																};
@@ -27103,7 +27106,7 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(property_name, o
 				};
 };
 
-var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(uri) {
+var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(props) {
 				return {
 								getInitialState: function getInitialState() {
 												this.reloadData();
@@ -27133,14 +27136,14 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(u
 												});
 								},
 								reloadData: function reloadData() {
-												(0, _getAPIData2.default)(uri, this.setData);
+												(0, _getAPIData2.default)(props.uri, this.setData);
 								},
 								putData: function putData(value, row_data) {
 												if (row_data.id === null) {
 																Object.assign(row_data, row_data, value);
 																return;
 												}
-												(0, _postAPIData2.default)(Object.assign({}, row_data, value), uri + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
+												(0, _postAPIData2.default)(Object.assign({}, row_data, value), props.uri + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
 								},
 								deleteData: function deleteData(id) {
 												if (id === null) {
@@ -27148,17 +27151,17 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(u
 																return;
 												}
 
-												(0, _postAPIData2.default)('', uri + id + '/', this.reloadData, console.log, [], 'DELETE');
+												(0, _postAPIData2.default)('', props.uri + id + '/', this.reloadData, console.log, [], 'DELETE');
 								},
 								createData: function createData(v, y) {
-												(0, _postAPIData2.default)(y.rowData, uri, this.reloadData, console.log);
+												(0, _postAPIData2.default)(y.rowData, props.uri, this.reloadData, console.log);
 												this.hideEmptyRow();
 								},
 								render: function render() {
 												var empty_row = {},
 												    table_rows;
 												this.getColumns().map(function (v) {
-																empty_row[v.property] = v.empty_value;
+																empty_row[v.property] = v.new_value;
 												});
 												if (this.state.show_empty) {
 																table_rows = [empty_row].concat(this.state.data);
@@ -27168,7 +27171,7 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(u
 												return _react2.default.createElement(
 																Table.Provider,
 																{
-																				className: 'editable-table',
+																				className: props.className,
 																				columns: this.getColumns() },
 																_react2.default.createElement(Table.Header, null),
 																_react2.default.createElement(Table.Body, { rows: table_rows, rowKey: 'id' })

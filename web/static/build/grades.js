@@ -27061,7 +27061,7 @@ var editableColumn = exports.editableColumn = function editableColumn(props) {
 								cell: {
 												formatters: [function (value, cell_info) {
 																return _react2.default.createElement(_riek.RIEInput, {
-																				value: value,
+																				value: value ? value : '-',
 																				propName: final_props.property,
 																				change: function change(v) {
 																								return final_props.onchange(v, cell_info.rowData);

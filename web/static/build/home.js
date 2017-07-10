@@ -27352,7 +27352,10 @@ exports.default = _react2.default.createClass(Object.assign((0, _generic.searcha
 		console.log(v);return true;
 	} }), {
 	getColumns: function getColumns() {
-		return [(0, _generic.nonEditableColumn)({ property: 'route_name', label: 'Route', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'route_grade', label: 'Grade', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'style', label: 'Style', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'sector_name', label: 'Sector', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'crag_name', label: 'Crag', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'crag_country', label: 'Country', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'date', label: 'Date', onchange: this.putData }), (0, _generic.deleteColumn)({ ondelete: this.deleteWithConfirmation, onshowempty: null, oncreate: null })];
+		return [(0, _generic.nonEditableColumn)({ property: 'route_name', label: 'Route', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'route_grade', label: 'Grade', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'style', label: 'Style', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'sector_name', label: 'Sector', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'crag_name', label: 'Crag', onchange: this.putData }), (0, _generic.nonEditableColumn)({ property: 'crag_country', label: 'Country', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'date', label: 'Date', onchange: this.putData,
+			validation: function validation(v) {
+				return v.match(/^\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\s*$/) !== null;
+			} }), (0, _generic.deleteColumn)({ ondelete: this.deleteWithConfirmation, onshowempty: null, oncreate: null })];
 	},
 	deleteWithConfirmation: function deleteWithConfirmation(v) {
 		console.log('YEP!');
@@ -27403,7 +27406,7 @@ var editableColumn = exports.editableColumn = function editableColumn(props) {
 								cell: {
 												formatters: [function (value, cell_info) {
 																return _react2.default.createElement(_riek.RIEInput, {
-																				value: value,
+																				value: value ? value : '-',
 																				propName: final_props.property,
 																				change: function change(v) {
 																								return final_props.onchange(v, cell_info.rowData);

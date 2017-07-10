@@ -17,7 +17,7 @@ export const editableColumn = function(props) {
             formatters: [
                 (value, cell_info) => (
                     <RIEInput
-                        value={value}
+                        value={value?value:'-'}
                         propName={final_props.property}
                         change={(v) => final_props.onchange(v, cell_info.rowData)}
                         validate={final_props.validation}

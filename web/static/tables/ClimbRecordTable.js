@@ -14,8 +14,8 @@ export default React.createClass(
 		            nonEditableColumn({property: 'sector_name', label: 'Sector', onchange: this.putData}),
 		            nonEditableColumn({property: 'crag_name', label: 'Crag', onchange: this.putData}),
 		            nonEditableColumn({property: 'crag_country', label: 'Country', onchange: this.putData}),
-		            editableColumn({property: 'date', label: 'Date', onchange: this.putData}),
-		            
+		            editableColumn({property: 'date', label: 'Date', onchange: this.putData,
+		            	validation: v => (v.match(/^\s*[0-9]{4}-[0-9]{2}-[0-9]{2}\s*$/) !== null)}),
 		            deleteColumn({ondelete: this.deleteWithConfirmation, onshowempty: null, oncreate: null})
 		        ];
 		    },

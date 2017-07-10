@@ -39,3 +39,17 @@
 .editable-table.fixed-width .manipulation-column {
 	width: 0em;
 }
+
+.editable-table.loading:before {
+	content: "Loading...";
+	display: block; 
+	position: relative;
+	background-color: AliceBlue;
+	top: 2em;
+	left: 0em;
+	text-align: center;	
+}
+
+.editable-table.loading {
+	color: grey;
+}

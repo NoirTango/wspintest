@@ -27470,16 +27470,18 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 
 				return {
 								getInitialState: function getInitialState() {
-												this.reloadData();
+												(0, _getAPIData2.default)(final_props.uri, this.setData);
 												return {
 																data: [],
-																show_empty: false
+																show_empty: false,
+																loading: 'loading'
 												};
 								},
 								setData: function setData(data) {
 												this.setState(function (prevState, props) {
 																return Object.assign({}, prevState, { data: data });
 												});
+												this.loadingAnimation(false);
 								},
 								showEmptyRow: function showEmptyRow() {
 												this.setState(function (prevState, props) {
@@ -27497,7 +27499,13 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												});
 								},
 								reloadData: function reloadData() {
+												this.loadingAnimation(true);
 												(0, _getAPIData2.default)(final_props.uri, this.setData);
+								},
+								loadingAnimation: function loadingAnimation(flag) {
+												this.setState(function (prevState, props) {
+																return Object.assign({}, prevState, { loading: flag ? 'loading' : '' });
+												});
 								},
 								putData: function putData(value, row_data) {
 												if (row_data.id === null) {
@@ -27532,7 +27540,7 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												return _react2.default.createElement(
 																Table.Provider,
 																{
-																				className: props.className,
+																				className: props.className + " " + this.state.loading,
 																				columns: this.getColumns() },
 																_react2.default.createElement(Table.Header, null),
 																_react2.default.createElement(Table.Body, { rows: table_rows.filter(final_props.filter), rowKey: 'id' })

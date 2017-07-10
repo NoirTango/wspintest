@@ -75,14 +75,16 @@ export const apiConnectedTable = function(props) {
 	
 	return {
 	    getInitialState() {
-	        this.reloadData();
+	        getAPIData(final_props.uri, this.setData);
 	        return {
 	            data: [],
-	            show_empty: false
+	            show_empty: false,
+	            loading: 'loading'
 	        };
 	    },
 	    setData(data) {
 	        this.setState((prevState, props) => Object.assign({}, prevState, {data: data}));
+	        this.loadingAnimation(false);
 	    },
 	    showEmptyRow() {
 	        this.setState((prevState, props) => Object.assign({}, prevState, {show_empty: true}));
@@ -94,7 +96,11 @@ export const apiConnectedTable = function(props) {
             this.setState((prevState, props) => Object.assign({}, prevState, {show_empty: !prevState.show_empty}));
         },
 	    reloadData() {
+        	this.loadingAnimation(true);
 	        getAPIData(final_props.uri, this.setData);
+	    },
+	    loadingAnimation(flag) {
+	    	this.setState((prevState, props) => Object.assign({}, prevState, {loading: flag?'loading':''}));
 	    },
 	    putData(value, row_data) {
 	        if (row_data.id === null) {
@@ -146,7 +152,7 @@ export const apiConnectedTable = function(props) {
 	        }
 	        return (
 	            <Table.Provider
-	                className={props.className}
+	                className={props.className + " " + this.state.loading}
 	                columns={this.getColumns()}>
 	                <Table.Header />
 	                <Table.Body rows={table_rows.filter(final_props.filter)} rowKey="id" />

@@ -27024,7 +27024,7 @@ exports.default = _react2.default.createClass(Object.assign((0, _generic.apiConn
 Object.defineProperty(exports, "__esModule", {
 				value: true
 });
-exports.apiConnectedTable = exports.deleteColumn = exports.editableColumn = undefined;
+exports.searchableConnectedTable = exports.apiConnectedTable = exports.deleteColumn = exports.nonEditableColumn = exports.editableColumn = undefined;
 
 var _react = require('react');
 
@@ -27072,6 +27072,15 @@ var editableColumn = exports.editableColumn = function editableColumn(props) {
 								}
 				};
 }; // jshint esnext:true
+var nonEditableColumn = exports.nonEditableColumn = function nonEditableColumn(props) {
+				return {
+								property: props.property,
+								header: {
+												label: props.label
+								}
+				};
+};
+
 var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
 				var final_props = Object.assign({ property: 'id' }, props);
 				return {
@@ -27079,7 +27088,10 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
 								new_value: null,
 								header: {
 												transforms: [function () {
-																return {
+																return props.onshowempty === null ? {
+																				className: "manipulation-column",
+																				children: " "
+																} : {
 																				className: "icon-plus-squared manipulation-column",
 																				onClick: final_props.onshowempty,
 																				children: " "
@@ -27107,6 +27119,10 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
 };
 
 var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(props) {
+				var final_props = Object.assign({ filter: function filter(v) {
+												return true;
+								} }, props);
+
 				return {
 								getInitialState: function getInitialState() {
 												this.reloadData();
@@ -27136,14 +27152,14 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												});
 								},
 								reloadData: function reloadData() {
-												(0, _getAPIData2.default)(props.uri, this.setData);
+												(0, _getAPIData2.default)(final_props.uri, this.setData);
 								},
 								putData: function putData(value, row_data) {
 												if (row_data.id === null) {
-																Object.assign(row_data, row_data, value);
+																Object.assign(row_data, value);
 																return;
 												}
-												(0, _postAPIData2.default)(Object.assign({}, row_data, value), props.uri + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
+												(0, _postAPIData2.default)(Object.assign({}, row_data, value), final_props.uri + row_data.id + '/', this.reloadData, console.log, [], 'PUT');
 								},
 								deleteData: function deleteData(id) {
 												if (id === null) {
@@ -27151,10 +27167,10 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 																return;
 												}
 
-												(0, _postAPIData2.default)('', props.uri + id + '/', this.reloadData, console.log, [], 'DELETE');
+												(0, _postAPIData2.default)('', final_props.uri + id + '/', this.reloadData, console.log, [], 'DELETE');
 								},
 								createData: function createData(v, y) {
-												(0, _postAPIData2.default)(y.rowData, props.uri, this.reloadData, console.log);
+												(0, _postAPIData2.default)(y.rowData, final_props.uri, this.reloadData, console.log);
 												this.hideEmptyRow();
 								},
 								render: function render() {
@@ -27174,10 +27190,32 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 																				className: props.className,
 																				columns: this.getColumns() },
 																_react2.default.createElement(Table.Header, null),
-																_react2.default.createElement(Table.Body, { rows: table_rows, rowKey: 'id' })
+																_react2.default.createElement(Table.Body, { rows: table_rows.filter(final_props.filter), rowKey: 'id' })
 												);
 								}
 				};
+};
+
+var searchableConnectedTable = exports.searchableConnectedTable = function searchableConnectedTable(props) {
+				var table = apiConnectedTable(props);
+				table.original_render = table.render;
+				table.render = function () {
+								return _react2.default.createElement(
+												'div',
+												null,
+												_react2.default.createElement(
+																'div',
+																null,
+																'Filter: ',
+																_react2.default.createElement('input', { type: 'text', onChange: this.filterchange })
+												),
+												this.original_render()
+								);
+				};
+				table.filterchange = function (v) {
+								console.log(v);
+				};
+				return table;
 };
 
 },{"../getAPIData.js":329,"../postAPIData.js":331,"react":305,"reactabular-table":313,"riek":325}]},{},[330]);

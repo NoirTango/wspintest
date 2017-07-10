@@ -28,6 +28,15 @@ export const editableColumn = function(props) {
     };
 };
 
+export const nonEditableColumn = function(props) {
+    return {
+        property: props.property,
+        header: {
+            label: props.label
+        }
+    };
+};
+
 export const deleteColumn = function(props) {
 	var final_props = Object.assign({property: 'id'}, props);
     return {
@@ -35,7 +44,10 @@ export const deleteColumn = function(props) {
         new_value: null,
         header: {
             transforms: [
-                () => ({
+                () => ((props.onshowempty === null)?{
+                	className: "manipulation-column",
+                	children: " "
+                }:{
                     className: "icon-plus-squared manipulation-column",
                     onClick: final_props.onshowempty,
                     children: " "
@@ -59,6 +71,8 @@ export const deleteColumn = function(props) {
 };
 
 export const apiConnectedTable = function(props) {
+	var final_props = Object.assign({filter: (v)=>(true)}, props);
+	
 	return {
 	    getInitialState() {
 	        this.reloadData();
@@ -80,16 +94,16 @@ export const apiConnectedTable = function(props) {
             this.setState((prevState, props) => Object.assign({}, prevState, {show_empty: !prevState.show_empty}));
         },
 	    reloadData() {
-	        getAPIData(props.uri, this.setData);
+	        getAPIData(final_props.uri, this.setData);
 	    },
 	    putData(value, row_data) {
 	        if (row_data.id === null) {
-	        	Object.assign(row_data, row_data, value);
+	        	Object.assign(row_data, value);
 	            return;
 	        }
 	        postAPIData(
 	            Object.assign({}, row_data, value), 
-	            props.uri+row_data.id+'/', 
+	            final_props.uri+row_data.id+'/', 
 	            this.reloadData, 
 	            console.log, 
 	            [], 
@@ -104,7 +118,7 @@ export const apiConnectedTable = function(props) {
 	        
 	        postAPIData(
 	            '',
-	            props.uri+id+'/',
+	            final_props.uri+id+'/',
 	            this.reloadData,
 	            console.log,
 	            [],
@@ -114,7 +128,7 @@ export const apiConnectedTable = function(props) {
 	    createData(v, y) {
 	        postAPIData(
 	            y.rowData,
-	            props.uri,
+	            final_props.uri,
 	            this.reloadData,
 	            console.log
 	        );
@@ -135,9 +149,24 @@ export const apiConnectedTable = function(props) {
 	                className={props.className}
 	                columns={this.getColumns()}>
 	                <Table.Header />
-	                <Table.Body rows={table_rows} rowKey="id" />
+	                <Table.Body rows={table_rows.filter(final_props.filter)} rowKey="id" />
 	            </Table.Provider>    
 	        );
 	    }
 	}
 };
+
+export const searchableConnectedTable = function(props) {
+	var table = apiConnectedTable(props);
+	table.original_render = table.render;
+	table.render = function () {
+		return (
+			<div>
+			    <div>Filter: <input type="text" onChange={this.filterchange}></input></div>
+			    {this.original_render()}
+			</div>
+		);
+	}
+	table.filterchange = function(v) {console.log(v);};
+	return table;
+}

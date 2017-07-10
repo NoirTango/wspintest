@@ -1,11 +1,11 @@
 // jshint esnext: true
-var React = require('react'),
-    ReactDOM = require('react-dom'),
-    ClimbRecordList = require('./ClimbRecordList.js'),
-    ClimbRecordForm = require('./ClimbRecordForm.js'),
-    getAPIData = require('./getAPIData.js'),
-    postAPIData = require('./postAPIData.js'),
-    deleteAPI = require('./deleteAPI.js');
+import React  from 'react';
+import ReactDOM from 'react-dom';
+import ClimbRecordForm from './ClimbRecordForm.js';
+import getAPIData from './getAPIData.js';
+import postAPIData from './postAPIData.js';
+import deleteAPI from './deleteAPI.js';
+import ClimbRecordTable from './tables/ClimbRecordTable.js';
 
 var MainPage = React.createClass({
     getInitialState: function() {
@@ -61,7 +61,7 @@ var MainPage = React.createClass({
         return React.createElement('div', {},
             show_form_button,
             form_placeholder,
-            React.createElement(ClimbRecordList, {className: 'climb-list', climbs: this.state.climbs, onDelete: this.deleteRecord, onEdit: this.editRecord})
+            React.createElement(ClimbRecordTable)
         );
     }
 });

@@ -49,6 +49,34 @@ class ClimbRecordViewSet(ModelViewSetWithUserPermissions):
 
     def get_queryset(self):
         return super().get_queryset().order_by('-date')
+    
+    def create(self, request, *args, **kwargs):
+        return ModelViewSetWithUserPermissions.create(self, request, *args, **kwargs)
+    
+    def update(self, request, *args, **kwargs):
+        current_record = models.ClimbRecord.objects.get(id=kwargs['pk'])
+        request.data['route'] = current_record.route.id
+        request.data['sector'] = current_record.route.sector.id
+        request.data['crag'] = current_record.route.sector.crag.id
+        
+        if (current_record.route.name != request.data['route_name'] or 
+                current_record.route.grade != request.data['route_grade']):
+            del request.data['route']
+
+        if current_record.route.sector.name != request.data['sector_name']:
+            del request.data['route']
+            del request.data['sector']
+
+        if (current_record.route.sector.crag.name != request.data['crag_name'] or
+                current_record.route.sector.crag.country != request.data['crag_country']):
+            del request.data['route']
+            del request.data['sector']
+            del request.data['crag']
+        
+        if request.data.get('route') is None:
+            request.data['route'] = self.create_route_from_ajax_request(request.data).id
+
+        return ModelViewSetWithUserPermissions.update(self, request, *args, **kwargs)
 
     @list_route(methods=['post'])
     def ajax(self, request):

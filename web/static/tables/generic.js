@@ -176,7 +176,6 @@ export const searchableConnectedTable = function(props) {
 	}
 	table.filterchange = function(v) {
 	    var new_content = v.target.value;
-	    console.log(new_content);
 	    this.setState((prevState, props) => Object.assign({}, prevState, {filtercontent: new_content}));
 	};
 	return table;

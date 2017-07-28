@@ -3,7 +3,16 @@ import React from 'react';
 import {nonEditableColumn, deleteColumn, searchableConnectedTable, editableColumn} from './generic.js';
 
 var greedyFilter = function(row, filtercontent){
-    return true;
+    if (filtercontent === null) {
+        return true;
+    }
+    var search_term = row.date +' ' +
+                      row.route_name.toLowerCase() + ' ' +
+                      row.route_grade.toLowerCase() + ' ' +
+                      row.sector_name.toLowerCase() + ' ' +
+                      row.crag_name.toLowerCase() + ' ' +
+                      row.crag_country.toLowerCase();
+    return search_term.indexOf(filtercontent.toLowerCase()) >= 0;                  
 };
 
 export default React.createClass(

@@ -27937,7 +27937,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // jshint esnext:true
 var greedyFilter = function greedyFilter(row, filtercontent) {
-	return true;
+	var search_term = row.date + ' ' + row.route_name.toLowerCase() + ' ' + row.route_grade.toLowerCase() + ' ' + row.sector_name.toLowerCase() + ' ' + row.crag_name.toLowerCase() + ' ' + row.crag_country.toLowerCase();
+	console.log(search_term);
+	return search_term.indexOf(filtercontent.toLowerCase()) >= 0;
 };
 
 exports.default = _react2.default.createClass(Object.assign((0, _generic.searchableConnectedTable)({ uri: '/api/climb-records/', className: 'editable-table',
@@ -28163,7 +28165,6 @@ var searchableConnectedTable = exports.searchableConnectedTable = function searc
 				};
 				table.filterchange = function (v) {
 								var new_content = v.target.value;
-								console.log(new_content);
 								this.setState(function (prevState, props) {
 												return Object.assign({}, prevState, { filtercontent: new_content });
 								});

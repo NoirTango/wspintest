@@ -27828,7 +27828,6 @@ var searchableConnectedTable = exports.searchableConnectedTable = function searc
 				};
 				table.filterchange = function (v) {
 								var new_content = v.target.value;
-								console.log(new_content);
 								this.setState(function (prevState, props) {
 												return Object.assign({}, prevState, { filtercontent: new_content });
 								});

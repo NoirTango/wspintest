@@ -27937,8 +27937,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 // jshint esnext:true
 var greedyFilter = function greedyFilter(row, filtercontent) {
+	if (filtercontent === null) {
+		return true;
+	}
 	var search_term = row.date + ' ' + row.route_name.toLowerCase() + ' ' + row.route_grade.toLowerCase() + ' ' + row.sector_name.toLowerCase() + ' ' + row.crag_name.toLowerCase() + ' ' + row.crag_country.toLowerCase();
-	console.log(search_term);
 	return search_term.indexOf(filtercontent.toLowerCase()) >= 0;
 };
 

@@ -10,13 +10,10 @@ import ClimbRecordTable from './tables/ClimbRecordTable.js';
 var MainPage = React.createClass({
     getInitialState: function() {
         this.reloadData();
-        return {climbs: [], show_form: false};
-    },
-    setData: function(data) {
-        this.setState((prevState, props) => Object.assign({}, prevState, {climbs: data}));
+        return {show_form: false};
     },
     reloadData: function() {
-        getAPIData('/api/climb-records/', this.setData);
+        console.log("RELOADING");
     },
     submitForm: function(data) {
         var flatData = {
@@ -32,14 +29,6 @@ var MainPage = React.createClass({
             date: data.date
         };
         postAPIData(flatData, '/api/climb-records/ajax/', this.reloadData);
-    },
-    deleteRecord: function(id) {
-        console.log('Deleting ' + id);
-        deleteAPI('/api/climb-records/'+id, this.reloadData);  
-    },
-    editRecord: function(id) {
-        console.log('Editing ' + id);
-        // ??  
     },
     showForm: function() {
         this.setState((prevState, props) => Object.assign({}, prevState, {show_form: true}));

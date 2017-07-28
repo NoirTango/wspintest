@@ -27720,7 +27720,7 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
 };
 
 var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(props) {
-				var final_props = Object.assign({ filter: function filter(v) {
+				var final_props = Object.assign({ filter: function filter(row, _filter) {
 												return true;
 								} }, props);
 
@@ -27730,7 +27730,8 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												return {
 																data: [],
 																show_empty: false,
-																loading: 'loading'
+																loading: 'loading',
+																filtercontent: null
 												};
 								},
 								setData: function setData(data) {
@@ -27783,6 +27784,8 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												this.hideEmptyRow();
 								},
 								render: function render() {
+												var _this = this;
+
 												var empty_row = {},
 												    table_rows;
 												this.getColumns().map(function (v) {
@@ -27799,7 +27802,9 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 																				className: props.className + " " + this.state.loading,
 																				columns: this.getColumns() },
 																_react2.default.createElement(Table.Header, null),
-																_react2.default.createElement(Table.Body, { rows: table_rows.filter(final_props.filter), rowKey: 'id' })
+																_react2.default.createElement(Table.Body, { rows: table_rows.filter(function (row) {
+																								return final_props.filter(row, _this.state.filtercontent);
+																				}), rowKey: 'id' })
 												);
 								}
 				};
@@ -27822,7 +27827,11 @@ var searchableConnectedTable = exports.searchableConnectedTable = function searc
 								);
 				};
 				table.filterchange = function (v) {
-								console.log(v);
+								var new_content = v.target.value;
+								console.log(new_content);
+								this.setState(function (prevState, props) {
+												return Object.assign({}, prevState, { filtercontent: new_content });
+								});
 				};
 				return table;
 };

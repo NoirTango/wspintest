@@ -2,9 +2,14 @@
 import React from 'react';
 import {nonEditableColumn, deleteColumn, searchableConnectedTable, editableColumn} from './generic.js';
 
+var greedyFilter = function(row, filtercontent){
+    return true;
+};
+
 export default React.createClass(
 	Object.assign(
- 		searchableConnectedTable({uri: '/api/climb-records/', className: 'editable-table', filter: function(v){console.log(v); return true;}}),
+ 		searchableConnectedTable({uri: '/api/climb-records/', className: 'editable-table', 
+ 		                         filter: greedyFilter}),
 		{
 		    getColumns() {
 		        return [

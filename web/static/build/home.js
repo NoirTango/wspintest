@@ -27818,15 +27818,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var MainPage = _react2.default.createClass({
     getInitialState: function getInitialState() {
         this.reloadData();
-        return { climbs: [], show_form: false };
-    },
-    setData: function setData(data) {
-        this.setState(function (prevState, props) {
-            return Object.assign({}, prevState, { climbs: data });
-        });
+        return { show_form: false };
     },
     reloadData: function reloadData() {
-        (0, _getAPIData2.default)('/api/climb-records/', this.setData);
+        console.log("RELOADING");
     },
     submitForm: function submitForm(data) {
         var flatData = {
@@ -27842,14 +27837,6 @@ var MainPage = _react2.default.createClass({
             date: data.date
         };
         (0, _postAPIData2.default)(flatData, '/api/climb-records/ajax/', this.reloadData);
-    },
-    deleteRecord: function deleteRecord(id) {
-        console.log('Deleting ' + id);
-        (0, _deleteAPI2.default)('/api/climb-records/' + id, this.reloadData);
-    },
-    editRecord: function editRecord(id) {
-        console.log('Editing ' + id);
-        // ??  
     },
     showForm: function showForm() {
         this.setState(function (prevState, props) {
@@ -27949,9 +27936,12 @@ var _generic = require('./generic.js');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // jshint esnext:true
-exports.default = _react2.default.createClass(Object.assign((0, _generic.searchableConnectedTable)({ uri: '/api/climb-records/', className: 'editable-table', filter: function filter(v) {
-		console.log(v);return true;
-	} }), {
+var greedyFilter = function greedyFilter(row, filtercontent) {
+	return true;
+};
+
+exports.default = _react2.default.createClass(Object.assign((0, _generic.searchableConnectedTable)({ uri: '/api/climb-records/', className: 'editable-table',
+	filter: greedyFilter }), {
 	getColumns: function getColumns() {
 		return [(0, _generic.editableColumn)({ property: 'route_name', label: 'Route', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'route_grade', label: 'Grade', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'style', label: 'Style', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'sector_name', label: 'Sector', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'crag_name', label: 'Crag', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'crag_country', label: 'Country', onchange: this.putData }), (0, _generic.editableColumn)({ property: 'date', label: 'Date', onchange: this.putData,
 			validation: function validation(v) {
@@ -28065,7 +28055,7 @@ var deleteColumn = exports.deleteColumn = function deleteColumn(props) {
 };
 
 var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(props) {
-				var final_props = Object.assign({ filter: function filter(v) {
+				var final_props = Object.assign({ filter: function filter(row, _filter) {
 												return true;
 								} }, props);
 
@@ -28075,7 +28065,8 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												return {
 																data: [],
 																show_empty: false,
-																loading: 'loading'
+																loading: 'loading',
+																filtercontent: null
 												};
 								},
 								setData: function setData(data) {
@@ -28128,6 +28119,8 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 												this.hideEmptyRow();
 								},
 								render: function render() {
+												var _this = this;
+
 												var empty_row = {},
 												    table_rows;
 												this.getColumns().map(function (v) {
@@ -28144,7 +28137,9 @@ var apiConnectedTable = exports.apiConnectedTable = function apiConnectedTable(p
 																				className: props.className + " " + this.state.loading,
 																				columns: this.getColumns() },
 																_react2.default.createElement(Table.Header, null),
-																_react2.default.createElement(Table.Body, { rows: table_rows.filter(final_props.filter), rowKey: 'id' })
+																_react2.default.createElement(Table.Body, { rows: table_rows.filter(function (row) {
+																								return final_props.filter(row, _this.state.filtercontent);
+																				}), rowKey: 'id' })
 												);
 								}
 				};
@@ -28167,7 +28162,11 @@ var searchableConnectedTable = exports.searchableConnectedTable = function searc
 								);
 				};
 				table.filterchange = function (v) {
-								console.log(v);
+								var new_content = v.target.value;
+								console.log(new_content);
+								this.setState(function (prevState, props) {
+												return Object.assign({}, prevState, { filtercontent: new_content });
+								});
 				};
 				return table;
 };

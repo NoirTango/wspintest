@@ -71,7 +71,7 @@ export const deleteColumn = function(props) {
 };
 
 export const apiConnectedTable = function(props) {
-	var final_props = Object.assign({filter: (v)=>(true)}, props);
+	var final_props = Object.assign({filter: (row, filter)=>(true)}, props);
 	
 	return {
 	    getInitialState() {
@@ -79,7 +79,8 @@ export const apiConnectedTable = function(props) {
 	        return {
 	            data: [],
 	            show_empty: false,
-	            loading: 'loading'
+	            loading: 'loading',
+	            filtercontent: null
 	        };
 	    },
 	    setData(data) {
@@ -155,7 +156,7 @@ export const apiConnectedTable = function(props) {
 	                className={props.className + " " + this.state.loading}
 	                columns={this.getColumns()}>
 	                <Table.Header />
-	                <Table.Body rows={table_rows.filter(final_props.filter)} rowKey="id" />
+	                <Table.Body rows={table_rows.filter((row)=>(final_props.filter(row, this.state.filtercontent)))} rowKey="id" />
 	            </Table.Provider>    
 	        );
 	    }
@@ -173,6 +174,10 @@ export const searchableConnectedTable = function(props) {
 			</div>
 		);
 	}
-	table.filterchange = function(v) {console.log(v);};
+	table.filterchange = function(v) {
+	    var new_content = v.target.value;
+	    console.log(new_content);
+	    this.setState((prevState, props) => Object.assign({}, prevState, {filtercontent: new_content}));
+	};
 	return table;
 }

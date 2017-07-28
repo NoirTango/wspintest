@@ -27849,17 +27849,30 @@ var MainPage = _react2.default.createClass({
         });
     },
     render: function render() {
-        var show_form_button, form_placeholder;
         if (this.state.show_form) {
-            show_form_button = _react2.default.createElement('div', { className: 'hide-climb-record-form icon-left-open', onClick: this.hideForm }, 'Hide form');
-            form_placeholder = _react2.default.createElement(_ClimbRecordForm2.default, {
-                onSubmit: this.submitForm
-            });
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'hide-climb-record-form icon-left-open', onClick: this.hideForm },
+                    'Hide form'
+                ),
+                _react2.default.createElement(_ClimbRecordForm2.default, { onSubmit: this.submitForm }),
+                _react2.default.createElement(_ClimbRecordTable2.default, null)
+            );
         } else {
-            show_form_button = _react2.default.createElement('div', { className: 'show-climb-record-form icon-right-open', onClick: this.showForm }, 'Add route');
-            form_placeholder = '';
+            return _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    { className: 'show-climb-record-form icon-right-open', onClick: this.showForm },
+                    'Add route'
+                ),
+                _react2.default.createElement(_ClimbRecordTable2.default, null)
+            );
         }
-        return _react2.default.createElement('div', {}, show_form_button, form_placeholder, _react2.default.createElement(_ClimbRecordTable2.default));
     }
 }); // jshint esnext: true
 

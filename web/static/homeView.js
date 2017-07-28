@@ -53,6 +53,7 @@ var MainPage = React.createClass({
                     <div className='show-climb-record-form icon-right-open' onClick={this.showForm}>
                         Add route
                     </div>
+                    <div/>
                     <ClimbRecordTable/>
                 </div>
             );

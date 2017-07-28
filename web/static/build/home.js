@@ -27870,6 +27870,7 @@ var MainPage = _react2.default.createClass({
                     { className: 'show-climb-record-form icon-right-open', onClick: this.showForm },
                     'Add route'
                 ),
+                _react2.default.createElement('div', null),
                 _react2.default.createElement(_ClimbRecordTable2.default, null)
             );
         }
